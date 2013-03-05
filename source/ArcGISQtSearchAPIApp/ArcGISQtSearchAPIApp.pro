@@ -8,11 +8,10 @@ QT       += core gui xml sql
 
 TEMPLATE = app
 
-VERSION = 1.0
-QMAKE_TARGET_COMPANY = Environmental Systems Research Institute, Inc.
-QMAKE_TARGET_PRODUCT = ArcGIS Mobile for Qt
-QMAKE_TARGET_DESCRIPTION = Sample application using ArcGIS Mobile library for Qt/C++ development.
-QMAKE_TARGET_COPYRIGHT = Copyright �2010-2012 ESRI Inc. All Rights Reserved.
+QMAKE_TARGET_COMPANY = Esri, Inc.
+QMAKE_TARGET_PRODUCT = ArcGIS Runtime for Qt
+QMAKE_TARGET_DESCRIPTION = Sample application using ArcGIS Runtime for Qt development.
+QMAKE_TARGET_COPYRIGHT = Copyright �2010-2012 Esri Inc. 
 
 CONFIG += debug_and_release
 CONFIG(debug, debug|release){

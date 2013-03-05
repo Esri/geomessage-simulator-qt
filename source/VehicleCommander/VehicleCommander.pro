@@ -1,11 +1,10 @@
-QT       += opengl xml network declarative
+﻿QT       += opengl xml network declarative
 
 TEMPLATE  = app
-VERSION = 1.0
-QMAKE_TARGET_COMPANY = Environmental Systems Research Institute, Inc.
-QMAKE_TARGET_PRODUCT = ArcGIS Mobile for Qt
-QMAKE_TARGET_DESCRIPTION = Sample application using ArcGIS Mobile library for Qt/C++ development.
-QMAKE_TARGET_COPYRIGHT = Copyright �2010-2012 ESRI Inc. All Rights Reserved.
+QMAKE_TARGET_COMPANY = Esri, Inc.
+QMAKE_TARGET_PRODUCT = ArcGIS Runtime for Qt
+QMAKE_TARGET_DESCRIPTION = Sample application using ArcGIS Runtime for Qt development.
+QMAKE_TARGET_COPYRIGHT = Copyright �2010-2013 Esri Inc. 
 
 QMAKE_TARGET.arch = $$(BUILD_ARCH)
 
@@ -17,40 +16,6 @@ else{
     TARGET = VehicleCommander
 }
 
-win32{
-  INCLUDEPATH += "$$ARCGIS_RUNTIME_DIR/include"
-
-  #64 Bit Windows Build
-  contains(QMAKE_TARGET.arch, x86_64):{
-  message( "Building for 64 bit")
-    CONFIG(debug, debug|release){
-      LIBS  += -L"$$ARCGIS_RUNTIME_DIR/lib64" \
-               -lArcGISQtd1 \
-               -lSymbolDictionaryd1
-    }
-    else{
-      LIBS  += -L"$$ARCGIS_RUNTIME_DIR/lib64" \
-               -lArcGISQt1 \
-               -lSymbolDictionary1
-    }
-  }
-
-  #32 Bit Windows Build
-  contains(QMAKE_TARGET.arch, x86):{
-  message( "Building for 32 bit")
-    CONFIG(debug, debug|release){
-      LIBS  += -L"$$ARCGIS_RUNTIME_DIR/lib32" \
-               -lArcGISQtd1 \
-               -lSymbolDictionaryd1
-    }
-    else{
-      LIBS  += -L"$$ARCGIS_RUNTIME_DIR/lib32" \
-               -lArcGISQt1 \
-               -lSymbolDictionary1
-
-    }
-  }
-}
 
 unix{
   QMAKE_CXXFLAGS += --std=c++0x
