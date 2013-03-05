@@ -1,0 +1,308 @@
+<?xml version="1.0"?> 
+<gpx version="1.0" creator="GPS Visualizer http://www.gpsvisualizer.com/" xmlns="http://www.topografix.com/GPX/1/0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd"> 
+  <trk> 
+    <name>custom_block</name> 
+    <trkseg> 
+	<trkpt lat="32.70963677" lon="-117.16612265"> 
+        <time xmlns="">2010-09-23T22:54:29Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709657084" lon="-117.166297313"> 
+        <time xmlns="">2010-09-23T22:54:30Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709801379" lon="-117.166306592"> 
+        <time xmlns="">2010-09-23T22:54:31Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709866191" lon="-117.166150842"> 
+        <time xmlns="">2010-09-23T22:54:32Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709803039" lon="-117.165987198"> 
+        <time xmlns="">2010-09-23T22:54:33Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709718301" lon="-117.165832545"> 
+        <time xmlns="">2010-09-23T22:54:34Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709637644" lon="-117.165675707"> 
+        <time xmlns="">2010-09-23T22:54:35Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709556721" lon="-117.165519007"> 
+        <time xmlns="">2010-09-23T22:54:36Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709473014" lon="-117.165363776"> 
+        <time xmlns="">2010-09-23T22:54:37Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709384694" lon="-117.165211161"> 
+        <time xmlns="">2010-09-23T22:54:38Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709304604" lon="-117.165054034"> 
+        <time xmlns="">2010-09-23T22:54:39Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709233352" lon="-117.164893015"> 
+        <time xmlns="">2010-09-23T22:54:40Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709172725" lon="-117.16472801"> 
+        <time xmlns="">2010-09-23T22:54:41Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709088238" lon="-117.164573273"> 
+        <time xmlns="">2010-09-23T22:54:42Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709007089" lon="-117.164416716"> 
+        <time xmlns="">2010-09-23T22:54:43Z</time> 
+      </trkpt> 
+	<trkpt lat="32.708942829" lon="-117.164254892"> 
+        <time xmlns="">2010-09-23T22:54:44Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709020638" lon="-117.164099802"> 
+        <time xmlns="">2010-09-23T22:54:45Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709146646" lon="-117.163977267"> 
+        <time xmlns="">2010-09-23T22:54:46Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709296865" lon="-117.163885297"> 
+        <time xmlns="">2010-09-23T22:54:47Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709456043" lon="-117.163809521"> 
+        <time xmlns="">2010-09-23T22:54:48Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709624084" lon="-117.163758781"> 
+        <time xmlns="">2010-09-23T22:54:49Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709798532" lon="-117.163737591"> 
+        <time xmlns="">2010-09-23T22:54:50Z</time> 
+      </trkpt> 
+	<trkpt lat="32.70997478" lon="-117.163731281"> 
+        <time xmlns="">2010-09-23T22:54:51Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710151068" lon="-117.163726172"> 
+        <time xmlns="">2010-09-23T22:54:52Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710326213" lon="-117.163708147"> 
+        <time xmlns="">2010-09-23T22:54:53Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710372136" lon="-117.163552605"> 
+        <time xmlns="">2010-09-23T22:54:54Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710370131" lon="-117.163376266"> 
+        <time xmlns="">2010-09-23T22:54:55Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710372918" lon="-117.163199931"> 
+        <time xmlns="">2010-09-23T22:54:56Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710377308" lon="-117.163023624"> 
+        <time xmlns="">2010-09-23T22:54:57Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710301273" lon="-117.162884009"> 
+        <time xmlns="">2010-09-23T22:54:58Z</time> 
+      </trkpt> 
+	<trkpt lat="32.71012602" lon="-117.162873789"> 
+        <time xmlns="">2010-09-23T22:54:59Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709949666" lon="-117.162872232"> 
+        <time xmlns="">2010-09-23T22:55:00Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709773347" lon="-117.162868356"> 
+        <time xmlns="">2010-09-23T22:55:01Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709597025" lon="-117.162865723"> 
+        <time xmlns="">2010-09-23T22:55:02Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709421193" lon="-117.162866516"> 
+        <time xmlns="">2010-09-23T22:55:03Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709344826" lon="-117.16272397"> 
+        <time xmlns="">2010-09-23T22:55:04Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709343713" lon="-117.162547629"> 
+        <time xmlns="">2010-09-23T22:55:05Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709342184" lon="-117.162371279"> 
+        <time xmlns="">2010-09-23T22:55:06Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709342098" lon="-117.162194916"> 
+        <time xmlns="">2010-09-23T22:55:07Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709339844" lon="-117.162018576"> 
+        <time xmlns="">2010-09-23T22:55:08Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709428413" lon="-117.16188739"> 
+        <time xmlns="">2010-09-23T22:55:09Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709604596" lon="-117.161883472"> 
+        <time xmlns="">2010-09-23T22:55:10Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709780943" lon="-117.161881156"> 
+        <time xmlns="">2010-09-23T22:55:11Z</time> 
+      </trkpt> 
+	<trkpt lat="32.7099573" lon="-117.161879668"> 
+        <time xmlns="">2010-09-23T22:55:12Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710133627" lon="-117.161876186"> 
+        <time xmlns="">2010-09-23T22:55:13Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710309962" lon="-117.161873328"> 
+        <time xmlns="">2010-09-23T22:55:14Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710454351" lon="-117.161933316"> 
+        <time xmlns="">2010-09-23T22:55:15Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710460769" lon="-117.16210929"> 
+        <time xmlns="">2010-09-23T22:55:16Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710459017" lon="-117.162285641"> 
+        <time xmlns="">2010-09-23T22:55:17Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710455769" lon="-117.162461974"> 
+        <time xmlns="">2010-09-23T22:55:18Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710452939" lon="-117.162638314"> 
+        <time xmlns="">2010-09-23T22:55:19Z</time> 
+      </trkpt> 
+	<trkpt lat="32.71045225" lon="-117.162814674"> 
+        <time xmlns="">2010-09-23T22:55:20Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710452157" lon="-117.162991036"> 
+        <time xmlns="">2010-09-23T22:55:21Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710449929" lon="-117.163167384"> 
+        <time xmlns="">2010-09-23T22:55:22Z</time> 
+      </trkpt> 
+	<trkpt lat="32.71044724" lon="-117.163343726"> 
+        <time xmlns="">2010-09-23T22:55:23Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710449364" lon="-117.163520053"> 
+        <time xmlns="">2010-09-23T22:55:24Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710452836" lon="-117.163696379"> 
+        <time xmlns="">2010-09-23T22:55:25Z</time> 
+      </trkpt> 
+	<trkpt lat="32.71044857" lon="-117.163872671"> 
+        <time xmlns="">2010-09-23T22:55:26Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710447105" lon="-117.164049005"> 
+        <time xmlns="">2010-09-23T22:55:27Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710446853" lon="-117.164225367"> 
+        <time xmlns="">2010-09-23T22:55:28Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710442569" lon="-117.164401643"> 
+        <time xmlns="">2010-09-23T22:55:29Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710439312" lon="-117.164577311"> 
+        <time xmlns="">2010-09-23T22:55:30Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710322835" lon="-117.164693387"> 
+        <time xmlns="">2010-09-23T22:55:31Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710146991" lon="-117.164704981"> 
+        <time xmlns="">2010-09-23T22:55:32Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709973043" lon="-117.164732186"> 
+        <time xmlns="">2010-09-23T22:55:33Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709820758" lon="-117.164819794"> 
+        <time xmlns="">2010-09-23T22:55:34Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709674595" lon="-117.164918404"> 
+        <time xmlns="">2010-09-23T22:55:35Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709532691" lon="-117.165022605"> 
+        <time xmlns="">2010-09-23T22:55:36Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709507539" lon="-117.165191546"> 
+        <time xmlns="">2010-09-23T22:55:37Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709577601" lon="-117.16535252"> 
+        <time xmlns="">2010-09-23T22:55:38Z</time> 
+      </trkpt> 
+	<trkpt lat="32.70965543" lon="-117.16551064"> 
+        <time xmlns="">2010-09-23T22:55:39Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709734787" lon="-117.16566811"> 
+        <time xmlns="">2010-09-23T22:55:40Z</time> 
+      </trkpt> 
+	<trkpt lat="32.70981875" lon="-117.1658232"> 
+        <time xmlns="">2010-09-23T22:55:41Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709902372" lon="-117.165978474"> 
+        <time xmlns="">2010-09-23T22:55:42Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709986978" lon="-117.166133211"> 
+        <time xmlns="">2010-09-23T22:55:43Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710072669" lon="-117.166287357"> 
+        <time xmlns="">2010-09-23T22:55:44Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710159032" lon="-117.166441119"> 
+        <time xmlns="">2010-09-23T22:55:45Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710247961" lon="-117.166593416"> 
+        <time xmlns="">2010-09-23T22:55:46Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710329249" lon="-117.166749922"> 
+        <time xmlns="">2010-09-23T22:55:47Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710412434" lon="-117.166905412"> 
+        <time xmlns="">2010-09-23T22:55:48Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710492439" lon="-117.167062334"> 
+        <time xmlns="">2010-09-23T22:55:49Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710536767" lon="-117.167232722"> 
+        <time xmlns="">2010-09-23T22:55:50Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710605272" lon="-117.167394803"> 
+        <time xmlns="">2010-09-23T22:55:51Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710690194" lon="-117.167549363"> 
+        <time xmlns="">2010-09-23T22:55:52Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710776016" lon="-117.167703436"> 
+        <time xmlns="">2010-09-23T22:55:53Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710861704" lon="-117.167857583"> 
+        <time xmlns="">2010-09-23T22:55:54Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710944958" lon="-117.168012871"> 
+        <time xmlns="">2010-09-23T22:55:55Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710831464" lon="-117.168069648"> 
+        <time xmlns="">2010-09-23T22:55:56Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710747143" lon="-117.167915197"> 
+        <time xmlns="">2010-09-23T22:55:57Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710662023" lon="-117.167760911"> 
+        <time xmlns="">2010-09-23T22:55:58Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710598944" lon="-117.167596647"> 
+        <time xmlns="">2010-09-23T22:55:59Z</time> 
+      </trkpt> 
+	<trkpt lat="32.71052567" lon="-117.167436573"> 
+        <time xmlns="">2010-09-23T22:56:00Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710441188" lon="-117.167281836"> 
+        <time xmlns="">2010-09-23T22:56:01Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710363881" lon="-117.16712332"> 
+        <time xmlns="">2010-09-23T22:56:02Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710282371" lon="-117.166967052"> 
+        <time xmlns="">2010-09-23T22:56:03Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710186925" lon="-117.166818794"> 
+        <time xmlns="">2010-09-23T22:56:04Z</time> 
+      </trkpt> 
+	<trkpt lat="32.710087952" lon="-117.16667291"> 
+        <time xmlns="">2010-09-23T22:56:05Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709997414" lon="-117.166521595"> 
+        <time xmlns="">2010-09-23T22:56:06Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709846287" lon="-117.166511666"> 
+        <time xmlns="">2010-09-23T22:56:07Z</time> 
+      </trkpt> 
+	<trkpt lat="32.709699172" lon="-117.166608887"> 
+        <time xmlns="">2010-09-23T22:56:08Z</time> 
+      </trkpt> 
+    </trkseg> 
+  </trk> 
+</gpx> 

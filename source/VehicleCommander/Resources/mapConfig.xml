@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapconfig name="test map">
+    <spatialref>
+		<!-- spatial reference can be defined by a WKT (string) or a WKID (factory code)-->
+		<!--<wkt>PROJCS[&quot;NAD_1983_HARN_StatePlane_Oregon_North_FIPS_3601&quot;,GEOGCS[&quot;GCS_WGS_1984&quot;,DATUM[&quot;D_WGS_1984&quot;,SPHEROID[&quot;WGS_1984&quot;,6378137.0,298.257223563]],PRIMEM[&quot;Greenwich&quot;,0.0],UNIT[&quot;Degree&quot;,0.0174532925199433]],PROJECTION[&quot;Lambert_Conformal_Conic&quot;],PARAMETER[&quot;False_Easting&quot;,8202099.737532808],PARAMETER[&quot;False_Northing&quot;,0.0],PARAMETER[&quot;Central_Meridian&quot;,-120.5],PARAMETER[&quot;Standard_Parallel_1&quot;,44.33333333333334],PARAMETER[&quot;Standard_Parallel_2&quot;,46.0],PARAMETER[&quot;Latitude_Of_Origin&quot;,43.66666666666666],UNIT[&quot;Foot&quot;,0.3048]]</wkt>-->
+		<!-- a gt tag defines the geographical transformation from and to WGS 1984 (needed for the GPS feed)-->
+		<!--<wkid>4326</wkid>--> <!-- WGS 84 -->
+		<wkid>3857</wkid> <!-- web mercator -->
+		<gt>
+			<!--<wkt></wkt>
+			<wkid></wkid>-->
+		</gt> <!-- geogtran can either be a WKID or WKT given by GT::ToString or GT::FromString-->
+	</spatialref>
+	<layers>
+		<!-- layers describe the list of basemap layers -->
+		<!-- available types are compact and exploded-->
+		<layer name="Imagery" visible ="true" type="TiledCacheLayer">
+		      <datasetpath>D:/Temp/Data/AfghanCommercialImagery/Imagery</datasetpath>
+		</layer>
+		<layer name="Scanned maps" visible ="false" type="TiledCacheLayer">
+		      <datasetpath>D:/Temp/Data/AfghanScannedMaps/Scanned Maps</datasetpath>
+		</layer>
+		<layer name="Topo map" visible ="false" type="TiledCacheLayer">
+		      <datasetpath>D:/Temp/Data/AfghanTopo/Topographic</datasetpath>
+		</layer>
+		<!--<layer name="Imagery" visible ="true">
+		      <datasetpath>D:/Temp/Data/NewPortland</datasetpath>
+		</layer>-->
+		<!--<layer name="Imagery" visible ="true">
+		      <datasetpath>D:\Temp\Data\BaseMap_WGS84_M</datasetpath>
+		</layer>-->
+	</layers>
+	<initialextent>
+		<anchor heightratio="0.25">
+			<x>7842690</x>
+			<y>4086500</y>
+		</anchor>
+		<scale>250000</scale>
+		<rotation>0</rotation>
+	</initialextent>
+</mapconfig>

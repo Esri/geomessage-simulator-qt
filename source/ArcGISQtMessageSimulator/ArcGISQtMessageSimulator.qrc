@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Resources/SmallMilitaryMessages.xml</file>
+	<file>Resources/Jalalabad_webmerc.xml</file>
+	<file>Resources/Jalalabad_lat_lon.xml</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapconfig name="test map">
+	<spatialref>
+		<wkid>3857</wkid> <!-- web mercator -->
+	</spatialref>
+	<layers>
+		<!-- layers describe the list of basemap layers -->
+		<!-- available types are compact and exploded-->
+		<layer name="Imagery" visible ="true" type="TiledCacheLayer">
+		      <datasetpath>C:/Data/AfghanCommercialImagery/Imagery</datasetpath>
+		</layer>
+		<layer name="Topography" visible ="false" type="TiledCacheLayer">
+		      <datasetpath>C:/data/AfghanTopo/Topographic</datasetpath>
+		</layer>
+		<layer name="Scanned" visible ="false" type="TiledCacheLayer">
+		      <datasetpath>C:/data/AfghanScannedMaps/Scanned Maps</datasetpath>
+		</layer>
+    <layer name="EnemyViewshed" visible="false" type="TiledCacheLayer">
+        <datasetpath>../EnemyViewshed.tpk</datasetpath>
+    </layer>
+		<!--<layer name="Topography" visible = "true">
+		      <url>http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer</url>
+		      <username></username>
+		      <password></password>	
+        </layer>-->
+	</layers>
+	<initialextent>
+		<anchor heightratio="0.25">
+			<x>7842690</x>
+			<y>4086500</y>
+		</anchor>
+		<scale>250000</scale>
+		<rotation>0</rotation>
+	</initialextent>
+</mapconfig>

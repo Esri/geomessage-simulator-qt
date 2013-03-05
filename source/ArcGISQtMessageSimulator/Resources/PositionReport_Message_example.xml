@@ -1,0 +1,36 @@
+<messages>
+	<message>
+		<_id>1f68acc3-76b0-4385-acbb-72c69055adf9</_id>
+		<_action>update</_action>
+		<_type>position_report</_type>
+		<_wkid>3857</_wkid>
+		<_control_points>7840787.137,4087968.6839</_control_points>
+		<sic>SFGPEVAL----USG</sic>
+		<speed>51</speed>
+		<type>M1126</type>
+		<uniquedesignation>War Eagles 1A</uniquedesignation>
+		<staffcomments>Somewhere in the Negev</staffcomments>
+		<dtg>2012-10-31T17:19:06Z</dtg>
+		<quantity>1</quantity>
+		<higherformation>2nd Stryker Brigade</higherformation>
+		<additionalinformation>Equipped with M2 .50 caliber gun</additionalinformation>
+		<altitudedepth>0</altitudedepth>
+	</message>
+	<message>
+		<_id>1f68acc3-76b0-4385-acbb-72c69055adff</_id>
+		<_action>update</_action>
+		<_type>position_report</_type>
+		<_wkid>3857</_wkid>
+		<_control_points>7840887.137,4087868.6839</_control_points>
+		<sic>SFGPEVAL----USG</sic>
+		<speed>52</speed>
+		<type>M1</type>
+		<uniquedesignation>War Eagles 2A</uniquedesignation>
+		<staffcomments>Somewhere in the Negev</staffcomments>
+		<dtg>2012-10-31T18:19:06Z</dtg>
+		<quantity>1</quantity>
+		<higherformation>2nd Stryker Brigade</higherformation>
+		<additionalinformation>Equipped with M2 .50 caliber gun</additionalinformation>
+		<altitudedepth>0</altitudedepth>
+	</message>
+</messages>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<messages>
+	<message name="salute_report" type="report" id="00" action="update">
+		<symbols>
+			<sic value="SFGPUCI--------" type="2525C">
+				<quantity></quantity>	
+				<dtg></dtg>
+				<altitude_depth></altitude_depth>
+				<location></location>
+				<type></type>
+				<unique_designation></unique_designation>
+				<additional_information></additional_information>				
+				<speed></speed>
+			</sic>
+		</symbols>
+		<attributes> 
+			<message_sent_time></message_sent_time>
+			<observer_id></observer_id>
+			<observation_method></observation_method>
+			<overall_assessment></overall_assessment>
+			<overall_narrative></overall_narrative>
+			<size></size>
+			<activity></activity>
+			<location></location>
+			<unit></unit>
+			<time></time>
+			<equipment></equipment>
+		</attributes>
+		<geometry>
+			<vertex>
+				<lon></lon>
+				<lat></lat>
+			</vertex>
+		</geometry>
+	</message>
+</messages>

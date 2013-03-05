@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<messages>
+	<message name="chemlight1" type="report" id="3" action="update">
+		<symbols>
+			<mainsymbol type="PictureMarkerSymbol" value="path">
+				<size>large</size>
+			</mainsymbol>		
+		</symbols>
+		<geometry>
+			<vertex>
+				<lon>-117.1634</lon>
+				<lat>32.6995</lat>
+			</vertex>
+		</geometry>
+	</message>
+</messages>

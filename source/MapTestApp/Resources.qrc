@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Resources/icons/North-Arrow.png</file>
+    </qresource>
+</RCC>
