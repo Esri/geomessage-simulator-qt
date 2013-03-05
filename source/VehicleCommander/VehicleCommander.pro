@@ -1,4 +1,4 @@
-﻿QT       += opengl xml network declarative
+QT       += opengl xml network declarative
 
 TEMPLATE  = app
 QMAKE_TARGET_COMPANY = Esri, Inc.
