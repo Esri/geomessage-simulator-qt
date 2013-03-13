@@ -17,9 +17,11 @@
 #ifndef SIMULATORDIALOG_H
 #define SIMULATORDIALOG_H
 
-#include <QDialog>
-#include <QBasicTimer>
-#include <QtNetwork>
+#include <QMainWindow>
+#include <QMutex>
+
+#include "Geomessage.h"
+#include "SimulatorController.h"
 
 namespace Ui {
   class SimulatorDialog;
@@ -29,7 +31,7 @@ namespace Ui {
  * \class	SimulatorDialog
  * \brief	Dialog for setting the simulator. 
  */
-class SimulatorDialog : public QDialog {
+class SimulatorDialog : public QMainWindow {
   Q_OBJECT
 public:
   /*!
@@ -53,62 +55,17 @@ protected:
    * \fn	void SimulatorDialog::timerEvent(QTimerEvent *event);
    * \brief	Timer event, to broadcast messages periodically
    */
-  void timerEvent(QTimerEvent *event);
+//  void timerEvent(QTimerEvent *event);
 
 private:
-
-  /*!
-   * \fn	void SimulatorDialog::doSomething();
-   * \internal
-   */
-  void doSomething();
-  /*!
-   * \internal
-   * \fn	void SimulatorDialog::initializeSimulator();
-   * \brief this is where all the magic happens
-   * 		  set up timer, socket; read message file, setup UI, etc
-   */
-  void initializeSimulator(const QString & file);
-  bool loadSimulationFile(const QString & file);
-  bool fileHasAnyMessages();
-
-private:
-  static const QString TAG_ROOT;
-  static const QString TAG_MESSAGES;
-  static const QString TAG_MESSAGE;
-  static const QString TAG_SIC;
-  static const QString TAG_NAME;
-  static const QString TAG_ID;
-  static const QString TAG_ACTION;
-  static const QString TAG_TYPE;
-
   Ui::SimulatorDialog *ui;
-  int m_currentIndex;
-  bool m_simulationStarted;
-  bool m_simulationPaused;
-  int m_messageFrequency;
-  int m_messageThroughput;
-  QBasicTimer m_timer;
-  QStringList m_messages;
-  QUdpSocket *m_udpSocket;
-
+  bool m_paused;
   int m_numRows;
-  QFile m_inputFile;
-  QXmlStreamReader m_inputReader;
-  bool m_reachedEndOfFile;
+  SimulatorController controller;
+  QMutex messagesWidgetMutex;
 
 private slots:
-  /*!
-   * \fn	void SimulatorDialog::on_dialThroughput_valueChanged(int value);
-   * \brief	Handles throughput value changes.
-   */
   void on_btnFile_clicked();
-  void on_dialThroughput_valueChanged(int value);
-  /*!
-   * \fn	void SimulatorDialog::on_dialFrequency_valueChanged(int value);
-   * \brief	Handles frequency value changes.
-   */
-  void on_dialFrequency_valueChanged(int value);
   /*!
    * \fn	void SimulatorDialog::on_btnStart_clicked();
    * \brief	Starts or Restarts the simulator
@@ -124,6 +81,12 @@ private slots:
    * \brief	Pauses the simulator if started or continues it, if already paused
    */
   void on_btnPause_clicked();
+  void on_spinBox_port_valueChanged(int newPort);
+  void on_spinBox_frequency_valueChanged(int newFrequency);
+  void on_spinBox_throughput_valueChanged(int newThroughput);
+
+  void addGeomessageToTable(Geomessage geomessage);
+  void selectGeomessageInTable(int index);
 };
 
 #endif // SIMULATORDIALOG_H

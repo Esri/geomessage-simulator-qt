@@ -4,7 +4,23 @@
 
 # user settings
 *.pro.user
+*-Debug
+*-Release
+*-debug
+*-release
+*.autosave
 
+# Defense Template specific ignores
+application/
+data/geodatabases/
+data/shapefiles/
+data/layers/
+maps/
+scratch/
+arc.dir
+*.pyt.xml
+*.zip
+*-old
 
 #################
 ## *nux
