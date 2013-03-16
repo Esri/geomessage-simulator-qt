@@ -1,5 +1,78 @@
 <geomessages>
 	<geomessage v="1.0">
+		<_type>chemlight</_type>
+		<_action>UPDATE</_action>
+		<_id>{ecfc34f6-1583-4b88-8fe6-456e30874672}</_id>
+		<_wkid>4326</_wkid>
+		<_control_points>70.4426000006,34.4375</_control_points>
+		<datetimesubmitted>2012-07-26 00:00:00</datetimesubmitted>
+		<uniquedesignation>War Eagles 1 D</uniquedesignation>
+		<color>1</color>
+	</geomessage>
+	<geomessage v="1.0">
+		<_type>bedavail</_type>
+		<_action>UPDATE</_action>
+		<_id>{3601e009-4b06-4d1b-b058-f4fba802103f}</_id>
+		<_wkid>4326</_wkid>
+		<_control_points>70.3988000156,34.9226000144</_control_points>
+		<datetimesubmitted>2012-07-26 00:00:00</datetimesubmitted>
+		<uniquedesignation>2/1</uniquedesignation>
+		<element>BAS NURESTAN</element>
+		<total_opl>5</total_opl>
+		<gen_opl>4</gen_opl>
+		<burn_opl>1</burn_opl>
+		<avail_total>4</avail_total>
+		<avail_gen>3</avail_gen>
+		<avail_burn>1</avail_burn>
+		<narrative>Require resupply of burn and major trauma kits</narrative>
+	</geomessage>
+	<geomessage v="1.0">
+		<_type>spotrep</_type>
+		<_action>UPDATE</_action>
+		<_id>{4ec78db3-c202-4d7e-9030-df53b0d40601}</_id>
+		<_wkid>4326</_wkid>
+		<_control_points>70.5978000015,34.5698999986</_control_points>
+		<datetimesubmitted>2012-07-25 00:00:00</datetimesubmitted>
+		<uniquedesignation>Shadow 3</uniquedesignation>
+		<equipment>Toyota land cruiser - No visible weapons</equipment>
+		<activity>Moving S along main route</activity>
+		<location>On road</location>
+		<size>2 vehicles / 2+ pax</size>
+		<unit>Displaying militia flags</unit>
+		<activity_cat>Moving</activity_cat>
+		<unit_cat>Irregular</unit_cat>
+		<equip_cat>Ground Vehicle H</equip_cat>
+		<size_cat>1</size_cat>
+		<timeobserved>2012-07-25 00:00:00</timeobserved>
+	</geomessage>
+	<geomessage v="1.0">
+		<_type>situation_report</_type>
+		<_action>UPDATE</_action>
+		<_id>{5f42e166-e3e3-4c83-a31d-069b535d763c}</_id>
+		<_wkid>4326</_wkid>
+		<_control_points>70.3631000156,35.4820000145</_control_points>
+		<datetimesubmitted>2012-07-26 00:00:00</datetimesubmitted>
+		<uniquedesignation>2/1/B/2</uniquedesignation>
+		<activity>Conducting security patrols</activity>
+		<effective>A</effective>
+		<own_situation>Platoon based at FOB ATITI; 1st Squad manning OPs ALPHA and HOTEL</own_situation>
+		<situation_overview>Generally secure; some signs of insurgent recce to NW</situation_overview>
+		<operations>Ad-hoc patrolling in local area with teams at OPs</operations>
+		<isr>UAV support proving essential in covering gaps in own recce / surveillance coverage</isr>
+		<sustainment>4 DOS food and ammo</sustainment>
+	</geomessage>
+	<geomessage v="1.0">
+		<_type>gsrrep</_type>
+		<_action>UPDATE</_action>
+		<_id>{95464cee-03e9-4a91-92b0-107d65111376}</_id>
+		<_wkid>4326</_wkid>
+		<sic>SHGPEVA--------</sic>
+	<_control_points>70.1561000012,34.2463000007</_control_points>
+		<uniquedesignation>AT003-TRK005</uniquedesignation>
+		<direction>-1</direction>
+		<datetimevalid>2012-07-26 00:00:00</datetimevalid>
+	</geomessage>
+	<geomessage v="1.0">
 		<_type>position_report</_type>
 		<_action>UPDATE</_action>
 		<_id>{e15f6125-6dbc-4ea8-bd1d-26205957e2de}</_id>
@@ -207,38 +280,5 @@
 		<avail_gen>2</avail_gen>
 		<avail_burn>1</avail_burn>
 		<suites>0</suites>
-	</geomessage>
-	<geomessage v="1.0">
-		<_type>bedavail</_type>
-		<_action>UPDATE</_action>
-		<_id>{3601e009-4b06-4d1b-b058-f4fba802103f}</_id>
-		<_wkid>4326</_wkid>
-		<_control_points>70.3988000156,34.9226000144</_control_points>
-		<datetimesubmitted>2012-07-26 00:00:00</datetimesubmitted>
-		<uniquedesignation>2/1</uniquedesignation>
-		<element>BAS NURESTAN</element>
-		<total_opl>5</total_opl>
-		<gen_opl>4</gen_opl>
-		<burn_opl>1</burn_opl>
-		<avail_total>4</avail_total>
-		<avail_gen>3</avail_gen>
-		<avail_burn>1</avail_burn>
-		<narrative>Require resupply of burn and major trauma kits</narrative>
-	</geomessage>
-	<geomessage v="1.0">
-		<_type>situation_report</_type>
-		<_action>UPDATE</_action>
-		<_id>{5f42e166-e3e3-4c83-a31d-069b535d763c}</_id>
-		<_wkid>4326</_wkid>
-		<_control_points>70.3631000156,35.4820000145</_control_points>
-		<datetimesubmitted>2012-07-26 00:00:00</datetimesubmitted>
-		<uniquedesignation>2/1/B/2</uniquedesignation>
-		<activity>Conducting security patrols</activity>
-		<effective>A</effective>
-		<own_situation>Platoon based at FOB ATITI; 1st Squad manning OPs ALPHA and HOTEL</own_situation>
-		<situation_overview>Generally secure; some signs of insurgent recce to NW</situation_overview>
-		<operations>Ad-hoc patrolling in local area with teams at OPs</operations>
-		<isr>UAV support proving essential in covering gaps in own recce / surveillance coverage</isr>
-		<sustainment>4 DOS food and ammo</sustainment>
 	</geomessage>
 </geomessages>

@@ -50,9 +50,7 @@ public:
   explicit Dialog(QWidget *parent = 0);
   ~Dialog();
 
-
 private:
-  static const QString MIL2525C_DIRECTORY;
 
   void displayFilterValues(const QString & filter);
   void handlePrevNext();

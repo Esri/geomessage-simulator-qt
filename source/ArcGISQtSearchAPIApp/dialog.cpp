@@ -21,7 +21,7 @@
 
 #include "SymbolProperties.h"
 
-const int ICON_LIST_DISPLAY_SIZE = 20;
+const int ICON_LIST_DISPLAY_SIZE = 18;
 
 /*!
  \brief Constructs the Dialog UI and sets up the Symbol Dictionary object.
@@ -54,8 +54,6 @@ Dialog::Dialog(QWidget *parent) :
   layout->addWidget(lblCategory);
   layout->addWidget(lblTags);
 
-
-  //currentValue = 0;
   displaySize = ICON_LIST_DISPLAY_SIZE;
 
   ui->search->setIconSize(QSize(64, 64));
@@ -255,8 +253,11 @@ void Dialog::on_btnSearch_clicked()
     {
         SymbolProperties symbolProps = it.next();
 
-        // qDebug() << "Adding Symbol: " << symbolProps.name();
-        paths.append(symbolProps.name());
+        if (symbolProps.name().size() > 0)
+        {
+          // qDebug() << "Adding Symbol: " << symbolProps.name();
+          paths.append(symbolProps.name());
+        }
     }
 
   fwdIterator = QListIterator<QString> (paths);
@@ -430,7 +431,6 @@ QVariantMap Dialog::symbolNameOrId2VariantMap(QString nameOrId)
 
  The method grabs this information from the API and then displays it to the user
  in a dialog box.
-
 */
 void Dialog::on_search_itemClicked(QListWidgetItem* item)
 {

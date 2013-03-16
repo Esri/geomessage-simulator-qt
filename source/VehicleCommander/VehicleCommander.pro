@@ -57,7 +57,8 @@ SOURCES += main.cpp\
            AppConfigDialog.cpp \
            DictionaryImageProvider.cpp \
            SearchController.cpp \
-    simplegraphicoverlay.cpp
+           simplegraphicoverlay.cpp \
+           Geomessage.cpp
 
 HEADERS  += GPSSimulator.h \
             MapController.h \
@@ -65,7 +66,8 @@ HEADERS  += GPSSimulator.h \
             AppConfigDialog.h \
             DictionaryImageProvider.h \
             SearchController.h \
-    simplegraphicoverlay.h
+            simplegraphicoverlay.h \
+            Geomessage.h
 
 RESOURCES += MainViewResources.qrc
 

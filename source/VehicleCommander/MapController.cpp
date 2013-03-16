@@ -25,6 +25,7 @@
 #include "MarkerSymbol.h"
 #include "GeometryEngine.h"
 #include "ArcGISLocalDynamicMapServiceLayer.h"
+#include "Geomessage.h"
 
 #include "MapController.h"
 
@@ -99,16 +100,16 @@ QByteArray MapController::createChemLightReport(Point& location, const QString& 
   QByteArray data;
   QXmlStreamWriter chemLightReport(&data);
   chemLightReport.writeStartDocument();
-  chemLightReport.writeStartElement("messages");
-    chemLightReport.writeStartElement("message");
-      chemLightReport.writeTextElement("_type", "chemlight");
-      chemLightReport.writeTextElement("_action", "update");
-      chemLightReport.writeTextElement("_id",messageID);
-      chemLightReport.writeTextElement("_control_points", strControlPoint);
-      chemLightReport.writeTextElement("_wkid", "3857");
-      chemLightReport.writeTextElement("color", chemLightColorStr);
-    chemLightReport.writeEndElement(); // message
-  chemLightReport.writeEndElement(); // messages
+  chemLightReport.writeStartElement("geomessages");
+
+  Geomessage geomsg("chemlight", "update", messageID);
+  geomsg.setProperty("_control_points", strControlPoint);
+  geomsg.setProperty("_wkid", "3857");
+  geomsg.setProperty("color", chemLightColorStr);
+
+  geomsg.toXml(chemLightReport);
+
+  chemLightReport.writeEndElement(); // geomessages
   chemLightReport.writeEndDocument();
 
   return data;
@@ -117,22 +118,20 @@ QByteArray MapController::createChemLightReport(Point& location, const QString& 
 QByteArray MapController::createGenericReport(const QString& reportName, const QString& messageID, const QString& action)
 {
   Q_UNUSED(action)
+  Q_UNUSED(reportName)
 
   QByteArray reportData;
   QXmlStreamWriter genericReport(&reportData);
 
-  genericReport.writeStartElement("messages");
-    genericReport.writeStartElement("message");
-
-      // add an attribute with the ID in order to allow filtering the message
+  genericReport.writeStartElement("geomessages");
+    genericReport.writeStartElement("geomessage");
+      // IMPORTANT: adds an attribute with the ID in order to allow filtering these messages from ownship
       genericReport.writeAttribute("id", messageID);
-
-      genericReport.writeTextElement("_name", reportName);
       genericReport.writeTextElement("_type", "position_report");
       genericReport.writeTextElement("_action", "update");
-      genericReport.writeTextElement("_id",messageID);
-    genericReport.writeEndElement(); // message
-  genericReport.writeEndElement(); // messages
+      genericReport.writeTextElement("_id", messageID);
+    genericReport.writeEndElement(); // geomessage
+  genericReport.writeEndElement(); // geomessages
   genericReport.writeEndDocument();
 
   return reportData;
@@ -152,31 +151,32 @@ QByteArray MapController::createPositionReport(const QString& action)
   QByteArray reportData;
   QXmlStreamWriter positionReport(&reportData);
   positionReport.writeStartDocument();
-  positionReport.writeStartElement("messages");
-    positionReport.writeStartElement("message");
+  positionReport.writeStartElement("geomessages");
+    positionReport.writeStartElement("geomessage");
 
       // add an attribute with the ID in order to allow filtering the message
       positionReport.writeAttribute("id", userData.id);
 
-      positionReport.writeTextElement("_name", "position_report");
+      // positionReport.writeTextElement("_name", "position_report");
       positionReport.writeTextElement("_type", "position_report");
       positionReport.writeTextElement("_action", "update");
-      positionReport.writeTextElement("_id",userData.id);
+      positionReport.writeTextElement("_id", userData.id);
       positionReport.writeTextElement("_control_points", strLocationControlPoint);
       positionReport.writeTextElement("_wkid", "3857");
-
-      // symbol text modifiers
       positionReport.writeTextElement("sic", userData.code);
+
+      // TODO: evaluate these remaining properties to see if still valid
+      // symbol text modifiers
       positionReport.writeTextElement("quantity", "5");
-      positionReport.writeTextElement("reinforced_or_reduced", "+");
-      positionReport.writeTextElement("staff_comments", "Comments");
-      positionReport.writeTextElement("additional_information", "Additional Info");
+      positionReport.writeTextElement("reinforcedorreduced", "+");
+      positionReport.writeTextElement("staffcomments", "Comments");
+      positionReport.writeTextElement("additionalinformation", "Additional Info");
       positionReport.writeTextElement("evaluation_rating", "A1");
-      positionReport.writeTextElement("combat_effectiness", "Excellent");
-      positionReport.writeTextElement("signature_equipment", "Gun");
-      positionReport.writeTextElement("higher_formation", "XX");
+      positionReport.writeTextElement("combateffectiness", "Excellent");
+      positionReport.writeTextElement("signatureequipment", "Gun");
+      positionReport.writeTextElement("higherformation", "XX");
       positionReport.writeTextElement("iff_sif", "iff");
-      positionReport.writeTextElement("unique_designation", userData.name);
+      positionReport.writeTextElement("uniquedesignation", userData.name);
       positionReport.writeTextElement("type", "vehicle");
       positionReport.writeTextElement("dtg", QDateTime::currentDateTimeUtc().toString("dd' 'hhmmss'Z 'MMM' 'yyyy"));
       positionReport.writeTextElement("altitude_depth", "surface");
@@ -193,8 +193,8 @@ QByteArray MapController::createPositionReport(const QString& action)
       positionReport.writeTextElement("number_and_type", "1 Vehicle");
       positionReport.writeTextElement("category", "Land");
 
-    positionReport.writeEndElement(); // message
-  positionReport.writeEndElement(); // messages
+    positionReport.writeEndElement(); // geomessage
+  positionReport.writeEndElement(); // geomessages
   positionReport.writeEndDocument();
 
   return reportData;
@@ -221,8 +221,9 @@ QByteArray MapController::createSpotReport(QVariant data)
 
   QString strLocationControlPoint = locationXData.toString() % "," % locationYData.toString();
 
-  QString symbolID = "SFGPUCI-----USG"; // default value in case lookup SIDC from equipment name fails
+  QString symbolID = "SFGP--------USG"; // default value in case lookup SIDC from equipment name fails
 
+  // lookup SIDC from equipment name:
   QVariantMap symbolProps = symbolNameOrId2VariantMap(equipmentData.toString());
   if (symbolProps.count() > 0)
       symbolID = symbolProps.value("SymbolID").toString();
@@ -235,20 +236,17 @@ QByteArray MapController::createSpotReport(QVariant data)
   QByteArray reportData;
   QXmlStreamWriter spotReport(&reportData);
   spotReport.writeStartDocument();
-  spotReport.writeStartElement("messages");
-    spotReport.writeStartElement("message");
-
-      spotReport.writeTextElement("_name", "salute_report");
+  spotReport.writeStartElement("geomessages");
+    spotReport.writeStartElement("geomessage");
       spotReport.writeTextElement("_type", "position_report");
       spotReport.writeTextElement("_action", "update");
-      spotReport.writeTextElement("_id",messageID);
+      spotReport.writeTextElement("_id", messageID);
       spotReport.writeTextElement("_control_points", strLocationControlPoint);
       spotReport.writeTextElement("_wkid", "3857");
 
       // symbol and text modifiers
       spotReport.writeTextElement("sic", symbolID);
       spotReport.writeTextElement("quantity", sizeData.toString());
-      // spotReport.writeTextElement("uniquedesignation", messageID);
       spotReport.writeTextElement("type", equipmentData.toString());
       spotReport.writeTextElement("dtg", dtgTime);
       spotReport.writeTextElement("additionalinformation", activityData.toString());
@@ -293,11 +291,51 @@ bool MapController::filterMessages(const QString& strMessages)
 
   while (reader.readNextStartElement() && !reader.atEnd() && !reader.hasError())
   {
-    if (QStringRef::compare(reader.name(), "message", Qt::CaseInsensitive) == 0)
+    if (QStringRef::compare(reader.name(), "geomessage", Qt::CaseInsensitive) == 0)
     {
       attrs = reader.attributes();
       if (QStringRef::compare(attrs.value("id"), userData.id) == 0)
         return true;
+
+      // Next filter out unsupported message types
+      reader.readNext();
+      while (!reader.atEnd())
+      {
+        if (reader.isEndElement())
+        {
+            reader.readNext();
+            break;
+        }
+
+        if (reader.isStartElement())
+        {
+          if (QStringRef::compare(reader.name(), "_type", Qt::CaseInsensitive) == 0)
+          {
+            QString messageType = getReaderValue(reader);
+            if ((QString::compare(messageType, "position_report", Qt::CaseInsensitive) == 0) ||
+                (QString::compare(messageType, "spotrep", Qt::CaseInsensitive) == 0) ||
+                (QString::compare(messageType, "situation_report", Qt::CaseInsensitive) == 0) ||
+                (QString::compare(messageType, "gsrrep", Qt::CaseInsensitive) == 0))
+            {
+              return false;
+            }
+            else
+            {
+              qDebug() << "Skipping unsupported Message Type: " << messageType;
+              return true;
+            }
+          }
+          else
+          {
+            skipUnknownElement(reader);
+          }
+        }
+        else
+        {
+          reader.readNext();
+        }
+      }
+
     }
   }
 
@@ -313,7 +351,7 @@ void MapController::handleBasemapChange(QString name)
 
 void MapController::handleCenterOnSelfBtn()
 {
-    handleToggleFollowMe(true);
+  handleToggleFollowMe(true);
 }
 
 void MapController::handleChemLightSelected(QString color)
@@ -332,98 +370,97 @@ void MapController::handleGetPointFromMap()
 
 void MapController::handleHomeClicked()
 {
-    if (!ownshipStartingMapPoint.isEmpty())
-    {
-        handleToggleFollowMe(false); // or it will just snap right back in simulation
+  if (!ownshipStartingMapPoint.isEmpty())
+  {
+    handleToggleFollowMe(false); // or it will just snap right back in simulation
 
-        map->setExtent(originalExtent);
-        map->setScale(originalScale);
-        map->setRotation(0);
-        map->panTo(ownshipStartingMapPoint);
-    }
+    map->setExtent(originalExtent);
+    map->setScale(originalScale);
+    map->setRotation(0);
+    map->panTo(ownshipStartingMapPoint);
+  }
 }
 
 void MapController::handleMapMousePressLeft(QPointF mousePoint)
 {
-    if ((map) && (isMapReady))
+  if ((map) && (isMapReady))
+  {
+    Point mapPoint = map->toMapPoint(mousePoint.x(), mousePoint.y());
+
+    previousMousePressPosScreen.setX(mousePoint.x());
+    previousMousePressPosScreen.setY(mousePoint.y());
+
+    previousMousePressPosMap.setX(mapPoint.X());
+    previousMousePressPosMap.setY(mapPoint.Y());
+
+    qDebug() << "Right Click, Map Point = " << mapPoint.X() << ", " << mapPoint.Y();
+
+    if (mouseState == MouseStateMenuClicked)
+        mouseState = MouseStateWaitingForMapPoint;
+    else if (mouseState == MouseStateWaitingForMapPoint)
     {
-        Point mapPoint = map->toMapPoint(mousePoint.x(), mousePoint.y());
-
-        previousMousePressPosScreen.setX(mousePoint.x());
-        previousMousePressPosScreen.setY(mousePoint.y());
-
-        previousMousePressPosMap.setX(mapPoint.X());
-        previousMousePressPosMap.setY(mapPoint.Y());
-
-        qDebug() << "Right Click, Map Point = " << mapPoint.X() << ", " << mapPoint.Y();
-
-        if (mouseState == MouseStateMenuClicked)
-            mouseState = MouseStateWaitingForMapPoint;
-        else if (mouseState == MouseStateWaitingForMapPoint)
-        {
-          if (chemLightColorStr == "None")
-            returnPoint(previousMousePressPosMap);
-          else
-            sendChemLightMessage(previousMousePressPosMap);
-        }
-
+      if (chemLightColorStr == "None")
+        returnPoint(previousMousePressPosMap);
+      else
+        sendChemLightMessage(previousMousePressPosMap);
     }
+  }
 }
 
 void MapController::handleMapMousePressRight(QPointF mousePoint)
 {
   if ((map) && (isMapReady))
   {
-      Point mapPoint = map->toMapPoint(mousePoint.x(), mousePoint.y());
+    Point mapPoint = map->toMapPoint(mousePoint.x(), mousePoint.y());
 
-      previousMousePressPosScreen.setX(mousePoint.x());
-      previousMousePressPosScreen.setY(mousePoint.y());
+    previousMousePressPosScreen.setX(mousePoint.x());
+    previousMousePressPosScreen.setY(mousePoint.y());
 
-      previousMousePressPosMap.setX(mapPoint.X());
-      previousMousePressPosMap.setY(mapPoint.Y());
+    previousMousePressPosMap.setX(mapPoint.X());
+    previousMousePressPosMap.setY(mapPoint.Y());
 
-      qDebug() << "Left Click, Map Point = " << mapPoint.X() << ", " << mapPoint.Y();
+    qDebug() << "Left Click, Map Point = " << mapPoint.X() << ", " << mapPoint.Y();
 
-      QList<Layer> layers = map->layers();
+    QList<Layer> layers = map->layers();
 
-      foreach (Layer layer, layers)
+    foreach (Layer layer, layers)
+    {
+      QString name = layer.name();
+      Layer::LayerType layerType = layer.type();
+      Layer::LayerStatus status = layer.status();
+
+      qDebug() << "Layer Name: " << name << ", Type: " + layerType;
+
+      if ((status == Layer::LS_Initialized) &&
+              (layerType ==  Layer::LT_DynamicMapService))
       {
-        QString name = layer.name();
-        Layer::LayerType layerType = layer.type();
-        Layer::LayerStatus status = layer.status();
+        ArcGISLocalDynamicMapServiceLayer dynaMapLayer =
+          static_cast<ArcGISLocalDynamicMapServiceLayer>(layer);
 
-        qDebug() << "Layer Name: " << name << ", Type: " + layerType;
+        QString url = dynaMapLayer.url();
+        qDebug() << "url: " << url;
 
-        if ((status == Layer::LS_Initialized) &&
-                (layerType ==  Layer::LT_DynamicMapService))
-        {
-          ArcGISLocalDynamicMapServiceLayer dynaMapLayer =
-            static_cast<ArcGISLocalDynamicMapServiceLayer>(layer);
+        // Identify that point
+        IdentifyParameters params;
+        params.setGeometry(mapPoint);
+        params.setMapExtent(map->extent());
+        params.setSpatialReference(map->spatialReference());
+        params.setMapHeight(map->height());
+        params.setMapWidth(map->width());
+        params.setLayerMode(IdentifyParameters::VISIBLE_LAYERS);
+        int dpyY = QApplication::desktop()->physicalDpiY();
+        params.setDPI(dpyY);
 
-          QString url = dynaMapLayer.url();
-          qDebug() << "url: " << url;
+        IdentifyTask identifyTask(url);
 
-          // Identify that point
-          IdentifyParameters params;
-          params.setGeometry(mapPoint);
-          params.setMapExtent(map->extent());
-          params.setSpatialReference(map->spatialReference());
-          params.setMapHeight(map->height());
-          params.setMapWidth(map->width());
-          params.setLayerMode(IdentifyParameters::VISIBLE_LAYERS);
-          int dpyY = QApplication::desktop()->physicalDpiY();
-          params.setDPI(dpyY);
+        QList<IdentifyResult> results = identifyTask.execute(params);
+        onIdentifyComplete(results);
 
-          IdentifyTask identifyTask(url);
-
-          QList<IdentifyResult> results = identifyTask.execute(params);
-          onIdentifyComplete(results);
-
-          // if Async Desired:
-          // connect(&identifyTask, SIGNAL(signalIdentifyResult(QList<IdentifyResult>)), this, SLOT(onIdentifyComplete(QList<IdentifyResult>)));
-          // identifyTask.executeAsync(params);
-        }
+        // if Async Desired:
+        // connect(&identifyTask, SIGNAL(signalIdentifyResult(QList<IdentifyResult>)), this, SLOT(onIdentifyComplete(QList<IdentifyResult>)));
+        // identifyTask.executeAsync(params);
       }
+    }
   }
 }
 
@@ -445,48 +482,48 @@ void MapController::uiElementClicked()
 
 void MapController::onIdentifyComplete(QList<IdentifyResult> results)
 {
-    int resultsCount = results.count();
-    qDebug() << "identifyComplete, results = " << resultsCount;
+  int resultsCount = results.count();
+  qDebug() << "identifyComplete, results = " << resultsCount;
 
-    if (resultsCount == 0)
-        return;
+  if (resultsCount == 0)
+      return;
 
-    qDebug() << "identifyComplete, results = " << resultsCount;
+  qDebug() << "identifyComplete, results = " << resultsCount;
 
-    emit identifyComplete(results);
+  emit identifyComplete(results);
 }
 
 void MapController::handlePan(QString direction)
 {
-    // disable the vehicle following if enabled so pan will work, and be in the correct direction
-    if (followOwnship)
-    {
-        followOwnship = false;
-        map->setRotation(0);
-    }
+  // disable the vehicle following if enabled so pan will work, and be in the correct direction
+  if (followOwnship)
+  {
+      followOwnship = false;
+      map->setRotation(0);
+  }
 
-    Envelope extent = map->extent();
+  Envelope extent = map->extent();
 
-    double width = extent.width();
-    double height = extent.height();
+  double width = extent.width();
+  double height = extent.height();
 
-    double centerX = extent.centerX();
-    double centerY = extent.centerY();
+  double centerX = extent.centerX();
+  double centerY = extent.centerY();
 
-    const double PAN_INCREMENT = 0.25;
+  const double PAN_INCREMENT = 0.25;
 
-    if (direction.compare("up") == 0)
-        centerY += height * PAN_INCREMENT;
-    else if (direction.compare("down") == 0)
-        centerY -= height * PAN_INCREMENT;
-    else if (direction.compare("left") == 0)
-        centerX -= width * PAN_INCREMENT;
-    else if (direction.compare("right") == 0)
-        centerX += width * PAN_INCREMENT;
+  if (direction.compare("up") == 0)
+      centerY += height * PAN_INCREMENT;
+  else if (direction.compare("down") == 0)
+      centerY -= height * PAN_INCREMENT;
+  else if (direction.compare("left") == 0)
+      centerX -= width * PAN_INCREMENT;
+  else if (direction.compare("right") == 0)
+      centerX += width * PAN_INCREMENT;
 
-    Envelope newExtent(Point(centerX, centerY), width, height);
+  Envelope newExtent(Point(centerX, centerY), width, height);
 
-    map->panTo(newExtent);
+  map->panTo(newExtent);
 }
 
 void MapController::handlePositionAvailable(QPointF pos, double orientation)
@@ -607,7 +644,7 @@ void MapController::openAppConfigDialog()
 
 void MapController::handleToggleFollowMe(bool state)
 {
-    followOwnship = state;
+  followOwnship = state;
 }
 
 void MapController::handleToggleShowMe(bool state)
@@ -730,12 +767,6 @@ void MapController::processPendingDatagrams()
 
     // we need to parse the messages here,
     // break it into propertysets and push it to the message parser
-
-    // Handle old format messages by replacing these differences in formats
-    // only needed for "esri_" tags
-    strMessage.replace("<esri_type>report</esri_type>", "<_type>position_report</_type>");
-    strMessage.replace("esri_", "_");
-
     setMessageStream(strMessage);
   }
 }
@@ -847,7 +878,6 @@ void MapController::applyAppConfigSettings()
 
 void MapController::sendChemLightMessage(Point pos)
 {
-
   Qt::GlobalColor chemlightColor = Qt::green;
 
   if (chemLightColorStr == "red")
@@ -922,21 +952,26 @@ void MapController::transmitMessages(QByteArray datagram)
 
 double inline RandomValue()
 {
-    return (double)::rand() / ((double)(RAND_MAX));
+  return (double)::rand() / ((double)(RAND_MAX));
 } // end RandomValue
 
 void MapController::skipUnknownElement(QXmlStreamReader& reader)
 {
   reader.readNext();
-  while (!reader.atEnd()) {
-    if (reader.isEndElement()) {
+  while (!reader.atEnd())
+  {
+    if (reader.isEndElement())
+    {
       reader.readNext();
       break;
     }
 
-    if (reader.isStartElement()) {
+    if (reader.isStartElement())
+    {
       skipUnknownElement(reader);
-    } else {
+    }
+    else
+    {
       reader.readNext();
     }
   }
@@ -954,8 +989,10 @@ QString MapController::getReaderValue(QXmlStreamReader& reader)
 void MapController::readToElementEnd(QXmlStreamReader& reader)
 {
   reader.readNext();
-  while (!reader.atEnd()) {
-    if (reader.isEndElement()) {
+  while (!reader.atEnd())
+  {
+    if (reader.isEndElement())
+    {
       reader.readNext();
       break;
     }
@@ -982,7 +1019,9 @@ void MapController::setMessageStream(QXmlStreamReader& reader)
   {
     if (reader.isStartElement())
     {
-      if (QStringRef::compare(reader.name(), "messages", Qt::CaseInsensitive) == 0)
+      // Handle Runtime Message or GeoMessage
+      if ((QStringRef::compare(reader.name(), "geomessages", Qt::CaseInsensitive) == 0) ||
+        (QStringRef::compare(reader.name(), "messages", Qt::CaseInsensitive) == 0))
       {
         if (!readMessages(reader))
         {
@@ -997,23 +1036,32 @@ void MapController::setMessageStream(QXmlStreamReader& reader)
 bool MapController::readMessages(QXmlStreamReader& reader)
 {
   reader.readNext();
-  while (!reader.atEnd()) {
-    if (reader.isEndElement()) {
+  while (!reader.atEnd())
+  {
+    if (reader.isEndElement())
+    {
       reader.readNext();
       break;
     }
-    if (reader.isStartElement()){
-      if (QStringRef::compare(reader.name(), "message", Qt::CaseInsensitive) == 0) {
+    if (reader.isStartElement())
+    {
+      // Handle Runtime Message or GeoMessage
+      if ((QStringRef::compare(reader.name(), "geomessage", Qt::CaseInsensitive) == 0) ||
+          (QStringRef::compare(reader.name(), "message", Qt::CaseInsensitive) == 0))
+      {
         if (!readMessage(reader))
         {
           readToElementEnd(reader);
           continue;
         }
-      } else {
+      }
+      else
+      {
         skipUnknownElement(reader);
       }
     } // end if isStartElement
-    else {
+    else
+    {
       reader.readNext();
     } // end of if start element
   }
@@ -1023,197 +1071,212 @@ bool MapController::readMessages(QXmlStreamReader& reader)
 
 bool MapController::readMessage(QXmlStreamReader& reader)
 {
-    if (!isMapReady)
-        return false;
+  if (!isMapReady)
+      return false;
 
-    // each message is simply a key/value pair
-    QVariantMap properties;
-    QString name;
-    QString value;
-    reader.readNext();
-    while (!reader.atEnd()) {
-      if (reader.isEndElement()) {
-        reader.readNext();
-        break;
-      }
-      if (reader.isStartElement()){
-        // get the name of the element
-        name = reader.name().toString();
-        value = getReaderValue(reader);
-        properties.insert(name, QVariant(value));
-      } // end if isStartElement
-      else {
-        reader.readNext();
-      } // end of if start element
-    }
-
-    if (properties.count() > 0)
+  // each message is simply a key/value pair
+  QVariantMap properties;
+  QString name;
+  QString value;
+  reader.readNext();
+  while (!reader.atEnd())
+  {
+    if (reader.isEndElement())
     {
-      Message message;
-      message.setProperties(properties);
+      reader.readNext();
+      break;
+    }
+    if (reader.isStartElement())
+    {
+      // get the name of the element
+      name = reader.name().toString();
+      value = getReaderValue(reader);
+      properties.insert(name, QVariant(value));
+    } // end if isStartElement
+    else
+    {
+      reader.readNext();
+    } // end of if start element
+  }
 
-      if (0)
-      {
-          qDebug() << "New Message, Properties: ";
-          for (QVariantMap::const_iterator i = properties.begin(); i != properties.end(); ++i)
-          {
-              QString key = i.key();
-              QVariant value = i.value();
-              qDebug() << "Key: " << key << ", Value: " << value.toString();
-          }
-      }
+  if (properties.count() > 0)
+  {
+    Message message;
 
-      // MESSAGES PROCESSED HERE:
-      messageProcessor.processMessage(message);
+    // force every message type (except chemlight) to position_report for runtime
+    if (QString::compare(properties["_type"].toString(), "chemlight", Qt::CaseInsensitive) == 0)
+    {
+      qDebug("Chemlight");
+    }
+    else
+    {
+      properties["_type"] = "position_report";
     }
 
-    return true;
+    message.setProperties(properties);
+
+    if (0) // debug desired for sent messages
+    {
+      qDebug() << "New Message, Properties: ";
+      for (QVariantMap::const_iterator i = properties.begin(); i != properties.end(); ++i)
+      {
+          QString key = i.key();
+          QVariant value = i.value();
+          qDebug() << "Key: " << key << ", Value: " << value.toString();
+      }
+    }
+
+    // MESSAGES PROCESSED HERE:
+    messageProcessor.processMessage(message);
+  }
+
+  return true;
 }
 
 void MapController::showHideMe(bool show, Point atPoint, double withHeading)
 {
-    if (!isMapReady)
-        return;
+  if (!isMapReady)
+    return;
 
-    if (drawingOverlay == 0)
-    {
-        drawingOverlay = new SimpleGraphicOverlay();
+  if (drawingOverlay == 0)
+  {
+    drawingOverlay = new SimpleGraphicOverlay();
 
-        QPixmap ownshipPixmap(":/Resources/icons/Ownship.png");
-        QImage ownshipImage = ownshipPixmap.toImage();
-        drawingOverlay->setImage(ownshipImage);
-        drawingOverlay->setMap(map);
-    }
+    QPixmap ownshipPixmap(":/Resources/icons/Ownship.png");
+    QImage ownshipImage = ownshipPixmap.toImage();
+    drawingOverlay->setImage(ownshipImage);
+    drawingOverlay->setMap(map);
+  }
 
-    drawingOverlay->setVisible(show);
-    if (show)
-    {
-        drawingOverlay->setPosition(atPoint);
-        drawingOverlay->setAngle(withHeading);
-    }
+  drawingOverlay->setVisible(show);
+  if (show)
+  {
+    drawingOverlay->setPosition(atPoint);
+    drawingOverlay->setAngle(withHeading);
+  }
 
-    lastOwnshipPoint = atPoint;
-    lastHeading = withHeading;
+  lastOwnshipPoint = atPoint;
+  lastHeading = withHeading;
 }
 
 void MapController::mapReady()
 {
-    isMapReady = true;
+  isMapReady = true;
 
-    // these will be valid now
-    originalExtent = map->extent();
-    originalScale = map->scale();
+  // these will be valid now
+  originalExtent = map->extent();
+  originalScale = map->scale();
 
-    ownshipStartingMapPoint = originalExtent.center();
+  ownshipStartingMapPoint = originalExtent.center();
 
-    SpatialReference sr = map->spatialReference();
+  SpatialReference sr = map->spatialReference();
 
-    qDebug() << "MapReady, Spatial Reference = " << sr.id();
+  qDebug() << "MapReady, Spatial Reference = " << sr.id();
 
-    // IMPORTANT: turn on/off grid by deafult
-    // NOTE: it doesn't seem to update the grid until the map rotation is disabled
-    const bool DEFAULT_GRID_ON = false;
-    if (DEFAULT_GRID_ON)
-    {
-        map->grid().setType(Grid::GridType::GT_MGRS);
-        map->grid().setVisibility(true);
-    }
+  // IMPORTANT: turn on/off grid by deafult
+  // NOTE: it doesn't seem to update the grid until the map rotation is disabled
+  const bool DEFAULT_GRID_ON = false;
+  if (DEFAULT_GRID_ON)
+  {
+      map->grid().setType(Grid::GridType::GT_MGRS);
+      map->grid().setVisibility(true);
+  }
 }
 
 Point MapController::MGRSToMapPoint(QString mgrs)
 {
-    Point returnPoint;
+  Point returnPoint;
 
-    if (!isMapReady) // no SR until map ready
-        return returnPoint;
+  if (!isMapReady) // no SR until map ready
+      return returnPoint;
 
-    SpatialReference sr = map->spatialReference();
-    if (sr.id() < 0)
-    {
-        qDebug() << "FAIL: No SR in mapPointToMGRS";
-        return returnPoint;
-    }
+  SpatialReference sr = map->spatialReference();
+  if (sr.id() < 0)
+  {
+      qDebug() << "FAIL: No SR in mapPointToMGRS";
+      return returnPoint;
+  }
 
-    QStringList mgrss;
-    mgrss.append(mgrs);
+  QStringList mgrss;
+  mgrss.append(mgrs);
 
-    QList<Point> points;
-    points = sr.fromMilitaryGrid(mgrss, SpatialReference::MGRS_Automatic);
+  QList<Point> points;
+  points = sr.fromMilitaryGrid(mgrss, SpatialReference::MGRS_Automatic);
 
-    if (points.length() < 1)
-        return returnPoint;
-
-    returnPoint = points.at(0);
-
-    if (0)
-        qDebug() << "MGRSToMapPoint: " << QString::number(returnPoint.X()) << ", " << QString::number(returnPoint.Y());;
-
+  if (points.length() < 1)
     return returnPoint;
+
+  returnPoint = points.at(0);
+
+  if (0)
+    qDebug() << "MGRSToMapPoint: " << QString::number(returnPoint.X()) << ", " << QString::number(returnPoint.Y());;
+
+  return returnPoint;
 }
 
 QString MapController::mapPointToMGRS(Point point)
 {
-    QString returnMgrs;
+  QString returnMgrs;
 
-    if (!isMapReady) // no SR until map ready
-        return returnMgrs;
+  if (!isMapReady) // no SR until map ready
+      return returnMgrs;
 
-    SpatialReference sr = map->spatialReference();
-    if (sr.id() < 0)
-    {
-        qDebug() << "FAIL: No SR in mapPointToMGRS";
-        return returnMgrs;
-    }
+  SpatialReference sr = map->spatialReference();
+  if (sr.id() < 0)
+  {
+      qDebug() << "FAIL: No SR in mapPointToMGRS";
+      return returnMgrs;
+  }
 
-    QList<Point> coordinates;
-    coordinates.append(point);
+  QList<Point> coordinates;
+  coordinates.append(point);
 
-    const SpatialReference::MgrsConversionMode method = SpatialReference::MGRS_Automatic;
-    const int digits = 5;
-    QStringList mgrss = sr.toMilitaryGrid(method, digits, false, true, coordinates);
+  const SpatialReference::MgrsConversionMode method = SpatialReference::MGRS_Automatic;
+  const int digits = 5;
+  QStringList mgrss = sr.toMilitaryGrid(method, digits, false, true, coordinates);
 
-    if (mgrss.length() < 1)
-        return returnMgrs;
+  if (mgrss.length() < 1)
+      return returnMgrs;
 
-    returnMgrs = mgrss.at(0);
+  returnMgrs = mgrss.at(0);
 
-    if (0)
-        qDebug() << "mapPointToMGRS = " << returnMgrs;
+  if (0)
+      qDebug() << "mapPointToMGRS = " << returnMgrs;
 
-    return returnMgrs;
+  return returnMgrs;
 }
 
 // returns symbol properties as a slightly more friendly property set
 QVariantMap MapController::symbolNameOrId2VariantMap(QString nameOrId)
 {
-    QVariantMap vMap;
+  QVariantMap vMap;
 
-    SymbolProperties symbol(nameOrId, dictionary);
+  SymbolProperties symbol(nameOrId, dictionary);
 
-    int key_size = symbol.keywords().size();
-    int val_size = symbol.values().size();
-    Q_UNUSED(key_size)
-    Q_UNUSED(val_size)
+  int key_size = symbol.keywords().size();
+  int val_size = symbol.values().size();
+  Q_UNUSED(key_size)
+  Q_UNUSED(val_size)
 
-    QHash<QString, QString> values = symbol.values();
-    QStringList keywords = symbol.keywords();
+  QHash<QString, QString> values = symbol.values();
+  QStringList keywords = symbol.keywords();
 
-    QHashIterator<QString, QString> i(values);
-    while (i.hasNext())
-    {
-      i.next();
-      qDebug() << i.key() << ": " << i.value();
-      vMap[i.key()] = i.value();
-    }
+  QHashIterator<QString, QString> i(values);
+  while (i.hasNext())
+  {
+    i.next();
+    qDebug() << i.key() << ": " << i.value();
+    vMap[i.key()] = i.value();
+  }
 
-    QString keywordString;
-    QStringListIterator j(keywords);
-    while (j.hasNext())
-    {
-        keywordString.append(j.next());
-        keywordString.append(";");
-    }
-    vMap["Tags"] = keywordString;
+  QString keywordString;
+  QStringListIterator j(keywords);
+  while (j.hasNext())
+  {
+      keywordString.append(j.next());
+      keywordString.append(";");
+  }
+  vMap["Tags"] = keywordString;
 
-    return vMap;
+  return vMap;
 }
