@@ -156,7 +156,7 @@ void Geomessage::toXml(QXmlStreamWriter& writer) const
 {
   writer.writeStartElement(TAG_MESSAGE_ELEMENT);
 
-  QVariantMap::Iterator it = m_properties.begin();
+  QVariantMap::const_iterator it = m_properties.begin();
   while(it != m_properties.end())
   {
     QString tag = it.key();
