@@ -59,13 +59,14 @@ win32:DEFINES += WINDOWS
 SOURCES += main.cpp\
         mainwindow.cpp \
     mapcompass.cpp \
+    mapscalebar.cpp \
     pages.cpp \
     configdialog.cpp \
     samplemap.cpp
 
-
 HEADERS  += mainwindow.h \
     mapcompass.h \
+    mapscalebar.h \
     pages.h \
     configdialog.h \
     samplemap.h

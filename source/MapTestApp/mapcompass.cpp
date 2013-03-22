@@ -48,7 +48,7 @@ void MapCompass::setMap(Map* pMap)
 
 void MapCompass::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    if ((!m_pMap))
+    if (!m_pMap || !m_pMap->isReady())
         return;
 
     Q_UNUSED(option)
@@ -81,9 +81,10 @@ QSize MapCompass::sizeHint() const
 
 void MapCompass::UpdateRotation(double value)
 {
-    qDebug("MapCompass Rotate");
     rotateValue = 360.0 - value;
     update();
+
+    // qDebug() << "MapCompass Rotate to: " << rotateValue;
 }
 
 void MapCompass::setScale(double scale)

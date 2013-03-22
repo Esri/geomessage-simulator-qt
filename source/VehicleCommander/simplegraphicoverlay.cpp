@@ -56,6 +56,9 @@ void SimpleGraphicOverlay::setPosition(Point position)
 
     screenX = (int)screenPoint.X();
     screenY = (int)screenPoint.Y();
+
+    // TODO: handle case when wraparound enabled and point returned is offscreen
+    // qDebug() << "Draw Ownship @ Map Point(" << position.X() << ", " << position.Y() << ")";
 }
 
 void SimpleGraphicOverlay::setMap(Map* pMap)
@@ -83,6 +86,7 @@ void SimpleGraphicOverlay::paint(QPainter *painter, const QStyleOptionGraphicsIt
     // however if needed anywhere else uncomment these lines and place the image accordingly:
     // double mapWidth  = m_pMap->width();
     // double mapHeight = m_pMap->height();
+    // qDebug() << "Draw Ownship @ (" << screenX << ", " << screenY << ")";
 
     double mapRotation = m_pMap->rotation();
 

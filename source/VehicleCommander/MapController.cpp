@@ -14,10 +14,6 @@
  | limitations under the License.
  */
 
-#include <QHostInfo>
-#include <QUuid>
-#include <QFontDatabase>
-
 #include "Geometry.h"
 #include "Layer.h"
 #include "GraphicsLayer.h"
@@ -805,6 +801,7 @@ void MapController::readAppConfig()
   {
     QFile file("./appconfig.xml");
 
+    // if a local file doesn't exist use the one from the resource file
     if (!file.exists())
       file.setFileName(APP_CONFIG_PATH);
 
@@ -1138,6 +1135,14 @@ void MapController::showHideMe(bool show, Point atPoint, double withHeading)
   if (!isMapReady)
     return;
 
+  // set these on the first positioning
+  if (ownshipStartingMapPoint.isEmpty())
+  {
+    originalExtent = map->extent();
+    originalScale = map->scale();
+    ownshipStartingMapPoint = atPoint; // originalExtent.center();
+  }
+
   if (drawingOverlay == 0)
   {
     drawingOverlay = new SimpleGraphicOverlay();
@@ -1163,18 +1168,14 @@ void MapController::mapReady()
 {
   isMapReady = true;
 
-  // these will be valid now
-  originalExtent = map->extent();
-  originalScale = map->scale();
-
-  ownshipStartingMapPoint = originalExtent.center();
+  // Zoom into on start
+  map->setScale(5000000.0);
 
   SpatialReference sr = map->spatialReference();
 
   qDebug() << "MapReady, Spatial Reference = " << sr.id();
 
   // IMPORTANT: turn on/off grid by deafult
-  // NOTE: it doesn't seem to update the grid until the map rotation is disabled
   const bool DEFAULT_GRID_ON = false;
   if (DEFAULT_GRID_ON)
   {

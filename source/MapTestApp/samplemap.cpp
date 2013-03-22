@@ -30,6 +30,7 @@ SampleMap::SampleMap(QWidget *parent) :
     m_pMap(0),
     m_pInsetMap(0),
     m_pMapCompass(0),
+    m_pMapScalebar(0),
     QWidget(parent)
 {
     try
@@ -71,8 +72,11 @@ SampleMap::SampleMap(QWidget *parent) :
 
     // north arrow
     m_pMapCompass = new MapCompass();
-
     m_pMapCompass->setMap(m_pMap);
+
+    // scale bar
+    m_pMapScalebar = new MapScalebar();
+    m_pMapScalebar->setMap(m_pMap);
 
     // set the layout
     this->setLayout(gridLayout);
@@ -115,7 +119,12 @@ SampleMap::SampleMap(QWidget *parent) :
 
 SampleMap::~SampleMap()
 {
+
+  if (m_pMapCompass)
     delete m_pMapCompass;
+
+  if (m_pMapScalebar)
+    delete m_pMapScalebar;
 }
 
 void SampleMap::onMapReady()
@@ -192,7 +201,7 @@ void SampleMap::handleMapExtentChanged()
 {
     qDebug()<< "MapExtentChanged()";
 
-    if(!m_pInsetMap || !m_pMap)
+    if(!m_pInsetMap || !m_pMap || !m_pInsetMap->isReady() || !m_pMap->isReady())
         return;
 
     Envelope extent = m_pMap->extent();
@@ -213,12 +222,14 @@ void SampleMap::handleMapExtentChanged()
     // IMPORTANT: below assumes that map and inset must be same Spatial Reference
     // If not, you will need to adjust the Scale Factor
 
+    // update scalebar
+    m_pMapScalebar->updateScalebar();
+
     qDebug()<< "Setting mapscale on inset map to " << scale*INSETMAP_SCALE_FACTOR << " from " << scale;
     m_pInsetMap->setScale(scale);
     m_pInsetMap->panTo(extent);
 }
 
-//IVendorNeutralMap
 void SampleMap::panMap(QString direction)
 {
     qDebug() << "panMap, direction=" << direction;
@@ -402,19 +413,18 @@ const QPoint SampleMap::MapToScreenPoint(const Point& mapPoint)
 // Show/Hide scale bar
 void SampleMap::ShowScalebar(bool visible)
 {
-    if(!m_pMap)
+    if(!m_pMap || !m_pMapScalebar)
         return;
 
-    Q_UNUSED(visible)
-
-    // TODO
+    m_pMapScalebar->setVisible(visible);
 }
 
 bool SampleMap::IsScalebarVisible()
 {
-    // TODO
-
+  if(!m_pMapScalebar)
     return false;
+  else
+    return m_pMapScalebar->isVisible();
 }
 
 // Drawing
@@ -775,4 +785,14 @@ void SampleMap::Reset()
 void SampleMap::TestReproCase()
 {
    QMessageBox::warning(m_pMap, "Test Case", "Insert Your Test Repro Case Here", "To Show Problems");
+}
+
+void SampleMap::resizeEvent(QResizeEvent* event)
+{
+  Q_UNUSED(event)
+
+  qDebug() << "Widget resized.";
+
+  if (m_pMapScalebar)
+    m_pMapScalebar->updateScalebar();
 }

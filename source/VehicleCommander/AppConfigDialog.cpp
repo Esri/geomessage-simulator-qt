@@ -18,6 +18,7 @@
 #include "ui_AppConfigDialog.h"
 
 #include <QSettings>
+#include <QHostInfo>
 
 #include "MapController.h"
 
@@ -65,4 +66,5 @@ void AppConfigDialog::on_pushButton_clicked()
 {
   //Generate a new unique ID and add to UI but don't save it yet (let the OK button save it)
   ui->lineEdit_uniqueId->setText(QUuid::createUuid().toString());
+  ui->lineEdit_username->setText(QHostInfo::localHostName());
 }

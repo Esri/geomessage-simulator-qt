@@ -14,27 +14,24 @@
  *   limitations under the License.
  ******************************************************************************/
 
-#ifndef MAPCOMPASS_H
-#define MAPCOMPASS_H
+#ifndef MAPSCALEBAR_H
+#define MAPSCALEBAR_H
 
 #include <QWidget>
 #include <QGraphicsWidget>
 
 #include "Map.h"
-#include "Geometry.h"
 
 using namespace EsriRuntimeQt;
 
-class MapCompass : public QGraphicsWidget //QWidget
+class MapScalebar : public QGraphicsWidget
 {
     Q_OBJECT
 public:
-    MapCompass(QGraphicsItem *parent = 0);
+    MapScalebar(QGraphicsItem *parent = 0);
 
     void setMap(Map* pMap);
-    QSize sizeHint() const;
-    void UpdateRotation(double);
-    void setScale(double);
+    void updateScalebar();
 
 signals:
 
@@ -43,12 +40,14 @@ public slots:
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-private:
-    QImage image;
-    double rotateValue;
-    double scaleValue;
+private:    
+    int RoundToPlace(int);
+
+    double maxTick;
+    double pixelLength;
+    double pixelMaxLength;
 
     Map* m_pMap;
 };
 
-#endif // MAPCOMPASS_H
+#endif // MAPSCALEBAR_H

@@ -74,7 +74,7 @@ void MainWindow::on_actionPan_Up_triggered()
     }
     else
     {
-        qDebug("IVendorNeutralMap pointer is null");
+        qDebug("SampleMap pointer is null");
     }
 }
 
@@ -86,7 +86,7 @@ void MainWindow::on_actionPan_Down_triggered()
     }
     else
     {
-        qDebug("IVendorNeutralMap pointer is null");
+        qDebug("SampleMap pointer is null");
     }
 }
 
@@ -98,7 +98,7 @@ void MainWindow::on_actionPan_Left_triggered()
     }
     else
     {
-        qDebug("IVendorNeutralMap pointer is null");
+        qDebug("SampleMap pointer is null");
     }
 }
 
@@ -110,7 +110,7 @@ void MainWindow::on_actionPan_Right_triggered()
     }
     else
     {
-        qDebug("IVendorNeutralMap pointer is null");
+        qDebug("SampleMap pointer is null");
     }
 }
 
@@ -122,7 +122,7 @@ void MainWindow::on_actionScale_bar_toggled(bool visible)
     }
     else
     {
-        qDebug("IVendorNeutralMap pointer is null");
+        qDebug("SampleMap pointer is null");
     }
 }
 
@@ -134,7 +134,7 @@ void MainWindow::on_actionGrid_toggled(bool visible)
     }
     else
     {
-        qDebug("IVendorNeutralMap pointer is null");
+        qDebug("SampleMap pointer is null");
     }
 }
 
@@ -146,7 +146,7 @@ void MainWindow::on_actionZoom_triggered()
     }
     else
     {
-        qDebug("IVendorNeutralMap pointer is null");
+        qDebug("SampleMap pointer is null");
     }
 }
 
@@ -158,7 +158,7 @@ void MainWindow::on_actionZoom_2_triggered()
     }
     else
     {
-        qDebug("IVendorNeutralMap pointer is null");
+        qDebug("SampleMap pointer is null");
     }
 }
 
@@ -175,7 +175,7 @@ void MainWindow::on_actionRotate_triggered()
     }
     else
     {
-        qDebug("IVendorNeutralMap pointer is null");
+        qDebug("SampleMap pointer is null");
     }
 }
 
@@ -193,7 +193,7 @@ void MainWindow::on_actionRotateMinus_triggered()
     }
     else
     {
-        qDebug("IVendorNeutralMap pointer is null");
+        qDebug("SampleMap pointer is null");
     }
 }
 

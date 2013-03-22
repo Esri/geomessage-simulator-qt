@@ -99,7 +99,7 @@ void MainView::setUI()
   this->setWindowFlags(Qt::CustomizeWindowHint);
 
   map = Map::create(this);
-  map->setWrapAroundEnabled(true);
+  map->setWrapAroundEnabled(false);
   map->setShowingEsriLogo(false);
 
   QString dataPath = getPathSampleData();
@@ -114,6 +114,9 @@ void MainView::setUI()
   //  QString fallbackTpk = dataPathTpk + "Topographic.tpk";
   //  if (!(QFile(loadTpk).exists() || QDir(loadTpk).exists()))
   //      loadTpk = fallbackTpk;
+  // -or-
+  // If you want to use your own map for temp/testing, just hardcode here:
+  // loadTpk = "/arcgis/basemaps/Imagery";
 
   if ((QFile(loadTpk).exists() || QDir(loadTpk).exists()))
   {

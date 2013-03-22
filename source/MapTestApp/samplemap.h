@@ -38,6 +38,7 @@
 #include "SymbolDictionary.h"
 
 #include "mapcompass.h"
+#include "mapscalebar.h"
 
 using namespace EsriRuntimeQt;
 
@@ -94,6 +95,8 @@ public:
 
     SampleMap(QWidget *parent);
     virtual ~SampleMap();
+
+    void resizeEvent(QResizeEvent* event);
 
     // Panning
     virtual void PanUp();
@@ -173,6 +176,8 @@ private:
     Map* m_pMap;
     Map* m_pInsetMap;
     MapCompass*  m_pMapCompass;
+    MapScalebar* m_pMapScalebar;
+
     SymbolDictionary dictionary;
     MessageProcessor messageProcessor;
     MessageGroupLayer messagGroupLayer;

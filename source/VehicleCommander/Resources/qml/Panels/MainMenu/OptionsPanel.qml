@@ -17,8 +17,8 @@ Panel
   model:
   [
     ModelObject { text: "About Me"; Component.onCompleted: noArgModelSignal.connect(optionsMenu.aboutMeClicked); },
-    ModelObject { text: "Show Me"; type: "toggle"; Component.onCompleted: modelSignal.connect(optionsMenu.showMeToggled); },
-    ModelObject { text: "Follow Me"; type: "toggle"; Component.onCompleted: modelSignal.connect(optionsMenu.followMeToggled); },
+    ModelObject { text: "Show Me"; startEnabled: true; type: "toggle"; Component.onCompleted: modelSignal.connect(optionsMenu.showMeToggled); },
+    ModelObject { text: "Follow Me"; startEnabled: true; type: "toggle"; Component.onCompleted: modelSignal.connect(optionsMenu.followMeToggled); },
     ModelObject { text: "Send My Location"; startEnabled: true; type: "toggle"; Component.onCompleted: modelSignal.connect(optionsMenu.sendMyPositionToggled); },
     ModelObject { text: "Reset Map"; Component.onCompleted: noArgModelSignal.connect(optionsMenu.resetMapClicked); }
   ]
