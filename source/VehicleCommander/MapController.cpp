@@ -1123,8 +1123,17 @@ bool MapController::readMessage(QXmlStreamReader& reader)
       }
     }
 
-    // MESSAGES PROCESSED HERE:
-    messageProcessor.processMessage(message);
+    try
+    {
+      // MESSAGES PROCESSED HERE:
+      messageProcessor.processMessage(message);
+    }
+    catch (EsriRuntimeQt::Exception e)
+    {
+      qWarning() << "Process Message Failed: ";
+      qWarning() << "Exception: " << e.what();
+    }
+
   }
 
   return true;
@@ -1176,7 +1185,7 @@ void MapController::mapReady()
   qDebug() << "MapReady, Spatial Reference = " << sr.id();
 
   // IMPORTANT: turn on/off grid by deafult
-  const bool DEFAULT_GRID_ON = false;
+  const bool DEFAULT_GRID_ON = true;
   if (DEFAULT_GRID_ON)
   {
       map->grid().setType(Grid::GridType::GT_MGRS);
