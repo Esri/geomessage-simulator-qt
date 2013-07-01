@@ -213,45 +213,11 @@ void SimulatorDialog::on_spinBox_port_valueChanged(int newPort)
 void SimulatorDialog::on_spinBox_frequency_valueChanged(int newFrequency)
 {
   QString currentText = ui->comboBox_timeUnit->currentText();
-  updateMessageFrequency(newFrequency, getSeconds(&currentText));
+  controller.setMessageFrequency(newFrequency, currentText);
 }
 
 void SimulatorDialog::on_comboBox_timeUnit_currentIndexChanged(int index)
 {
   QString currentText = ui->comboBox_timeUnit->itemText(index);
-  updateMessageFrequency(ui->spinBox_frequency->value(), getSeconds(&currentText));
-}
-
-void SimulatorDialog::updateMessageFrequency(float messages, float seconds)
-{
-  QMutexLocker locker(&updateFrequencyMutex);
-  controller.setMessageFrequency(messages / seconds);
-}
-
-int SimulatorDialog::getSeconds(const QString* unit)
-{
-  if (0 == unit->compare("second"))
-  {
-    return 1;
-  }
-  else if (0 == unit->compare("minute"))
-  {
-    return 60;
-  }
-  else if (0 == unit->compare("hour"))
-  {
-    return 60 * 60;
-  }
-  else if (0 == unit->compare("day"))
-  {
-    return 60 * 60 * 24;
-  }
-  else if (0 == unit->compare("week"))
-  {
-    return 60 * 60 * 24 * 7;
-  }
-  else
-  {
-    return 1;
-  }
+  controller.setMessageFrequency(ui->spinBox_frequency->value(), currentText);
 }

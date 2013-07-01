@@ -63,7 +63,6 @@ private:
   int m_numRows;
   SimulatorController controller;
   QMutex messagesWidgetMutex;
-  QMutex updateFrequencyMutex;
 
 private slots:
   void on_btnFile_clicked();
@@ -88,10 +87,6 @@ private slots:
 
   void addGeomessageToTable(Geomessage geomessage);
   void selectGeomessageInTable(int index);
-
-private:
-  void updateMessageFrequency(float messages, float seconds);
-  static int getSeconds(const QString* unit);
 };
 
 #endif // SIMULATORDIALOG_H

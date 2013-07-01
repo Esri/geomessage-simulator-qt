@@ -283,6 +283,10 @@ void SimulatorController::setMessageFrequency(float newFrequency)
   }
 }
 
+void SimulatorController::setMessageFrequency(float newFrequency, QString newTimeUnit) {
+  setMessageFrequency(newFrequency / (float) getSeconds(&newTimeUnit));
+}
+
 float SimulatorController::messageFrequency()
 {
   return m_messageFrequency;
@@ -321,4 +325,32 @@ void SimulatorController::setVerbose(bool verbose)
 bool SimulatorController::verbose()
 {
   return m_verbose;
+}
+
+int SimulatorController::getSeconds(const QString* unit)
+{
+  if (0 == unit->compare("second"))
+  {
+    return 1;
+  }
+  else if (0 == unit->compare("minute"))
+  {
+    return 60;
+  }
+  else if (0 == unit->compare("hour"))
+  {
+    return 60 * 60;
+  }
+  else if (0 == unit->compare("day"))
+  {
+    return 60 * 60 * 24;
+  }
+  else if (0 == unit->compare("week"))
+  {
+    return 60 * 60 * 24 * 7;
+  }
+  else
+  {
+    return 1;
+  }
 }

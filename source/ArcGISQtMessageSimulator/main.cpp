@@ -26,6 +26,7 @@ int main(int argc, char *argv[])
   QString simulationFile;
   int port = SimulatorController::DEFAULT_BROADCAST_PORT;
   float frequency = 1;
+  QString timeUnit = "second";
   bool isVerbose = false;
   for (int i = 1; i < argc; i++)
   {
@@ -38,7 +39,9 @@ int main(int argc, char *argv[])
       out << "  -c               Console mode (no GUI)" << endl;
       out << "  -p <port number> Port number (console mode only; default is " << port << ")" << endl;
       out << "  -f <filename>    Simulation file (console mode only)" << endl;
-      out << "  -q <frequency>   Frequency (messages per second); default is 1; console mode only" << endl;
+      out << "  -q <frequency>   Frequency (messages per time unit); default is 1; console mode only" << endl;
+      out << "  -t <time unit>   Time unit for frequency; valid values are second, minute," << endl <<
+             "                   hour, day, and week; default is second; console mode only" << endl;
       out << "  -v               Verbose output (console mode only)" << endl;
       return 0;
     }
@@ -67,6 +70,13 @@ int main(int argc, char *argv[])
         frequency = atoi(argv[++i]);
       }
     }
+    else if (!strcmp(argv[i], "-t"))
+    {
+      if ((i + 1) < argc)
+      {
+        timeUnit = QString(argv[++i]);
+      }
+    }
     else if (!strcmp(argv[i], "-v"))
     {
       isVerbose = true;
@@ -83,7 +93,7 @@ int main(int argc, char *argv[])
   {
     QCoreApplication a(argc, argv);
     SimulatorController controller;
-    controller.setMessageFrequency(frequency);
+    controller.setMessageFrequency(frequency, timeUnit);
     controller.setPort(port);
     controller.initializeSimulator(simulationFile);
     controller.setVerbose(isVerbose);

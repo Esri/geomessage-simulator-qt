@@ -51,10 +51,20 @@ public:
   void stopSimulation();
 
   /*!
-   * \brief Sets the number of broadcasts per second.
+   * \brief Sets the number of broadcasts per second. Equivalent to
+   *        setMessageFrequency(newFrequency, "second");
    * \param the number of broadcasts per second.
    */
   void setMessageFrequency(float newFrequency);
+
+  /*!
+   * \brief Sets the number of messages per time unit. Then the application will send
+   *        <newFrequency> messages per <newTimeUnit>.
+   * \param newFrequency the number of broadcasts per time unit.
+   * \param newTimeUnit the time unit. Valid values are second, minute
+   *        hour, day, and week; default is second.
+   */
+  void setMessageFrequency(float newFrequency, QString newTimeUnit);
 
   /*!
    * \brief Returns the number of broadcasts per second.
@@ -111,6 +121,7 @@ private:
 
   QString loadSimulationFile(const QString & file);
   bool fileHasAnyMessages();
+  static int getSeconds(const QString* unit);
 
 signals:
   void readGeomessage(Geomessage geomessage);
