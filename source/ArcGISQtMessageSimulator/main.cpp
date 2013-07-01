@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2012 Esri
+ * Copyright 2013 Esri
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,8 +24,8 @@ int main(int argc, char *argv[])
 {
   bool isGui = true;
   QString simulationFile;
-  int frequency = 1;
-  int throughput = 1;
+  int port = SimulatorController::DEFAULT_BROADCAST_PORT;
+  float frequency = 1;
   bool isVerbose = false;
   for (int i = 1; i < argc; i++)
   {
@@ -34,12 +34,12 @@ int main(int argc, char *argv[])
       //Print help and exit
       QTextStream out(stdout);
       out << "Available command line parameters:" << endl;
-      out << "  -?              Print this help and exit" << endl;
-      out << "  -c              Console mode (no GUI)" << endl;
-      out << "  -f <filename>   Simulation file (console mode only)" << endl;
-      out << "  -q <frequency>  Frequency (broadcasts per second); default is 1; console mode only" << endl;
-      out << "  -t <throughput> Throughput (messages per broadcast); default is 1; console mode only" << endl;
-      out << "  -v              Verbose output (console mode only)" << endl;
+      out << "  -?               Print this help and exit" << endl;
+      out << "  -c               Console mode (no GUI)" << endl;
+      out << "  -p <port number> Port number (console mode only; default is " << port << ")" << endl;
+      out << "  -f <filename>    Simulation file (console mode only)" << endl;
+      out << "  -q <frequency>   Frequency (messages per second); default is 1; console mode only" << endl;
+      out << "  -v               Verbose output (console mode only)" << endl;
       return 0;
     }
     else if (!strcmp(argv[i], "-c"))
@@ -53,18 +53,18 @@ int main(int argc, char *argv[])
         simulationFile = QString(argv[++i]);
       }
     }
+    else if (!strcmp(argv[i], "-p"))
+    {
+      if ((i + 1) < argc)
+      {
+        port = atoi(argv[++i]);
+      }
+    }
     else if (!strcmp(argv[i], "-q"))
     {
       if ((i + 1) < argc)
       {
         frequency = atoi(argv[++i]);
-      }
-    }
-    else if (!strcmp(argv[i], "-t"))
-    {
-      if ((i + 1) < argc)
-      {
-        throughput = atoi(argv[++i]);
       }
     }
     else if (!strcmp(argv[i], "-v"))
@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
     SimulatorController controller;
     controller.setMessageFrequency(frequency);
-    controller.setMessageThroughput(throughput);
+    controller.setPort(port);
     controller.initializeSimulator(simulationFile);
     controller.setVerbose(isVerbose);
     controller.startSimulation();

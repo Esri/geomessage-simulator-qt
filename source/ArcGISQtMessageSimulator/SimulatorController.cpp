@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2012 Esri
+ * Copyright 2013 Esri
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ SimulatorController::SimulatorController(QObject *parent) :
   QObject(parent),
   m_simulationStarted(false),
   m_simulationPaused(false),
-  m_messageFrequency(1), // broadcasts per second
+  m_messageFrequency(1.f), // broadcasts per second
   m_messageThroughput(1), // messages per broadcast
   m_reachedEndOfFile(false),
   m_currentIndex(-1),
@@ -240,7 +240,7 @@ void SimulatorController::startSimulation()
 
   m_simulationPaused = false;
   m_simulationStarted = true;
-  int msec = (int) floor((1.0 / m_messageFrequency * 1000) + 0.5);
+  int msec = (int) floor((1.f / m_messageFrequency * 1000.f) + 0.5);
   m_timer.start(msec, this);
 }
 
@@ -252,7 +252,7 @@ void SimulatorController::pauseSimulation()
 
 void SimulatorController::unpauseSimulation()
 {
-  int msec = (int) floor((1.0 / m_messageFrequency * 1000) + 0.5);
+  int msec = (int) floor((1.f / m_messageFrequency * 1000.f) + 0.5);
   m_timer.start(msec, this);
 }
 
@@ -270,18 +270,20 @@ void SimulatorController::stopSimulation()
   m_simulationStarted = false;
 }
 
-void SimulatorController::setMessageFrequency(int newFrequency)
+void SimulatorController::setMessageFrequency(float newFrequency)
 {
-  m_messageFrequency = newFrequency;
-  m_timer.stop();
-  if((true == m_simulationStarted) && (false == m_simulationPaused))
-  {
-    int msec = (int) floor((1.0 / m_messageFrequency * 1000) + 0.5);
-    m_timer.start(msec, this);
+  if (0 < newFrequency) {
+    m_messageFrequency = newFrequency;
+    m_timer.stop();
+    if((true == m_simulationStarted) && (false == m_simulationPaused))
+    {
+      int msec = (int) floor((1.f / m_messageFrequency * 1000.f) + 0.5);
+      m_timer.start(msec, this);
+    }
   }
 }
 
-int SimulatorController::messageFrequency()
+float SimulatorController::messageFrequency()
 {
   return m_messageFrequency;
 }

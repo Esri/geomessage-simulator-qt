@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2012 Esri
+ * Copyright 2013 Esri
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -186,7 +186,6 @@ void SimulatorDialog::on_btnFile_clicked()
         setCursor(c);
         ui->btnStart->setEnabled(true);
         ui->spinBox_frequency->setValue(controller.messageFrequency());
-        ui->spinBox_throughput->setValue(controller.messageThroughput());
 
         QStringList labels;
         ui->messagesWidget->setColumnCount(5);
@@ -213,10 +212,46 @@ void SimulatorDialog::on_spinBox_port_valueChanged(int newPort)
 
 void SimulatorDialog::on_spinBox_frequency_valueChanged(int newFrequency)
 {
-  controller.setMessageFrequency(newFrequency);
+  QString currentText = ui->comboBox_timeUnit->currentText();
+  updateMessageFrequency(newFrequency, getSeconds(&currentText));
 }
 
-void SimulatorDialog::on_spinBox_throughput_valueChanged(int newThroughput)
+void SimulatorDialog::on_comboBox_timeUnit_currentIndexChanged(int index)
 {
-  controller.setMessageThroughput(newThroughput);
+  QString currentText = ui->comboBox_timeUnit->itemText(index);
+  updateMessageFrequency(ui->spinBox_frequency->value(), getSeconds(&currentText));
+}
+
+void SimulatorDialog::updateMessageFrequency(float messages, float seconds)
+{
+  QMutexLocker locker(&updateFrequencyMutex);
+  controller.setMessageFrequency(messages / seconds);
+}
+
+int SimulatorDialog::getSeconds(const QString* unit)
+{
+  if (0 == unit->compare("second"))
+  {
+    return 1;
+  }
+  else if (0 == unit->compare("minute"))
+  {
+    return 60;
+  }
+  else if (0 == unit->compare("hour"))
+  {
+    return 60 * 60;
+  }
+  else if (0 == unit->compare("day"))
+  {
+    return 60 * 60 * 24;
+  }
+  else if (0 == unit->compare("week"))
+  {
+    return 60 * 60 * 24 * 7;
+  }
+  else
+  {
+    return 1;
+  }
 }

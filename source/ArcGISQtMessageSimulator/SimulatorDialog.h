@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2012 Esri
+ * Copyright 2013 Esri
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -63,6 +63,7 @@ private:
   int m_numRows;
   SimulatorController controller;
   QMutex messagesWidgetMutex;
+  QMutex updateFrequencyMutex;
 
 private slots:
   void on_btnFile_clicked();
@@ -83,10 +84,14 @@ private slots:
   void on_btnPause_clicked();
   void on_spinBox_port_valueChanged(int newPort);
   void on_spinBox_frequency_valueChanged(int newFrequency);
-  void on_spinBox_throughput_valueChanged(int newThroughput);
+  void on_comboBox_timeUnit_currentIndexChanged(int index);
 
   void addGeomessageToTable(Geomessage geomessage);
   void selectGeomessageInTable(int index);
+
+private:
+  void updateMessageFrequency(float messages, float seconds);
+  static int getSeconds(const QString* unit);
 };
 
 #endif // SIMULATORDIALOG_H

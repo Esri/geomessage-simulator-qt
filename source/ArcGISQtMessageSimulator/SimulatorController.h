@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2012 Esri
+ * Copyright 2013 Esri
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,6 +35,8 @@ class SimulatorController : public QObject
 {
   Q_OBJECT
 public:
+  static const int DEFAULT_BROADCAST_PORT;
+
   explicit SimulatorController(QObject *parent = 0);
   /*!
    * \fn	bool SimulatorController::initializeSimulator(const QString&)
@@ -48,8 +50,25 @@ public:
   void unpauseSimulation();
   void stopSimulation();
 
-  void setMessageFrequency(int newFrequency);
-  int messageFrequency();
+  /*!
+   * \brief Sets the number of broadcasts per second.
+   * \param the number of broadcasts per second.
+   */
+  void setMessageFrequency(float newFrequency);
+
+  /*!
+   * \brief Returns the number of broadcasts per second.
+   * \return the number of broadcasts per second.
+   */
+  float messageFrequency();
+
+  /*!
+   * \brief Sets the number of messages per broadcast.
+   * \param newThroughput the number of messages per broadcast.
+   * \deprecated Sending more than one message per broadcast is something that ArcGIS GeoEvent Processor
+   *             cannot handle. Therefore, it is not recommended that you leave the throughput at its
+   *             default value of 1.
+   */
   void setMessageThroughput(int newThroughput);
   int messageThroughput();
   void setPort(int newPort);
@@ -63,7 +82,6 @@ protected:
 
 private:
   static const QString PORT_SETTING_NAME;
-  static const int DEFAULT_BROADCAST_PORT;
   static const QString TAG_ROOT;
   static const QString TAG_MESSAGES;
   static const QString TAG_MESSAGE;
@@ -77,7 +95,11 @@ private:
   QFile m_inputFile;
   QXmlStreamReader m_inputReader;
   bool m_reachedEndOfFile;
-  int m_messageFrequency;
+  float m_messageFrequency;
+  /*!
+   * \brief m_messageThroughput should be left at its default value of 1. Otherwise, ArcGIS GeoEvent
+   *        Processor cannot handle it.
+   */
   int m_messageThroughput;
   QSettings settings;
   bool m_simulationStarted;
