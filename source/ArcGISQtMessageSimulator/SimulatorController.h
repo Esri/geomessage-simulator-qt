@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2012 Esri
+ * Copyright 2012-2013 Esri
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,7 +19,9 @@
 
 #include <QBasicTimer>
 #include <QFile>
+#include <QMutex>
 #include <QSettings>
+#include <QStringList>
 #include <QTimerEvent>
 #include <QUdpSocket>
 #include <QXmlStreamReader>
@@ -35,6 +37,9 @@ class SimulatorController : public QObject
 {
   Q_OBJECT
 public:
+  static const int DEFAULT_BROADCAST_PORT;
+  static const QString DATE_FORMAT;
+
   explicit SimulatorController(QObject *parent = 0);
   /*!
    * \fn	bool SimulatorController::initializeSimulator(const QString&)
@@ -48,8 +53,38 @@ public:
   void unpauseSimulation();
   void stopSimulation();
 
-  void setMessageFrequency(int newFrequency);
-  int messageFrequency();
+  /*!
+   * \brief Sets the number of broadcasts per second. Equivalent to
+   *        setMessageFrequency(newFrequency, "seconds");
+   * \param the number of broadcasts per second.
+   */
+  void setMessageFrequency(float newFrequency);
+
+  /*!
+   * \brief Sets the number of messages per time unit. Then the application will send
+   *        <newFrequency> messages per <timeCount> <newTimeUnit>. For example,
+   *        setMessageFrequency(50, 6, "minutes") will cause 50 messages to be sent
+   *        every 6 minutes.
+   * \param newFrequency the number of broadcasts per time unit.
+   * \param timeCount the amount of time for the frequency.
+   * \param newTimeUnit the time unit. Valid values are seconds, minutes
+   *        hours, days, and weeks; default is seconds.
+   */
+  void setMessageFrequency(float newFrequency, float newTimeCount, QString newTimeUnit);
+
+  /*!
+   * \brief Returns the number of broadcasts per second.
+   * \return the number of broadcasts per second.
+   */
+  float messageFrequency();
+
+  /*!
+   * \brief Sets the number of messages per broadcast.
+   * \param newThroughput the number of messages per broadcast.
+   * \deprecated Sending more than one message per broadcast is something that ArcGIS GeoEvent Processor
+   *             cannot handle. Therefore, it is not recommended that you leave the throughput at its
+   *             default value of 1.
+   */
   void setMessageThroughput(int newThroughput);
   int messageThroughput();
   void setPort(int newPort);
@@ -58,12 +93,30 @@ public:
   void setVerbose(bool verbose);
   bool verbose();
 
+  /*!
+   * \brief Set the fields whose value will be replaced with the current time in outgoing messages.
+   * \param fields the fields whose value will be replaced with the current time in outgoing messages.
+   */
+  void setTimeOverrideFields(QStringList fields);
+
+  /*!
+   * \brief Returns the fields whose value will be replaced with the current time in outgoing messages.
+   * \return the fields whose value will be replaced with the current time in outgoing messages.
+   */
+  QStringList timeOverrideFields();
+
+  /*!
+   * \brief Returns a list of field names found in the first message in the current message file.
+   *        You must call initializeSimulator first; otherwise, fieldNames() returns an empty list.
+   * \return a list of field names found in the first message in the current message file.
+   */
+  QStringList fieldNames();
+
 protected:
   void timerEvent(QTimerEvent *event);
 
 private:
   static const QString PORT_SETTING_NAME;
-  static const int DEFAULT_BROADCAST_PORT;
   static const QString TAG_ROOT;
   static const QString TAG_MESSAGES;
   static const QString TAG_MESSAGE;
@@ -77,7 +130,11 @@ private:
   QFile m_inputFile;
   QXmlStreamReader m_inputReader;
   bool m_reachedEndOfFile;
-  int m_messageFrequency;
+  float m_messageFrequency;
+  /*!
+   * \brief m_messageThroughput should be left at its default value of 1. Otherwise, ArcGIS GeoEvent
+   *        Processor cannot handle it.
+   */
   int m_messageThroughput;
   QSettings settings;
   bool m_simulationStarted;
@@ -86,9 +143,17 @@ private:
   QUdpSocket *m_udpSocket;
   bool m_verbose;
   QTextStream consoleOut;
+  QStringList m_fieldNames;
+  QStringList m_timeOverrideFields;
+  QMutex timeOverrideFieldsMutex;
 
   QString loadSimulationFile(const QString & file);
-  bool fileHasAnyMessages();
+  /*!
+   * \brief Reads the first message in the file, if it exists, and gets the field names.
+   * \return true if and only if the file has at least one message.
+   */
+  bool doInitialRead();
+  static int getSeconds(const QString* unit);
 
 signals:
   void readGeomessage(Geomessage geomessage);

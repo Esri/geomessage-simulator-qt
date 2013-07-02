@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2012 Esri
+ * Copyright 2012-2013 Esri
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #ifndef SIMULATORDIALOG_H
 #define SIMULATORDIALOG_H
 
+#include <QListWidgetItem>
 #include <QMainWindow>
 #include <QMutex>
 
@@ -38,7 +39,7 @@ public:
    * \fn	SimulatorDialog::SimulatorDialog(QWidget *parent = 0);
    * \brief	Constructor.
    */
-  SimulatorDialog(QWidget *parent = 0);
+  SimulatorDialog(bool isVerboseOutput = true, QWidget *parent = 0);
   /*!
    * \fn	SimulatorDialog::~SimulatorDialog();
    * \brief	Desstructor
@@ -63,6 +64,10 @@ private:
   int m_numRows;
   SimulatorController controller;
   QMutex messagesWidgetMutex;
+  QStringList checkedFields;
+  QMutex checkedFieldsMutex;
+
+  void updateMessageFrequency();
 
 private slots:
   void on_btnFile_clicked();
@@ -83,10 +88,12 @@ private slots:
   void on_btnPause_clicked();
   void on_spinBox_port_valueChanged(int newPort);
   void on_spinBox_frequency_valueChanged(int newFrequency);
-  void on_spinBox_throughput_valueChanged(int newThroughput);
+  void on_comboBox_timeUnit_currentIndexChanged(int index);
 
   void addGeomessageToTable(Geomessage geomessage);
   void selectGeomessageInTable(int index);
+  void on_listWidget_timeOverrideFields_itemChanged(QListWidgetItem *item);
+  void on_spinBox_timeCount_valueChanged(int newTimeCount);
 };
 
 #endif // SIMULATORDIALOG_H

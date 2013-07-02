@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2012 Esri
+ * Copyright 2012-2013 Esri
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,13 +20,14 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
-SimulatorDialog::SimulatorDialog(QWidget *parent) :
+SimulatorDialog::SimulatorDialog(bool isVerboseOutput, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::SimulatorDialog),
     m_numRows(0),
     m_paused(false),
     controller()
 {
+  controller.setVerbose(isVerboseOutput);
   ui->setupUi(this);
 
   ui->btnStart->setEnabled(false);
@@ -186,12 +187,24 @@ void SimulatorDialog::on_btnFile_clicked()
         setCursor(c);
         ui->btnStart->setEnabled(true);
         ui->spinBox_frequency->setValue(controller.messageFrequency());
-        ui->spinBox_throughput->setValue(controller.messageThroughput());
 
         QStringList labels;
         ui->messagesWidget->setColumnCount(5);
         labels << "Name" <<"Message ID" << "Message Action" << "Symbol ID" << "Type";
         ui->messagesWidget->setHorizontalHeaderLabels(labels);
+
+        ui->listWidget_timeOverrideFields->clear();
+        QStringList fieldNames = controller.fieldNames();
+        ui->listWidget_timeOverrideFields->addItems(fieldNames);
+        for (int i = 0; i < fieldNames.length(); i++)
+        {
+          ui->listWidget_timeOverrideFields->item(i)->setFlags(ui->listWidget_timeOverrideFields->item(i)->flags() | Qt::ItemIsUserCheckable);
+          ui->listWidget_timeOverrideFields->item(i)->setCheckState(Qt::Unchecked);
+        }
+        {
+          QMutexLocker locker(&checkedFieldsMutex);
+          checkedFields = QStringList();
+        }
 
         ui->btnFile->setEnabled(true);
         ui->btnStart->setEnabled(true);
@@ -213,10 +226,40 @@ void SimulatorDialog::on_spinBox_port_valueChanged(int newPort)
 
 void SimulatorDialog::on_spinBox_frequency_valueChanged(int newFrequency)
 {
-  controller.setMessageFrequency(newFrequency);
+  Q_UNUSED(newFrequency);
+  updateMessageFrequency();
 }
 
-void SimulatorDialog::on_spinBox_throughput_valueChanged(int newThroughput)
+void SimulatorDialog::on_comboBox_timeUnit_currentIndexChanged(int index)
 {
-  controller.setMessageThroughput(newThroughput);
+  Q_UNUSED(index);
+  updateMessageFrequency();
+}
+
+void SimulatorDialog::on_spinBox_timeCount_valueChanged(int newTimeCount)
+{
+  Q_UNUSED(newTimeCount);
+  updateMessageFrequency();
+}
+
+void SimulatorDialog::updateMessageFrequency()
+{
+  controller.setMessageFrequency(
+        ui->spinBox_frequency->value(),
+        ui->spinBox_timeCount->value(),
+        ui->comboBox_timeUnit->currentText());
+}
+
+void SimulatorDialog::on_listWidget_timeOverrideFields_itemChanged(QListWidgetItem *item)
+{
+  QMutexLocker locker(&checkedFieldsMutex);
+  if (Qt::Checked == item->checkState())
+  {
+    checkedFields.append(item->text());
+  }
+  else
+  {
+    checkedFields.removeAll(item->text());
+  }
+  controller.setTimeOverrideFields(checkedFields);
 }
