@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2013 Esri
+ * Copyright 2012-2013 Esri
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
     {
       if ((i + 1) < argc)
       {
-        frequency = atoi(argv[++i]);
+        frequency = atof(argv[++i]);
       }
     }
     else if (!strcmp(argv[i], "-t"))

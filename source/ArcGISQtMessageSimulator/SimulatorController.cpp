@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2013 Esri
+ * Copyright 2012-2013 Esri
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -318,7 +318,7 @@ void SimulatorController::stopSimulation()
 
 void SimulatorController::setMessageFrequency(float newFrequency)
 {
-  if (0 < newFrequency) {
+  if (0.0f < newFrequency) {
     m_messageFrequency = newFrequency;
     m_timer.stop();
     if((true == m_simulationStarted) && (false == m_simulationPaused))
