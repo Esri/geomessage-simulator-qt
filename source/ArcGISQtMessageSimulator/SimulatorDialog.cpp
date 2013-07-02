@@ -20,13 +20,14 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
-SimulatorDialog::SimulatorDialog(QWidget *parent) :
+SimulatorDialog::SimulatorDialog(bool isVerboseOutput, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::SimulatorDialog),
     m_numRows(0),
     m_paused(false),
     controller()
 {
+  controller.setVerbose(isVerboseOutput);
   ui->setupUi(this);
 
   ui->btnStart->setEnabled(false);
@@ -192,6 +193,19 @@ void SimulatorDialog::on_btnFile_clicked()
         labels << "Name" <<"Message ID" << "Message Action" << "Symbol ID" << "Type";
         ui->messagesWidget->setHorizontalHeaderLabels(labels);
 
+        ui->listWidget_timeOverrideFields->clear();
+        QStringList fieldNames = controller.fieldNames();
+        ui->listWidget_timeOverrideFields->addItems(fieldNames);
+        for (int i = 0; i < fieldNames.length(); i++)
+        {
+          ui->listWidget_timeOverrideFields->item(i)->setFlags(ui->listWidget_timeOverrideFields->item(i)->flags() | Qt::ItemIsUserCheckable);
+          ui->listWidget_timeOverrideFields->item(i)->setCheckState(Qt::Unchecked);
+        }
+        {
+          QMutexLocker locker(&checkedFieldsMutex);
+          checkedFields = QStringList();
+        }
+
         ui->btnFile->setEnabled(true);
         ui->btnStart->setEnabled(true);
       }
@@ -220,4 +234,18 @@ void SimulatorDialog::on_comboBox_timeUnit_currentIndexChanged(int index)
 {
   QString currentText = ui->comboBox_timeUnit->itemText(index);
   controller.setMessageFrequency(ui->spinBox_frequency->value(), currentText);
+}
+
+void SimulatorDialog::on_listWidget_timeOverrideFields_itemChanged(QListWidgetItem *item)
+{
+  QMutexLocker locker(&checkedFieldsMutex);
+  if (Qt::Checked == item->checkState())
+  {
+    checkedFields.append(item->text());
+  }
+  else
+  {
+    checkedFields.removeAll(item->text());
+  }
+  controller.setTimeOverrideFields(checkedFields);
 }

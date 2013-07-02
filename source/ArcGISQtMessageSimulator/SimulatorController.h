@@ -19,7 +19,9 @@
 
 #include <QBasicTimer>
 #include <QFile>
+#include <QMutex>
 #include <QSettings>
+#include <QStringList>
 #include <QTimerEvent>
 #include <QUdpSocket>
 #include <QXmlStreamReader>
@@ -36,6 +38,7 @@ class SimulatorController : public QObject
   Q_OBJECT
 public:
   static const int DEFAULT_BROADCAST_PORT;
+  static const QString DATE_FORMAT;
 
   explicit SimulatorController(QObject *parent = 0);
   /*!
@@ -87,6 +90,25 @@ public:
   void setVerbose(bool verbose);
   bool verbose();
 
+  /*!
+   * \brief Set the fields whose value will be replaced with the current time in outgoing messages.
+   * \param fields the fields whose value will be replaced with the current time in outgoing messages.
+   */
+  void setTimeOverrideFields(QStringList fields);
+
+  /*!
+   * \brief Returns the fields whose value will be replaced with the current time in outgoing messages.
+   * \return the fields whose value will be replaced with the current time in outgoing messages.
+   */
+  QStringList timeOverrideFields();
+
+  /*!
+   * \brief Returns a list of field names found in the first message in the current message file.
+   *        You must call initializeSimulator first; otherwise, fieldNames() returns an empty list.
+   * \return a list of field names found in the first message in the current message file.
+   */
+  QStringList fieldNames();
+
 protected:
   void timerEvent(QTimerEvent *event);
 
@@ -118,9 +140,16 @@ private:
   QUdpSocket *m_udpSocket;
   bool m_verbose;
   QTextStream consoleOut;
+  QStringList m_fieldNames;
+  QStringList m_timeOverrideFields;
+  QMutex timeOverrideFieldsMutex;
 
   QString loadSimulationFile(const QString & file);
-  bool fileHasAnyMessages();
+  /*!
+   * \brief Reads the first message in the file, if it exists, and gets the field names.
+   * \return true if and only if the file has at least one message.
+   */
+  bool doInitialRead();
   static int getSeconds(const QString* unit);
 
 signals:

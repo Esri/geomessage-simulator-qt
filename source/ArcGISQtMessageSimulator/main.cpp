@@ -27,7 +27,8 @@ int main(int argc, char *argv[])
   int port = SimulatorController::DEFAULT_BROADCAST_PORT;
   float frequency = 1;
   QString timeUnit = "second";
-  bool isVerbose = false;
+  QStringList timeOverrideFields;
+  bool isVerbose = true;
   for (int i = 1; i < argc; i++)
   {
     if (!strcmp(argv[i], "-?"))
@@ -35,14 +36,17 @@ int main(int argc, char *argv[])
       //Print help and exit
       QTextStream out(stdout);
       out << "Available command line parameters:" << endl;
-      out << "  -?               Print this help and exit" << endl;
-      out << "  -c               Console mode (no GUI)" << endl;
-      out << "  -p <port number> Port number (console mode only; default is " << port << ")" << endl;
-      out << "  -f <filename>    Simulation file (console mode only)" << endl;
-      out << "  -q <frequency>   Frequency (messages per time unit); default is 1; console mode only" << endl;
-      out << "  -t <time unit>   Time unit for frequency; valid values are second, minute," << endl <<
-             "                   hour, day, and week; default is second; console mode only" << endl;
-      out << "  -v               Verbose output (console mode only)" << endl;
+      out << "  -?                     Print this help and exit" << endl;
+      out << "  -c                     Console mode (no GUI)" << endl;
+      out << "Parameters available only in console mode:" << endl;
+      out << "  -p <port number>       Port number (console mode only; default is " << port << ")" << endl;
+      out << "  -f <filename>          Simulation file" << endl;
+      out << "  -q <frequency>         Frequency (messages per time unit); default is 1" << endl;
+      out << "  -t <time unit>         Time unit for frequency; valid values are second," << endl <<
+             "                         minute, hour, day, and week; default is second" << endl;
+      out << "  -o <field1,...,fieldN> Override the value of these fields with the current" << endl <<
+             "                         date/time" << endl;
+      out << "  -s                     Silent mode; no verbose output" << endl;
       return 0;
     }
     else if (!strcmp(argv[i], "-c"))
@@ -77,15 +81,22 @@ int main(int argc, char *argv[])
         timeUnit = QString(argv[++i]);
       }
     }
-    else if (!strcmp(argv[i], "-v"))
+    else if (!strcmp(argv[i], "-o"))
     {
-      isVerbose = true;
+      if ((i + 1) < argc)
+      {
+        timeOverrideFields = QString(argv[++i]).split(',');
+      }
+    }
+    else if (!strcmp(argv[i], "-s"))
+    {
+      isVerbose = false;
     }
   }
   if (isGui)
   {
     QApplication a(argc, argv);
-    SimulatorDialog w;
+    SimulatorDialog w(isVerbose);
     w.show();
     return a.exec();
   }
@@ -97,6 +108,7 @@ int main(int argc, char *argv[])
     controller.setPort(port);
     controller.initializeSimulator(simulationFile);
     controller.setVerbose(isVerbose);
+    controller.setTimeOverrideFields(timeOverrideFields);
     controller.startSimulation();
     return a.exec();
   }

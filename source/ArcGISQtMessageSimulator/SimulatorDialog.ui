@@ -46,6 +46,23 @@
      </spacer>
     </item>
     <item>
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>Time Override Fields (use the current time in outgoing message for the value of these fields)</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QListWidget" name="listWidget_timeOverrideFields">
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::NoSelection</enum>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QLabel" name="lblMessage">
       <property name="font">
        <font>

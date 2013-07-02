@@ -17,8 +17,10 @@
 #include "SimulatorController.h"
 
 #include <QtCore/qmath.h>
+#include <QDateTime>
 
 const int SimulatorController::DEFAULT_BROADCAST_PORT = 45678;
+const QString SimulatorController::DATE_FORMAT = "yyyy-MM-dd hh:mm:ss";
 const QString SimulatorController::PORT_SETTING_NAME = "port";
 const QString SimulatorController::TAG_ROOT = "geomessages";
 const QString SimulatorController::TAG_MESSAGES = "geomessages";
@@ -39,6 +41,9 @@ SimulatorController::SimulatorController(QObject *parent) :
   m_currentIndex(-1),
   settings("DefenseTemplates", "Message Simulator"),
   consoleOut(stdout),
+  m_fieldNames(),
+  m_timeOverrideFields(),
+  timeOverrideFieldsMutex(),
   m_verbose(true),
   m_timer()
 {
@@ -53,6 +58,7 @@ void SimulatorController::timerEvent(QTimerEvent *event)
     QString currentElementName;
     QString Name, messageID, messageAction, symbolID, type;
     QXmlStreamWriter streamWriter(&payload);
+    QString currentTimeString = QDateTime::currentDateTimeUtc().toString(SimulatorController::DATE_FORMAT);
 
     streamWriter.writeStartElement(TAG_ROOT);
     for(int messageThroughput = 0 ; messageThroughput < m_messageThroughput ; messageThroughput++)
@@ -112,6 +118,14 @@ void SimulatorController::timerEvent(QTimerEvent *event)
         else if (m_inputReader.isCharacters())
         {
           QString text = m_inputReader.text().toString();
+          {
+            QMutexLocker locker(&timeOverrideFieldsMutex);
+            if (m_timeOverrideFields.contains(currentElementName))
+            {
+              text = currentTimeString;
+            }
+          }
+
           streamWriter.writeCharacters(text);
           if (TAG_NAME == currentElementName)
           {
@@ -185,7 +199,7 @@ QString SimulatorController::loadSimulationFile(const QString &fileName)
   m_inputFile.setFileName(fileName);
 
   //Check file for at least one message
-  if (!fileHasAnyMessages())
+  if (!doInitialRead())
   {
     return QString(m_inputFile.fileName() + " is an empty message file");
   }
@@ -195,8 +209,10 @@ QString SimulatorController::loadSimulationFile(const QString &fileName)
   }
 }
 
-bool SimulatorController::fileHasAnyMessages()
+bool SimulatorController::doInitialRead()
 {
+  m_fieldNames = QStringList();
+
   // Open the file for reading.
   if(m_inputFile.isOpen())
     m_inputFile.reset();
@@ -208,15 +224,45 @@ bool SimulatorController::fileHasAnyMessages()
   m_inputReader.setDevice(&m_inputFile);
 
   bool hasMessage = false;
+  bool readingMessage = false;
+  int depth = -1;//0 is the root element
+  int messageDepth = -1;
   while (!m_inputReader.atEnd())
   {
     m_inputReader.readNext();
-    if (m_inputReader.isStartElement() && 0 == QStringRef::compare(m_inputReader.name(), TAG_MESSAGE))
+    QStringRef nameRef = m_inputReader.name();
+    QString name = nameRef.toString();
+    if (m_inputReader.isStartElement())
     {
-      hasMessage = true;
-      break;
+      depth++;
+      if (0 == QStringRef::compare(nameRef, TAG_MESSAGE))
+      {
+        hasMessage = true;
+        readingMessage = true;
+        messageDepth = depth;
+      }
+      else if (readingMessage)
+      {
+        if (depth == messageDepth + 1)
+        {
+          if (!m_fieldNames.contains(nameRef.toString()))
+          {
+            m_fieldNames.append(nameRef.toString());
+          }
+        }
+      }
+    }
+    else if (m_inputReader.isEndElement()) {
+      if (0 == QStringRef::compare(nameRef, TAG_MESSAGE))
+      {
+        readingMessage = false;
+//        break;
+      }
+      depth--;
     }
   }
+
+  m_fieldNames.sort();
 
   m_inputReader.clear();
   m_inputFile.reset();
@@ -325,6 +371,22 @@ void SimulatorController::setVerbose(bool verbose)
 bool SimulatorController::verbose()
 {
   return m_verbose;
+}
+
+QStringList SimulatorController::fieldNames() {
+  return QStringList(m_fieldNames);
+}
+
+void SimulatorController::setTimeOverrideFields(QStringList fields)
+{
+  QMutexLocker locker(&timeOverrideFieldsMutex);
+  m_timeOverrideFields = fields;
+}
+
+QStringList SimulatorController::timeOverrideFields()
+{
+  QMutexLocker locker(&timeOverrideFieldsMutex);
+  return m_timeOverrideFields;
 }
 
 int SimulatorController::getSeconds(const QString* unit)

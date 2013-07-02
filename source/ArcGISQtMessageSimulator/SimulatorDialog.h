@@ -17,6 +17,7 @@
 #ifndef SIMULATORDIALOG_H
 #define SIMULATORDIALOG_H
 
+#include <QListWidgetItem>
 #include <QMainWindow>
 #include <QMutex>
 
@@ -38,7 +39,7 @@ public:
    * \fn	SimulatorDialog::SimulatorDialog(QWidget *parent = 0);
    * \brief	Constructor.
    */
-  SimulatorDialog(QWidget *parent = 0);
+  SimulatorDialog(bool isVerboseOutput = true, QWidget *parent = 0);
   /*!
    * \fn	SimulatorDialog::~SimulatorDialog();
    * \brief	Desstructor
@@ -63,6 +64,8 @@ private:
   int m_numRows;
   SimulatorController controller;
   QMutex messagesWidgetMutex;
+  QStringList checkedFields;
+  QMutex checkedFieldsMutex;
 
 private slots:
   void on_btnFile_clicked();
@@ -87,6 +90,7 @@ private slots:
 
   void addGeomessageToTable(Geomessage geomessage);
   void selectGeomessageInTable(int index);
+  void on_listWidget_timeOverrideFields_itemChanged(QListWidgetItem *item);
 };
 
 #endif // SIMULATORDIALOG_H
