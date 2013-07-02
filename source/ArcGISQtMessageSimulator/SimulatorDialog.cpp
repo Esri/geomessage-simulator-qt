@@ -226,16 +226,19 @@ void SimulatorDialog::on_spinBox_port_valueChanged(int newPort)
 
 void SimulatorDialog::on_spinBox_frequency_valueChanged(int newFrequency)
 {
+  Q_UNUSED(newFrequency);
   updateMessageFrequency();
 }
 
 void SimulatorDialog::on_comboBox_timeUnit_currentIndexChanged(int index)
 {
+  Q_UNUSED(index);
   updateMessageFrequency();
 }
 
 void SimulatorDialog::on_spinBox_timeCount_valueChanged(int newTimeCount)
 {
+  Q_UNUSED(newTimeCount);
   updateMessageFrequency();
 }
 
