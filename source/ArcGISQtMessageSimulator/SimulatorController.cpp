@@ -298,6 +298,7 @@ void SimulatorController::pauseSimulation()
 
 void SimulatorController::unpauseSimulation()
 {
+  m_simulationPaused = false;
   int msec = (int) floor((1.f / m_messageFrequency * 1000.f) + 0.5);
   m_timer.start(msec, this);
 }
