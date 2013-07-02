@@ -67,6 +67,8 @@ private:
   QStringList checkedFields;
   QMutex checkedFieldsMutex;
 
+  void updateMessageFrequency();
+
 private slots:
   void on_btnFile_clicked();
   /*!
@@ -91,6 +93,7 @@ private slots:
   void addGeomessageToTable(Geomessage geomessage);
   void selectGeomessageInTable(int index);
   void on_listWidget_timeOverrideFields_itemChanged(QListWidgetItem *item);
+  void on_spinBox_timeCount_valueChanged(int newTimeCount);
 };
 
 #endif // SIMULATORDIALOG_H

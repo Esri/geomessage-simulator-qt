@@ -119,9 +119,6 @@
         <property name="maximum">
          <number>2000000000</number>
         </property>
-        <property name="value">
-         <number>1</number>
-        </property>
        </widget>
       </item>
       <item>
@@ -132,30 +129,43 @@
        </widget>
       </item>
       <item>
+       <widget class="QSpinBox" name="spinBox_timeCount">
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>2000000000</number>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QComboBox" name="comboBox_timeUnit">
         <item>
          <property name="text">
-          <string>second</string>
+          <string>seconds</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>minute</string>
+          <string>minutes</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>hour</string>
+          <string>hours</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>day</string>
+          <string>days</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>week</string>
+          <string>weeks</string>
          </property>
         </item>
        </widget>

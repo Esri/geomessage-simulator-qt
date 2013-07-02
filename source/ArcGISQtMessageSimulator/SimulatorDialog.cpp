@@ -226,14 +226,25 @@ void SimulatorDialog::on_spinBox_port_valueChanged(int newPort)
 
 void SimulatorDialog::on_spinBox_frequency_valueChanged(int newFrequency)
 {
-  QString currentText = ui->comboBox_timeUnit->currentText();
-  controller.setMessageFrequency(newFrequency, currentText);
+  updateMessageFrequency();
 }
 
 void SimulatorDialog::on_comboBox_timeUnit_currentIndexChanged(int index)
 {
-  QString currentText = ui->comboBox_timeUnit->itemText(index);
-  controller.setMessageFrequency(ui->spinBox_frequency->value(), currentText);
+  updateMessageFrequency();
+}
+
+void SimulatorDialog::on_spinBox_timeCount_valueChanged(int newTimeCount)
+{
+  updateMessageFrequency();
+}
+
+void SimulatorDialog::updateMessageFrequency()
+{
+  controller.setMessageFrequency(
+        ui->spinBox_frequency->value(),
+        ui->spinBox_timeCount->value(),
+        ui->comboBox_timeUnit->currentText());
 }
 
 void SimulatorDialog::on_listWidget_timeOverrideFields_itemChanged(QListWidgetItem *item)

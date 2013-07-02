@@ -26,6 +26,7 @@ int main(int argc, char *argv[])
   QString simulationFile;
   int port = SimulatorController::DEFAULT_BROADCAST_PORT;
   float frequency = 1;
+  float timeCount = 1;
   QString timeUnit = "second";
   QStringList timeOverrideFields;
   bool isVerbose = true;
@@ -42,8 +43,9 @@ int main(int argc, char *argv[])
       out << "  -p <port number>       Port number (console mode only; default is " << port << ")" << endl;
       out << "  -f <filename>          Simulation file" << endl;
       out << "  -q <frequency>         Frequency (messages per time unit); default is 1" << endl;
-      out << "  -t <time unit>         Time unit for frequency; valid values are second," << endl <<
-             "                         minute, hour, day, and week; default is second" << endl;
+      out << "  -i <time count>        Amount of time for frequency; default is 1" << endl;
+      out << "  -t <time unit>         Time unit for frequency; valid values are seconds," << endl <<
+             "                         minutes, hours, days, and weeks; default is seconds" << endl;
       out << "  -o <field1,...,fieldN> Override the value of these fields with the current" << endl <<
              "                         date/time" << endl;
       out << "  -s                     Silent mode; no verbose output" << endl;
@@ -72,6 +74,13 @@ int main(int argc, char *argv[])
       if ((i + 1) < argc)
       {
         frequency = atof(argv[++i]);
+      }
+    }
+    else if (!strcmp(argv[i], "-i"))
+    {
+      if ((i + 1) < argc)
+      {
+        timeCount = atof(argv[++i]);
       }
     }
     else if (!strcmp(argv[i], "-t"))
@@ -104,7 +113,7 @@ int main(int argc, char *argv[])
   {
     QCoreApplication a(argc, argv);
     SimulatorController controller;
-    controller.setMessageFrequency(frequency, timeUnit);
+    controller.setMessageFrequency(frequency, timeCount, timeUnit);
     controller.setPort(port);
     controller.initializeSimulator(simulationFile);
     controller.setVerbose(isVerbose);

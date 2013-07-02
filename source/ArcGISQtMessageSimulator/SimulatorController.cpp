@@ -328,8 +328,8 @@ void SimulatorController::setMessageFrequency(float newFrequency)
   }
 }
 
-void SimulatorController::setMessageFrequency(float newFrequency, QString newTimeUnit) {
-  setMessageFrequency(newFrequency / (float) getSeconds(&newTimeUnit));
+void SimulatorController::setMessageFrequency(float newFrequency, float newTimeCount, QString newTimeUnit) {
+  setMessageFrequency(newFrequency / (newTimeCount * (float) getSeconds(&newTimeUnit)));
 }
 
 float SimulatorController::messageFrequency()
@@ -390,28 +390,25 @@ QStringList SimulatorController::timeOverrideFields()
 
 int SimulatorController::getSeconds(const QString* unit)
 {
-  if (0 == unit->compare("second"))
-  {
-    return 1;
-  }
-  else if (0 == unit->compare("minute"))
+  if (0 == unit->compare("minutes"))
   {
     return 60;
   }
-  else if (0 == unit->compare("hour"))
+  else if (0 == unit->compare("hours"))
   {
     return 60 * 60;
   }
-  else if (0 == unit->compare("day"))
+  else if (0 == unit->compare("days"))
   {
     return 60 * 60 * 24;
   }
-  else if (0 == unit->compare("week"))
+  else if (0 == unit->compare("weeks"))
   {
     return 60 * 60 * 24 * 7;
   }
   else
   {
+    //Default: seconds
     return 1;
   }
 }

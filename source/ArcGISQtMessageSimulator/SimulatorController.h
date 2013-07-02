@@ -55,19 +55,22 @@ public:
 
   /*!
    * \brief Sets the number of broadcasts per second. Equivalent to
-   *        setMessageFrequency(newFrequency, "second");
+   *        setMessageFrequency(newFrequency, "seconds");
    * \param the number of broadcasts per second.
    */
   void setMessageFrequency(float newFrequency);
 
   /*!
    * \brief Sets the number of messages per time unit. Then the application will send
-   *        <newFrequency> messages per <newTimeUnit>.
+   *        <newFrequency> messages per <timeCount> <newTimeUnit>. For example,
+   *        setMessageFrequency(50, 6, "minutes") will cause 50 messages to be sent
+   *        every 6 minutes.
    * \param newFrequency the number of broadcasts per time unit.
-   * \param newTimeUnit the time unit. Valid values are second, minute
-   *        hour, day, and week; default is second.
+   * \param timeCount the amount of time for the frequency.
+   * \param newTimeUnit the time unit. Valid values are seconds, minutes
+   *        hours, days, and weeks; default is seconds.
    */
-  void setMessageFrequency(float newFrequency, QString newTimeUnit);
+  void setMessageFrequency(float newFrequency, float newTimeCount, QString newTimeUnit);
 
   /*!
    * \brief Returns the number of broadcasts per second.
