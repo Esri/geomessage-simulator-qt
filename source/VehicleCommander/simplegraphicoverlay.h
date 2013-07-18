@@ -19,8 +19,9 @@
 
 #include <QGraphicsWidget>
 
-#include "Map.h"
 #include "Geometry.h"
+#include "Point.h"
+#include "Map.h"
 
 using namespace EsriRuntimeQt;
 

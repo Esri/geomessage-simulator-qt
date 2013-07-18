@@ -22,6 +22,7 @@
 #include "GeometryEngine.h"
 #include "ArcGISLocalDynamicMapServiceLayer.h"
 #include "Geomessage.h"
+#include "SimpleMarkerSymbol.h"
 
 #include "MapController.h"
 
@@ -88,10 +89,10 @@ QByteArray MapController::createChemLightReport(Point& location, const QString& 
 {
   Q_UNUSED(action)
 
-  if (qIsNaN(location.X()) || qIsNaN(location.Y()))
+  if (qIsNaN(location.x()) || qIsNaN(location.y()))
     return QByteArray();
 
-  QString strControlPoint = QString("%1,%2").arg(location.X()).arg(location.Y());
+  QString strControlPoint = QString("%1,%2").arg(location.x()).arg(location.y());
 
   QByteArray data;
   QXmlStreamWriter chemLightReport(&data);
@@ -138,9 +139,9 @@ QByteArray MapController::createPositionReport(const QString& action)
   Q_UNUSED(action)
 
   Point location = lastOwnshipPoint;
-  QString strLocationControlPoint = QString("%1,%2").arg(location.X()).arg(location.Y());
-  double lat = location.Y();
-  double lon = location.X();
+  QString strLocationControlPoint = QString("%1,%2").arg(location.x()).arg(location.y());
+  double lat = location.y();
+  double lon = location.x();
 
   QString mgrs = mapPointToMGRS(lastOwnshipPoint);
 
@@ -386,10 +387,10 @@ void MapController::handleMapMousePressLeft(QPointF mousePoint)
     previousMousePressPosScreen.setX(mousePoint.x());
     previousMousePressPosScreen.setY(mousePoint.y());
 
-    previousMousePressPosMap.setX(mapPoint.X());
-    previousMousePressPosMap.setY(mapPoint.Y());
+    previousMousePressPosMap.setX(mapPoint.x());
+    previousMousePressPosMap.setY(mapPoint.y());
 
-    qDebug() << "Right Click, Map Point = " << mapPoint.X() << ", " << mapPoint.Y();
+    qDebug() << "Right Click, Map Point = " << mapPoint.x() << ", " << mapPoint.y();
 
     if (mouseState == MouseStateMenuClicked)
         mouseState = MouseStateWaitingForMapPoint;
@@ -412,10 +413,10 @@ void MapController::handleMapMousePressRight(QPointF mousePoint)
     previousMousePressPosScreen.setX(mousePoint.x());
     previousMousePressPosScreen.setY(mousePoint.y());
 
-    previousMousePressPosMap.setX(mapPoint.X());
-    previousMousePressPosMap.setY(mapPoint.Y());
+    previousMousePressPosMap.setX(mapPoint.x());
+    previousMousePressPosMap.setY(mapPoint.y());
 
-    qDebug() << "Left Click, Map Point = " << mapPoint.X() << ", " << mapPoint.Y();
+    qDebug() << "Left Click, Map Point = " << mapPoint.x() << ", " << mapPoint.y();
 
     QList<Layer> layers = map->layers();
 
@@ -428,7 +429,7 @@ void MapController::handleMapMousePressRight(QPointF mousePoint)
       qDebug() << "Layer Name: " << name << ", Type: " + layerType;
 
       if ((status == Layer::LS_Initialized) &&
-              (layerType ==  Layer::LT_DynamicMapService))
+              (layerType ==  Layer::LT_ArcGISLocalDynamicMapService))
       {
         ArcGISLocalDynamicMapServiceLayer dynaMapLayer =
           static_cast<ArcGISLocalDynamicMapServiceLayer>(layer);
@@ -535,7 +536,7 @@ void MapController::handlePositionAvailable(QPointF pos, double orientation)
   if (0) // if debug simulation data
   {
       qDebug() << "Simulator Data: " << QString::number(pos.y()) << ", " << QString::number(pos.y()) << ", Orientation: " << orientation;
-      qDebug() << "         Delta: " << QString::number(mapPoint.X()) << ", " << QString::number(mapPoint.Y());
+      qDebug() << "         Delta: " << QString::number(mapPoint.x()) << ", " << QString::number(mapPoint.y());
   }
 
   double angle = (double) ((static_cast<int>(orientation + 90.0)) % 360);
@@ -774,7 +775,7 @@ void MapController::returnPoint(Point point)
 
   mouseClickGraphicLayer.removeAll();
 
-  SimpleMarkerSymbol smsSymbol(SMSS_Circle, 16, Qt::red);
+  SimpleMarkerSymbol smsSymbol(Qt::red, 16, SimpleMarkerSymbol::SMSS_Circle);
   Graphic mouseClickGraphic(point, smsSymbol);
 
   int id = mouseClickGraphicLayer.addGraphic(mouseClickGraphic);
@@ -782,7 +783,7 @@ void MapController::returnPoint(Point point)
   mouseClickGraphicLayer.select(id);
 
   QString mgrs = mapPointToMGRS(point);
-  emit newPointCreated(point.X(), point.Y(), mgrs);
+  emit newPointCreated(point.x(), point.y(), mgrs);
 
   mouseState = MouseStateNone;
 }
@@ -885,7 +886,7 @@ void MapController::sendChemLightMessage(Point pos)
     if (chemLightColorStr == "yellow")
         chemlightColor = Qt::yellow;
 
-  SimpleMarkerSymbol smsSymbol(SMSS_Circle, 20, chemlightColor);
+  SimpleMarkerSymbol smsSymbol(chemlightColor, 20, SimpleMarkerSymbol::SMSS_Circle);
   Graphic mouseClickGraphic(pos, smsSymbol);
 
   int id = this->chemLightLayer.addGraphic(mouseClickGraphic);
@@ -1219,7 +1220,7 @@ Point MapController::MGRSToMapPoint(QString mgrs)
   returnPoint = points.at(0);
 
   if (0)
-    qDebug() << "MGRSToMapPoint: " << QString::number(returnPoint.X()) << ", " << QString::number(returnPoint.Y());;
+    qDebug() << "MGRSToMapPoint: " << QString::number(returnPoint.x()) << ", " << QString::number(returnPoint.y());;
 
   return returnPoint;
 }

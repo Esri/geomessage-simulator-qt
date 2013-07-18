@@ -54,8 +54,8 @@ void SimpleGraphicOverlay::setPosition(Point position)
 
     Point screenPoint = m_pMap->toScreenPoint(position);
 
-    screenX = (int)screenPoint.X();
-    screenY = (int)screenPoint.Y();
+    screenX = (int)screenPoint.x();
+    screenY = (int)screenPoint.y();
 
     // TODO: handle case when wraparound enabled and point returned is offscreen
     // qDebug() << "Draw Ownship @ Map Point(" << position.X() << ", " << position.Y() << ")";

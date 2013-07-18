@@ -16,6 +16,7 @@
 
 #include "samplemap.h"
 
+#include "Point.h"
 #include "ArcGISRuntime.h"
 #include "ArcGISLocalTiledLayer.h"
 #include "SpatialReference.h"
@@ -405,7 +406,7 @@ const QPoint SampleMap::MapToScreenPoint(const Point& mapPoint)
 
     Point screenPoint = m_pMap->toScreenPoint(mapPoint);
 
-    QPointF* pWindowPoint = new QPointF(screenPoint.X(), screenPoint.Y());
+    QPointF* pWindowPoint = new QPointF(screenPoint.x(), screenPoint.y());
 
     return pWindowPoint->toPoint();
 }
