@@ -82,6 +82,9 @@ private:
   QString getReaderValue(QXmlStreamReader& reader);
   void readToElementEnd(QXmlStreamReader& reader);
 
+  void handleMapMousePressLeft(QPointF mousePoint);
+  void handleMapMousePressRight(QPointF mousePoint);
+
   void showHideMe(bool show, Point atPoint, double withHeading);
   Point MGRSToMapPoint(QString mgrs);
   QString mapPointToMGRS(Point point);
@@ -176,8 +179,7 @@ public slots:
   void processPendingDatagrams();
   void sendSpotReport(QVariant data);
   void applyAppConfigSettings();
-  void handleMapMousePressLeft(QPointF mousePoint);
-  void handleMapMousePressRight(QPointF mousePoint);
+  void mousePress(QMouseEvent mouseEvent);
   void onIdentifyComplete(QList<IdentifyResult> results);
 
   /*!

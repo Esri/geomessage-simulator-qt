@@ -378,6 +378,20 @@ void MapController::handleHomeClicked()
   }
 }
 
+void MapController::mousePress(QMouseEvent mouseEvent)
+{
+  QPointF mousePoint = mouseEvent.posF();
+
+  if (mouseEvent.button() == Qt::LeftButton)
+  {
+    handleMapMousePressLeft(mousePoint);
+  }
+  else if (mouseEvent.button() == Qt::RightButton)
+  {
+    handleMapMousePressRight(mousePoint);
+  }
+}
+
 void MapController::handleMapMousePressLeft(QPointF mousePoint)
 {
   if ((map) && (isMapReady))
@@ -450,7 +464,7 @@ void MapController::handleMapMousePressRight(QPointF mousePoint)
 
         IdentifyTask identifyTask(url);
 
-        QList<IdentifyResult> results = identifyTask.execute(params);
+        QList<IdentifyResult> results = identifyTask.executeAndWait(params);
         onIdentifyComplete(results);
 
         // if Async Desired:

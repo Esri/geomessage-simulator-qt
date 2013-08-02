@@ -231,8 +231,7 @@ void MainView::setUI()
   if (map)
   {
     // hook up the handler for the mouse click
-    connect(map, SIGNAL(mouseLeftClick(QPointF)), mapController, SLOT(handleMapMousePressLeft(QPointF)));
-    connect(map, SIGNAL(mouseRightClick(QPointF)), mapController, SLOT(handleMapMousePressRight(QPointF)));
+    connect(map, SIGNAL(mousePress(QMouseEvent)), mapController, SLOT(mousePress(QMouseEvent)));
   }
 
   // Hook up the spot report component UI
