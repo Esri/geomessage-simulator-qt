@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2012 Esri
+ * Copyright 2012-2013 Esri
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,7 +14,11 @@
  *   limitations under the License.
  ******************************************************************************/
 
-#include <QtGui>
+#include <QListWidget>
+#include <QStackedWidget>
+#include <QListView>
+#include <QSize>
+#include <QPushButton>
 
 #include "configdialog.h"
 #include "pages.h"
@@ -36,7 +40,7 @@ ConfigDialog::ConfigDialog(SampleMap *iMap)
     pagesWidget->addWidget(confPage);
     pagesWidget->addWidget(new SymbolPage);
 
-    QPushButton *closeButton = new QPushButton(tr("Close"));
+    QPushButton *closeButton = new QPushButton(QString("Close"));
 
     createIcons();
     contentsWidget->setCurrentRow(0);

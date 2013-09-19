@@ -30,6 +30,8 @@
 #include <QString>
 #include <QVariant>
 #include <QStringList>
+#include <QDebug>
+#include <QMessageBox>
 
 #include <math.h>
 
@@ -38,7 +40,8 @@
 #include "Map.h"
 #include "ArcGISLocalTiledLayer.h"
 #include "ArcGISTiledMapServiceLayer.h"
-#include "ArcGISLocalDynamicMapServiceLayer.h"
+#include "ArcGISDynamicMapServiceLayer.h"
+#include "LocalMapService.h"
 #include "SymbolDictionary.h"
 
 #include "MainView.h"
@@ -48,7 +51,7 @@ static const QString UI_OVERLAY_PATH("qrc:/Resources/qml/MainOverlay.qml");
 
 MainView::MainView(QWidget* parent) :
   overlayWidget(new QGraphicsWidget()),
-  map(0),
+  mapGraphicsView(0),
   mapController(0),
   searchController(0),
   overlayUI(0),
@@ -98,11 +101,16 @@ void MainView::setUI()
   // Remove the frame, border, and title bar of the window
   this->setWindowFlags(Qt::CustomizeWindowHint);
 
-  map = Map::create(this);
-  map->setWrapAroundEnabled(false);
-  map->setShowingEsriLogo(false);
+  // set to openGL rendering (or won't work on Windows)
+  EsriRuntimeQt::ArcGISRuntime::setRenderEngine(EsriRuntimeQt::RenderEngine::OpenGL);
 
-  QString dataPath = getPathSampleData();
+  mapGraphicsView =
+      EsriRuntimeQt::MapGraphicsView::create(map, this);
+
+  map.setWrapAroundEnabled(false);
+
+  // TODO: Put back in when we figure out where this went
+  // map.setShowingEsriLogo(false);
 
   // TODO: put your own high res dataset path here if desired
   QString dataPathTpk = getPathSampleData() + "tpks" + QDir::separator();
@@ -123,7 +131,7 @@ void MainView::setUI()
     // use this local map
     ArcGISLocalTiledLayer tiledLayer(loadTpk);
     tiledLayer.setName("Basemap");
-    map->addLayer(tiledLayer);
+    map.addLayer(tiledLayer);
   }
   else
   {
@@ -131,7 +139,7 @@ void MainView::setUI()
     ArcGISTiledMapServiceLayer tiledLayer("http://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer");
     // -or- ArcGISTiledMapServiceLayer tiledLayer("http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer");
 
-    map->addLayer(tiledLayer);
+    map.addLayer(tiledLayer);
   }
 
   const bool LOAD_MPK = false;
@@ -139,26 +147,30 @@ void MainView::setUI()
   {
     // using sdk/samples/data/mpks/USCitiesStates.mpk
     QString dataPathMpk = getPathSampleData() + "mpks" + QDir::separator() + "USCitiesStates.mpk";
-    ArcGISLocalDynamicMapServiceLayer dynamicLayer = ArcGISLocalDynamicMapServiceLayer(dataPathMpk);
-    dynamicLayer.setName("Cities");
-    map->addLayer(dynamicLayer);
+    LocalMapService localMapService = LocalMapService(dataPathMpk);
+    localMapService.startAndWait();
+
+    ArcGISDynamicMapServiceLayer dynamicLocalServiceLayer =
+        ArcGISDynamicMapServiceLayer(localMapService.urlMapService());
+    dynamicLocalServiceLayer.setName("Cities");
+    map.addLayer(dynamicLocalServiceLayer);
   }
 
-  setCentralWidget(map);
-
-  if (!map)
+  if (!mapGraphicsView)
   {
     qCritical() << "Unable to create map.";
     return;
   }
 
-  QObject::connect(map, SIGNAL(mapReady()), this, SLOT(onMapReady()));
+  setCentralWidget(mapGraphicsView);
 
-  dictionary = SymbolDictionary(SymbolDictionary::Mil2525C);
+  QObject::connect(&map, SIGNAL(mapReady()), this, SLOT(onMapReady()));
+
+  dictionary = SymbolDictionary(SymbolDictionaryType::Mil2525C);
 
   searchController = new SearchController(&dictionary);
 
-  mapController = new MapController(map, this);
+  mapController = new MapController(&map, mapGraphicsView, this);
 
   // invoke the QML UI
   engine = new QDeclarativeEngine();
@@ -183,7 +195,7 @@ void MainView::setUI()
   QGraphicsLayoutItem* qmlUILayout = qobject_cast<QGraphicsLayoutItem*>(overlayUI);
   layout->addItem(qmlUILayout);
   overlayWidget->setLayout(layout);
-  map->scene()->addItem(overlayWidget);
+  mapGraphicsView->scene()->addItem(overlayWidget);
 
   // Hook up the main overlay UI
   connect(overlayUI, SIGNAL(basemapChanged(QString)), mapController, SLOT(handleBasemapChange(QString)));
@@ -228,11 +240,8 @@ void MainView::setUI()
     connect(mainMenuUI, SIGNAL(clicked()), mapController, SLOT(uiElementClicked()));
   }
 
-  if (map)
-  {
-    // hook up the handler for the mouse click
-    connect(map, SIGNAL(mousePress(QMouseEvent)), mapController, SLOT(mousePress(QMouseEvent)));
-  }
+  // hook up the handler for the mouse click
+  connect(&map, SIGNAL(mousePress(QMouseEvent)), mapController, SLOT(mousePress(QMouseEvent)));
 
   // Hook up the spot report component UI
   spotReportUI = overlayUI->findChild<QObject*>("spotReport");
@@ -264,13 +273,13 @@ void MainView::setUI()
     searchController->initController();
   }
 
-  map->scene()->setSceneRect(0, 0, qmlUILayout->preferredSize().width(), qmlUILayout->preferredSize().height());
+  mapGraphicsView->scene()->setSceneRect(0, 0, qmlUILayout->preferredSize().width(), qmlUILayout->preferredSize().height());
 
 }
 
 void MainView::updateNorthArrow()
 {
-  QMetaObject::invokeMethod(overlayUI, "updateMapRotation", Q_ARG(QVariant, map->rotation()));
+  QMetaObject::invokeMethod(overlayUI, "updateMapRotation", Q_ARG(QVariant, map.rotation()));
 }
 
 void MainView::showIdentifyPanel(QList<IdentifyResult> resultsList)
@@ -309,9 +318,9 @@ void MainView::keyPressEvent(QKeyEvent* event)
 
 void MainView::resizeEvent(QResizeEvent* event)
 {
-  if (map)
+  if (map.isInitialized())
   {
-    QRectF sceneRect = map->sceneRect();
+    QRectF sceneRect = mapGraphicsView->sceneRect();
     overlayWidget->setGeometry(sceneRect);
 
     // TODO: add any resizing logic here needed to adjust a scalebar or compass

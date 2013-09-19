@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2012 Esri
+ * Copyright 2012-2013 Esri
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,21 +17,20 @@
 #ifndef MAPCOMPASS_H
 #define MAPCOMPASS_H
 
-#include <QWidget>
 #include <QGraphicsWidget>
+#include <QGraphicsView>
 
-#include "Map.h"
-#include "Geometry.h"
+#include "MapGraphicsView.h"
 
 using namespace EsriRuntimeQt;
 
-class MapCompass : public QGraphicsWidget //QWidget
+class MapCompass : public QGraphicsWidget
 {
     Q_OBJECT
 public:
     MapCompass(QGraphicsItem *parent = 0);
 
-    void setMap(Map* pMap);
+    void setGraphicsView(MapGraphicsView* pGraphicView);
     QSize sizeHint() const;
     void UpdateRotation(double);
     void setScale(double);
@@ -48,7 +47,7 @@ private:
     double rotateValue;
     double scaleValue;
 
-    Map* m_pMap;
+    MapGraphicsView* m_pMapGraphicsView;
 };
 
 #endif // MAPCOMPASS_H

@@ -14,7 +14,7 @@
  *   limitations under the License.
  ******************************************************************************/
 
-#include <QtGui/QApplication>
+#include <QApplication>
 #include "dialog.h"
 
 int main(int argc, char *argv[])

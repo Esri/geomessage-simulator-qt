@@ -1,5 +1,5 @@
 /*
- | Copyright 2012 Esri
+ | Copyright 2012-2013 Esri
  |
  | Licensed under the Apache License, Version 2.0 (the "License");
  | you may not use this file except in compliance with the License.
@@ -14,15 +14,16 @@
  | limitations under the License.
  */
 
+#include <QPainter>
+
 #include "simplegraphicoverlay.h"
 
 SimpleGraphicOverlay::SimpleGraphicOverlay(QGraphicsItem *parent) :
-    QGraphicsWidget(parent)
+    QGraphicsWidget(parent), m_pMapGraphicsView(0)
 {
     rotation = 0.0;
     screenX = -1;
     screenY = -1;
-    m_pMap = 0;
     visible = true;
 
     setAttribute(Qt::WA_NoBackground);
@@ -31,8 +32,8 @@ SimpleGraphicOverlay::SimpleGraphicOverlay(QGraphicsItem *parent) :
 
 QRectF SimpleGraphicOverlay::boundingRect() const
 {
-  if (m_pMap)
-    return QRect(0, 0, m_pMap->width(), m_pMap->height());
+  if (m_pMapGraphicsView)
+    return QRect(0, 0, m_pMapGraphicsView->width(), m_pMapGraphicsView->height());
 
   return QRectF();
 }
@@ -49,10 +50,10 @@ void SimpleGraphicOverlay::setAngle(double rotationIn)
 
 void SimpleGraphicOverlay::setPosition(Point position)
 {
-    if (!m_pMap)
+    if (!m_pMapGraphicsView)
         return;
 
-    Point screenPoint = m_pMap->toScreenPoint(position);
+    Point screenPoint = m_pMapGraphicsView->map().toScreenPoint(position);
 
     screenX = (int)screenPoint.x();
     screenY = (int)screenPoint.y();
@@ -61,11 +62,11 @@ void SimpleGraphicOverlay::setPosition(Point position)
     // qDebug() << "Draw Ownship @ Map Point(" << position.X() << ", " << position.Y() << ")";
 }
 
-void SimpleGraphicOverlay::setMap(Map* pMap)
+void SimpleGraphicOverlay::setGraphicsView(MapGraphicsView* pGraphicView)
 {
-    m_pMap = pMap;
+    m_pMapGraphicsView = pGraphicView;
 
-    QGraphicsScene* scene = m_pMap->scene();
+    QGraphicsScene* scene = m_pMapGraphicsView->scene();
     scene->addItem(this);
 }
 
@@ -79,7 +80,7 @@ void SimpleGraphicOverlay::paint(QPainter *painter, const QStyleOptionGraphicsIt
     Q_UNUSED(option)
     Q_UNUSED(widget)
 
-    if ((!visible) || (!m_pMap) || image.isNull() || (screenX == -1) || (screenY == -1))
+    if ((!visible) || (!m_pMapGraphicsView) || image.isNull() || (screenX == -1) || (screenY == -1))
         return;
 
     // These are not needed because the image is always placed at the center of the display
@@ -88,7 +89,7 @@ void SimpleGraphicOverlay::paint(QPainter *painter, const QStyleOptionGraphicsIt
     // double mapHeight = m_pMap->height();
     // qDebug() << "Draw Ownship @ (" << screenX << ", " << screenY << ")";
 
-    double mapRotation = m_pMap->rotation();
+    double mapRotation = m_pMapGraphicsView->map().rotation();
 
     QSize size = image.size();
     double halfImageWidth = size.width() / 2.0;

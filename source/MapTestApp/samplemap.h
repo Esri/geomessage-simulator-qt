@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2012 Esri
+ * Copyright 2012-2013 Esri
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,8 +22,9 @@
 #include <QColor>
 #include <QtPlugin>
 #include <QObject>
+#include <QGridLayout>
+#include <QImage>
 
-#include "QImage"
 #include "Exception.h"
 #include "Map.h"
 
@@ -31,6 +32,7 @@
 #include "GraphicsLayer.h"
 #include "Layer.h"
 #include "Map.h"
+#include "MapGraphicsView.h"
 #include "MarkerSymbol.h"
 #include "Message.h"
 #include "MessageGroupLayer.h"
@@ -84,8 +86,6 @@ public slots:
     void handleMouseDoubleClick(QMouseEvent mouseEvent);
 
     void onMapReady();
-    void handleLeftClick(QPointF point);
-    void handleRightClick(QPointF point);
 
 private slots:
     void updateTimer();
@@ -173,8 +173,12 @@ private:
     QString getPathSampleData();
     void debugNotImplemented();
 
-    Map* m_pMap;
-    Map* m_pInsetMap;
+    MapGraphicsView* m_pMapGraphicsView;
+    MapGraphicsView* m_pMapGraphicsViewInsetMap;
+
+    Map m_pMap;
+    Map m_pInsetMap;
+
     MapCompass*  m_pMapCompass;
     MapScalebar* m_pMapScalebar;
 

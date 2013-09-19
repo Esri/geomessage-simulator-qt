@@ -14,13 +14,20 @@
  | limitations under the License.
  */
 
+#include <QApplication>
+#include <QDesktopWidget>
+#include <QFileDialog>
+#include <QDebug>
+#include <QMessageBox>
+
 #include "Geometry.h"
 #include "Layer.h"
 #include "GraphicsLayer.h"
 #include "LocalServer.h"
 #include "MarkerSymbol.h"
 #include "GeometryEngine.h"
-#include "ArcGISLocalDynamicMapServiceLayer.h"
+#include "ArcGISDynamicMapServiceLayer.h"
+#include "LocalMapService.h"
 #include "Geomessage.h"
 #include "SimpleMarkerSymbol.h"
 
@@ -29,9 +36,12 @@
 static const QString APP_CONFIG_PATH(":/Resources/appconfig.xml");
 static const QString GPS_SIMULATION_FILE(":/Resources/Route_Archer.gpx");
 
-MapController::MapController(Map* inputMap, QObject* parent) :
+MapController::MapController(Map* inputMap,
+                             MapGraphicsView* inputGraphicsView,
+                             QObject* parent) :
     QObject(parent),
     map(inputMap),
+    mapGraphicsView(inputGraphicsView),
     buddiesLayerVisible(true),
     observationsLayerVisible(true),
     udpSocket(NULL),
@@ -380,7 +390,7 @@ void MapController::handleHomeClicked()
 
 void MapController::mousePress(QMouseEvent mouseEvent)
 {
-  QPointF mousePoint = mouseEvent.posF();
+  QPointF mousePoint = QPointF(mouseEvent.pos().x(), mouseEvent.pos().y());
 
   if (mouseEvent.button() == Qt::LeftButton)
   {
@@ -437,16 +447,16 @@ void MapController::handleMapMousePressRight(QPointF mousePoint)
     foreach (Layer layer, layers)
     {
       QString name = layer.name();
-      Layer::LayerType layerType = layer.type();
-      Layer::LayerStatus status = layer.status();
+      LayerType layerType = layer.type();
+      LayerStatus status = layer.status();
 
-      qDebug() << "Layer Name: " << name << ", Type: " + layerType;
+      qDebug() << "Layer Name: " << name << ", Type: " << int(layerType);
 
-      if ((status == Layer::LS_Initialized) &&
-              (layerType ==  Layer::LT_ArcGISLocalDynamicMapService))
+      if ((status == LayerStatus::Initialized) &&
+              (layerType ==  LayerType::ArcGISDynamicMapService))
       {
-        ArcGISLocalDynamicMapServiceLayer dynaMapLayer =
-          static_cast<ArcGISLocalDynamicMapServiceLayer>(layer);
+        ArcGISDynamicMapServiceLayer dynaMapLayer =
+          static_cast<ArcGISDynamicMapServiceLayer>(layer);
 
         QString url = dynaMapLayer.url();
         qDebug() << "url: " << url;
@@ -540,6 +550,7 @@ void MapController::handlePan(QString direction)
 void MapController::handlePositionAvailable(QPointF pos, double orientation)
 {
   QDateTime positionReceivedTime = QDateTime::currentDateTime();
+  Q_UNUSED(positionReceivedTime)
 
   if (!isMapReady)
       return;
@@ -649,7 +660,7 @@ void MapController::handleToggleReceiveSpotReports(bool state)
 void MapController::openAppConfigDialog()
 {
   if (NULL == appConfigDialog)
-    appConfigDialog = new AppConfigDialog(this, map);
+    appConfigDialog = new AppConfigDialog(this, mapGraphicsView);
   appConfigDialog->show();
 }
 
@@ -697,7 +708,7 @@ void MapController::toggleLayerVisibility(QString layerName)
 {
   Layer layer = map->layer(layerName);
 
-  if (layer.status() == Layer::LayerStatus::LS_Initialized)
+  if (layer.status() == LayerStatus::Initialized)
   {
       layer.setVisible(!layer.visible());
   }
@@ -706,16 +717,19 @@ void MapController::toggleLayerVisibility(QString layerName)
 void MapController::handleOpenMPK()
 {
   //Give user a dialog to open an MPK
-  QFileDialog dialog(map);
+  QFileDialog dialog(mapGraphicsView);
   dialog.setFileMode(QFileDialog::ExistingFile);
   dialog.setNameFilter(tr("Map packages (*.mpk)"));
 
   QString mpkFileName = dialog.getOpenFileName();
   if (0 < mpkFileName.length())
   {
-    ArcGISLocalDynamicMapServiceLayer dynamicLayer =
-    ArcGISLocalDynamicMapServiceLayer(mpkFileName);
-    map->addLayer(dynamicLayer);
+    LocalMapService localMapService = LocalMapService(mpkFileName);
+    localMapService.startAndWait();
+
+    ArcGISDynamicMapServiceLayer dynamicLocalServiceLayer =
+        ArcGISDynamicMapServiceLayer(localMapService.urlMapService());
+     map->addLayer(dynamicLocalServiceLayer);
   }
 }
 
@@ -736,12 +750,12 @@ void MapController::initController()
     return;
   }
 
-  if (!messageProcessor.isNull())
+  if (!messageProcessor.isEmpty())
   {
     return;
   }
 
-  messagGroupLayer = MessageGroupLayer(SymbolDictionary::DictionaryType::Mil2525C);
+  messagGroupLayer = MessageGroupLayer(SymbolDictionaryType::Mil2525C);
   map->addLayer(messagGroupLayer);
 
   messageProcessor = messagGroupLayer.messageProcessor();
@@ -753,7 +767,7 @@ void MapController::initController()
   bool dictionaryWorks = (symbolCount > 0);
 
   if (!dictionaryWorks)
-      QMessageBox::warning(map, "Failure", "Dictionary Did not initialize", "Advanced/Military Symbology will not work");
+      QMessageBox::warning(mapGraphicsView, "Failure", "Dictionary Did not initialize", "Advanced/Military Symbology will not work");
 
   // Needed so map does not try to pan while we are following the vehicle (which gives a lagging appearance)
   map->setPanAnimationEnabled(false);
@@ -789,7 +803,7 @@ void MapController::returnPoint(Point point)
 
   mouseClickGraphicLayer.removeAll();
 
-  SimpleMarkerSymbol smsSymbol(Qt::red, 16, SimpleMarkerSymbol::SMSS_Circle);
+  SimpleMarkerSymbol smsSymbol(Qt::red, 16, SimpleMarkerSymbolStyle::Circle);
   Graphic mouseClickGraphic(point, smsSymbol);
 
   int id = mouseClickGraphicLayer.addGraphic(mouseClickGraphic);
@@ -900,7 +914,7 @@ void MapController::sendChemLightMessage(Point pos)
     if (chemLightColorStr == "yellow")
         chemlightColor = Qt::yellow;
 
-  SimpleMarkerSymbol smsSymbol(chemlightColor, 20, SimpleMarkerSymbol::SMSS_Circle);
+  SimpleMarkerSymbol smsSymbol(chemlightColor, 20, SimpleMarkerSymbolStyle::Circle);
   Graphic mouseClickGraphic(pos, smsSymbol);
 
   int id = this->chemLightLayer.addGraphic(mouseClickGraphic);
@@ -1156,7 +1170,7 @@ bool MapController::readMessage(QXmlStreamReader& reader)
 
 void MapController::showHideMe(bool show, Point atPoint, double withHeading)
 {
-  if (!isMapReady)
+  if ((!isMapReady) || (mapGraphicsView == 0))
     return;
 
   // set these on the first positioning
@@ -1174,7 +1188,7 @@ void MapController::showHideMe(bool show, Point atPoint, double withHeading)
     QPixmap ownshipPixmap(":/Resources/icons/Ownship.png");
     QImage ownshipImage = ownshipPixmap.toImage();
     drawingOverlay->setImage(ownshipImage);
-    drawingOverlay->setMap(map);
+    drawingOverlay->setGraphicsView(mapGraphicsView);
   }
 
   drawingOverlay->setVisible(show);
@@ -1203,8 +1217,8 @@ void MapController::mapReady()
   const bool DEFAULT_GRID_ON = true;
   if (DEFAULT_GRID_ON)
   {
-      map->grid().setType(Grid::GridType::GT_MGRS);
-      map->grid().setVisibility(true);
+      map->grid().setType(GridType::Mgrs);
+      map->grid().setVisible(true);
   }
 }
 
@@ -1226,7 +1240,7 @@ Point MapController::MGRSToMapPoint(QString mgrs)
   mgrss.append(mgrs);
 
   QList<Point> points;
-  points = sr.fromMilitaryGrid(mgrss, SpatialReference::MGRS_Automatic);
+  points = sr.fromMilitaryGrid(mgrss, MgrsConversionMode::Automatic);
 
   if (points.length() < 1)
     return returnPoint;
@@ -1256,7 +1270,7 @@ QString MapController::mapPointToMGRS(Point point)
   QList<Point> coordinates;
   coordinates.append(point);
 
-  const SpatialReference::MgrsConversionMode method = SpatialReference::MGRS_Automatic;
+  const MgrsConversionMode method = MgrsConversionMode::Automatic;
   const int digits = 5;
   QStringList mgrss = sr.toMilitaryGrid(method, digits, false, true, coordinates);
 

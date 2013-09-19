@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2012 Esri
+ * Copyright 2012-2013 Esri
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 #include "mapscalebar.h"
 #include <QtGui>
 
-MapScalebar::MapScalebar(QGraphicsItem *parent) : QGraphicsWidget(parent)
+MapScalebar::MapScalebar(QGraphicsItem *parent) : QGraphicsWidget(parent), m_pMapGraphicsView(0)
 {
     // set defaults
     maxTick = 500000.0; //meters
@@ -30,11 +30,11 @@ MapScalebar::MapScalebar(QGraphicsItem *parent) : QGraphicsWidget(parent)
     setAutoFillBackground(false);
 }
 
-void MapScalebar::setMap(Map* pMap)
+void MapScalebar::setGraphicsView(MapGraphicsView* pGraphicView)
 {
-    m_pMap = pMap;
+    m_pMapGraphicsView = pGraphicView;
 
-    QGraphicsScene* scene = m_pMap->scene();
+    QGraphicsScene* scene = m_pMapGraphicsView->scene();
     scene->addItem(this);
 }
 
@@ -48,13 +48,13 @@ void MapScalebar::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     Q_UNUSED(option)
     Q_UNUSED(widget)
 
-    if (!m_pMap || !m_pMap->isReady())
+    if (!m_pMapGraphicsView || !m_pMapGraphicsView->map().isReady())
         return;
 
-    if (m_pMap->layerCount() == 0)
+    if (m_pMapGraphicsView->map().layerCount() == 0)
       return;
 
-    double mapResolution = m_pMap->resolution();
+    double mapResolution = m_pMapGraphicsView->map().resolution();
     if (mapResolution <= 0.0)
       return;
 
@@ -70,7 +70,7 @@ void MapScalebar::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     pixelLength = maxTick / mapResolution;
 
     qDebug()<< "maxTick = " << maxTick;
-    qDebug()<< "ESRIRuntimeQT::Unit = " << m_pMap->layer(0).spatialReference().unit().displayName();
+    qDebug()<< "ESRIRuntimeQT::Unit = " << m_pMapGraphicsView->map().layer(0).spatialReference().unit().displayName();
 
     QLinearGradient linearGradient(QPointF(40, 40), QPointF(80, 80));
         linearGradient.setColorAt(0.1, Qt::red);

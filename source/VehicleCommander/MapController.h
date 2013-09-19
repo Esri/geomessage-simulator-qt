@@ -19,6 +19,7 @@
 
 #include <QObject>
 #include <QUdpSocket>
+#include <QMouseEvent>
 
 #include "IdentifyTask.h"
 #include "Geometry.h"
@@ -45,7 +46,7 @@ public:
   static const double METERS_PER_MILE;
   static const int MILLISECONDS_PER_HOUR;
 
-  explicit MapController(Map* inputMap, QObject* parent = 0);
+  explicit MapController(Map* inputMap, MapGraphicsView *inputGraphicsView, QObject* parent = 0);
   virtual ~MapController();
   void setMap(Map* newMap);
   void initController();
@@ -96,6 +97,7 @@ private:
 
   // Attributes
   Map* map;
+  MapGraphicsView* mapGraphicsView;
   SymbolDictionary dictionary;
   MessageGroupLayer messagGroupLayer;
   MessageProcessor messageProcessor;
