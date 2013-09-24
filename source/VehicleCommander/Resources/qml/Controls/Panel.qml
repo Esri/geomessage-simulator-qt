@@ -1,4 +1,4 @@
-import Qt 4.7
+import QtQuick 1.1
 
 Item
 {
@@ -9,6 +9,8 @@ Item
   property Stack stack
   property list<QtObject> model
   property Component delegate
+
+stack: stack
 
   function populateMenuPath()
   {

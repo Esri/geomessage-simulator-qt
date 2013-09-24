@@ -1,4 +1,4 @@
-import Qt 4.7
+import QtQuick 1.1
 import "StackObject.js" as StackObj
 
 Item
@@ -48,5 +48,9 @@ Item
   {
     return StackObj.stackArray
   }
-}
 
+  Component.onCompleted:
+  {
+    console.log("Stack onCompleted")
+  }
+}
