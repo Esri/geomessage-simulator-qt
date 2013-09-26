@@ -19,6 +19,7 @@ Item
   signal openMPK()
   signal toggleLayerVisibility(string name)
   signal clicked()
+  signal visibilityAnalysisClicked()
 
   property Stack stack
   property Panel panel
@@ -35,6 +36,8 @@ Item
     buddiesPanel: buddiesPanel
     observationsPanel: observationsPanel
     optionsPanel: optionsPanel
+    visibilityPanel: visibilityPanel
+
     anchors.fill: parent
     stack: mainMenu.stack;
     visible: false
@@ -102,6 +105,17 @@ Item
       sendMyPositionToggled.connect(mainMenu.sendMyPositionToggled)
       resetMapClicked.connect(mainMenu.resetMapClicked)
       aboutMeClicked.connect(mainMenu.aboutMeClicked)
+    }
+  }
+
+  VisibilityPanel
+  {
+    id: visibilityPanel
+    stack: mainMenu.stack
+    anchors.fill: parent
+    Component.onCompleted:
+    {
+      visibilityAnalysisClicked.connect(mainMenu.visibilityAnalysisClicked)
     }
   }
 }

@@ -117,5 +117,6 @@
         <file>Resources/icons/X-Normal.png</file>
         <file>Resources/icons/X-Pressed.png</file>
         <file>Resources/icons/Ownship.png</file>
+        <file>Resources/qml/Panels/MainMenu/VisibilityPanel.qml</file>
     </qresource>
 </RCC>

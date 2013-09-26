@@ -23,7 +23,7 @@ The Vehicle Commander Qt demonstrates developer samples for building and testing
 
 * ArcGIS Runtime SDK for Qt 10.2
     * Hardware and software requirements are the same as those for ArcGIS Runtime SDK for Qt.  See the [Runtime SDK documentation for more information](https://developers.arcgis.com/en/qt/).
-* The [Qt Software Developer Kit](http://qt.digia.com/)
+* The [Qt Software Developer Kit](http://qt.digia.com/) with Qt Creator
     * See the ArcGIS Runtime SDK documentation for specific versions supported.
     * Currently:
         * Qt 5.1 for Windows
@@ -36,12 +36,17 @@ The Vehicle Commander Qt demonstrates developer samples for building and testing
 * [New to Github? Get started here.](http://htmlpreview.github.com/?https://github.com/Esri/esri.github.com/blob/master/help/esri-getting-to-know-github.html)
 
 ### Getting Started with the Vehicle Commander (Qt)
+* Check your development environment is properly configured for the ArcGIS Runtime SDK for Qt; some items of note:
+    * Ensure the configuration file esri_runtime_qt_10_2.prf has been installed
+        * Copied from {ARCGISRUNTIMESDKQT}\sdk\ideintegration\esri_runtime_qt_10_2.prf to {QTDIR}\mkspecs\features\esri_runtime_qt_10_2.prf 
+    * (Linux only) Initialize runtime. From a Command Prompt> `> . {RuntimeSDKHome}/init_sdk_qt64.sh`
 * Open, build, and run one of the sample projects in Qt Creator
 * These projects include:
-    *  ArcGISQtMessageSimulator - sends simulated network update messages
-    *  ArcGISQtSearchAPIApp - a stand-alone symbol search sample
-    *  MapTestApp - a simple map demonstration application
-    *  VehicleCommander - a more advanced in-vehicle, touchscreen application
+    * ArcGISQtMessageSimulator - sends simulated network update messages
+    * ArcGISQtSearchAPIApp - a stand-alone symbol search sample
+    * MapTestApp - a simple map demonstration application
+    * VehicleCommander - a more advanced in-vehicle, touchscreen application
+        * To automate the copy of the deployment files, a manual step is required to the Qt Creator Project. To do this in Qt Creator: Projects | VehicleCommander - Build Settings tab | Build Steps click on Add Build Step | Choose Make from the Add menu | Add "install" as Make argument. See the [VehicleCommander.pro](source/VehicleCommander/VehicleCommander.pro) for details on the install step. Note: this must been done for both the Debug and Release Builds.
         * IMPORTANT/WORKAROUND: in order to debug the VehicleCommander project you will need to disable QML debugging (in Projects | Run | Debugger Settings). For more information see [Issue #5](https://github.com/Esri/vehicle-commander-qt/issues/5)
 
 ### Services

@@ -18,10 +18,21 @@ CONFIG += esri_runtime_qt_10_2
 CONFIG += debug_and_release
 CONFIG(debug, debug|release){
     TARGET = VehicleCommanderd
+
+    DESTDIR = $$OUT_PWD/debug
 }
 else{
     TARGET = VehicleCommander
+
+    DESTDIR = $$OUT_PWD/release
 }
+
+# This copies any deployment files, but requires you to add an additional build step
+# To do this: Projects | Build Settings tab | Build Steps click on Add Build Step
+#   | Choose Make from the Add menu | Add "install" as Make arguments
+DeployFiles.path = $$DESTDIR
+DeployFiles.files += Resources/gpks/FastVisibilityByDistance.gpk
+INSTALLS += DeployFiles
 
 win32:DEFINES += WINDOWS
 
@@ -99,4 +110,5 @@ OTHER_FILES += \
     Resources/qml/Panels/SpotReport/LocationPanel.qml \
     Resources/qml/Panels/SpotReport/EquipmentPanel.qml \
     Resources/qml/Panels/Identify/IdentifyResultsPanel.qml \
-    Resources/qml/Panels/SpotReport/ActivityPanel.qml
+    Resources/qml/Panels/SpotReport/ActivityPanel.qml \
+    Resources/qml/Panels/MainMenu/VisibilityPanel.qml

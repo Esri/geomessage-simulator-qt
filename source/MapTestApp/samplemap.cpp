@@ -546,7 +546,7 @@ QString SampleMap::getPathSampleData()
 
 void SampleMap::setUI()
 {
-    qDebug() << "ArcMapImpl::setUI";
+    qDebug() << "SampleMap::setUI";
 
     // set to openGL rendering (or won't work on Windows)
     EsriRuntimeQt::ArcGISRuntime::setRenderEngine(EsriRuntimeQt::RenderEngine::OpenGL);
@@ -556,14 +556,12 @@ void SampleMap::setUI()
 
     m_pMap.setWrapAroundEnabled(true);
 
-// TODO: figure out where this property went
-//    m_pMap.setShowingEsriLogo(false);
+    m_pMap.setEsriLogoVisible(false);
 
     m_pMapGraphicsViewInsetMap =
         EsriRuntimeQt::MapGraphicsView::create(m_pInsetMap, this);
 
-// TODO: figure out where this property went
-//    m_pInsetMap.setShowingEsriLogo(false);
+    m_pInsetMap.setEsriLogoVisible(false);
 
     // set this so inset will do finer grained zooming
     m_pInsetMap.setZoomSnapEnabled(false);

@@ -109,8 +109,7 @@ void MainView::setUI()
 
   map.setWrapAroundEnabled(false);
 
-  // TODO: Put back in when we figure out where this went
-  // map.setShowingEsriLogo(false);
+  map.setEsriLogoVisible(false);
 
   // TODO: put your own high res dataset path here if desired
   QString dataPathTpk = getPathSampleData() + "tpks" + QDir::separator();
@@ -238,6 +237,7 @@ void MainView::setUI()
     connect(mainMenuUI, SIGNAL(sendMyPositionToggled(bool)), mapController, SLOT(handleToggleBroadcastPosition(bool)));
     connect(mainMenuUI, SIGNAL(resetMapClicked()), mapController, SLOT(handleResetMap()));
     connect(mainMenuUI, SIGNAL(clicked()), mapController, SLOT(uiElementClicked()));
+    connect(mainMenuUI, SIGNAL(visibilityAnalysisClicked()), mapController, SLOT(handleVisibilityAnalysisClicked()));
   }
 
   // hook up the handler for the mouse click

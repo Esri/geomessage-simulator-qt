@@ -19,6 +19,7 @@
 #include <QFileDialog>
 #include <QDebug>
 #include <QMessageBox>
+#include <QProgressDialog>
 
 #include "Geometry.h"
 #include "Layer.h"
@@ -26,10 +27,10 @@
 #include "LocalServer.h"
 #include "MarkerSymbol.h"
 #include "GeometryEngine.h"
-#include "ArcGISDynamicMapServiceLayer.h"
 #include "LocalMapService.h"
 #include "Geomessage.h"
 #include "SimpleMarkerSymbol.h"
+#include "SimpleFillSymbol.h"
 
 #include "MapController.h"
 
@@ -57,7 +58,8 @@ MapController::MapController(Map* inputMap,
     isMapReady(false),
     drawingOverlay(0),
     lastHeading(0.0),
-    mouseState(MouseStateNone)
+    mouseState(MouseStateNone),
+    visibilityInProgress(false)
 {
   if (QFile::exists("./route.gpx"))
     simulator.setGpxFile("./route.gpx");
@@ -774,6 +776,7 @@ void MapController::initController()
 
   map->addLayer(mouseClickGraphicLayer);
   map->addLayer(chemLightLayer);
+  map->addLayer(viewshedGraphicLayer);
 
 }
 
@@ -1318,4 +1321,160 @@ QVariantMap MapController::symbolNameOrId2VariantMap(QString nameOrId)
   vMap["Tags"] = keywordString;
 
   return vMap;
+}
+
+void MapController::handleVisibilityAnalysisClicked()
+{ 
+  // IMPORTANT: Assumes gpk is in same folder as .exe
+  QString currentPath = QCoreApplication::applicationDirPath();
+
+  QFileInfo gpkFile(currentPath + QDir::separator() + "FastVisibilityByDistance.gpk");
+
+  if (!gpkFile.exists())
+  {
+    QString msg = "Could not find required GPK at: " + gpkFile.absoluteFilePath();
+    qDebug() << "IMPORTANT: " << msg;
+    QMessageBox messageBox;
+    messageBox.setText(msg);
+    messageBox.exec();
+    return;
+  }
+
+  if (visibilityInProgress)
+  {
+    qDebug() << "Visibility/Viewshed Already In Progress...";
+    return;
+  }
+  visibilityInProgress = true;
+
+  QProgressDialog* m_progressDialog = new QProgressDialog();
+  // set up progress bar
+  m_progressDialog->setBaseSize(280, 20);
+  m_progressDialog->setRange(0, 0);
+  m_progressDialog->setValue(0);
+  m_progressDialog->setCancelButton(0);
+  m_progressDialog->setLabelText("Computing the viewshed...");
+  m_progressDialog->setVisible(true);
+
+  if (viewshedService.isEmpty())
+  {
+    m_progressDialog->setLabelText("Starting Viewshed Service...");
+    viewshedService = EsriRuntimeQt::LocalGeoprocessingService(gpkFile.absoluteFilePath());
+    viewshedService.setServiceType(EsriRuntimeQt::GPServiceType::SubmitJobWithMapServerResult);
+    viewshedService.startAndWait();
+    m_progressDialog->setLabelText("Computing the viewshed...");
+  }
+
+  // the ownship is the viewshed point
+  EsriRuntimeQt::Point viewshedPoint = lastOwnshipPoint;
+
+  EsriRuntimeQt::SpatialReference srMap = map->spatialReference();
+  if (!EsriRuntimeQt::GeometryEngine::within(viewshedPoint, map->extent(), srMap))
+    qDebug() << "Warning: Viewshed point not on the map.";
+
+  if (!(viewshedLayer.isEmpty() || viewshedLayer.isNull()))
+  {
+    // remove the previous viewshed layer's outputs
+    map->removeLayer("Viewshed");
+  }
+
+  viewshedGraphicLayer.removeAll();
+
+  EsriRuntimeQt::SimpleMarkerSymbol sms(QColor("Red"), 14, EsriRuntimeQt::SimpleMarkerSymbolStyle::X);
+  EsriRuntimeQt::Graphic viewshedPointGraphic(viewshedPoint, sms);
+  viewshedGraphicLayer.addGraphic(viewshedPointGraphic);
+
+  QString viewshedUrl = viewshedService.url();
+
+  // IMPORTANT: The remaining parameters are dependent on the
+  // GPK used
+  QString modelName = "Fast%20Visibility%20By%20Distance";
+  geoprocessor = EsriRuntimeQt::Geoprocessor(viewshedUrl + "/" + modelName);
+
+  geoprocessor.setProcessSR(srMap);
+  geoprocessor.setOutSR(srMap);
+
+  QList<EsriRuntimeQt::GPParameter> gpInputParams;
+
+  EsriRuntimeQt::GPFeatureRecordSetLayer gpInputViewshedPoint("Observer");
+  gpInputViewshedPoint.setSpatialReference(srMap);
+  gpInputViewshedPoint.setGeometryType(GeometryType::Point);
+  gpInputViewshedPoint.addGraphic(viewshedPointGraphic);
+
+  // TODO: make this a setting on the menu
+  EsriRuntimeQt::GPLinearUnit gpInputViewshedDistance("Radius");
+  gpInputViewshedDistance.setUnits("esriMeters");
+  double viewshedDistance = 5000;
+  gpInputViewshedDistance.setDistance(viewshedDistance);
+
+  GPDouble gpInputHeight("ObserverHeight");
+  double observerHeight = 2.0;
+  gpInputHeight.setValue(observerHeight);
+
+  gpInputParams.append(gpInputViewshedPoint);
+  gpInputParams.append(gpInputViewshedDistance);
+  gpInputParams.append(gpInputHeight);
+
+  // execute the geoprocessing request
+  connect(&geoprocessor, SIGNAL(gpSubmitJobComplete(EsriRuntimeQt::GPJobResource)), this, SLOT(onSubmitJobComplete(EsriRuntimeQt::GPJobResource)));
+  connect(&geoprocessor, SIGNAL(gpError(EsriRuntimeQt::ServiceError)), this, SLOT(onGpError(EsriRuntimeQt::ServiceError)));
+
+  geoprocessor.submitJob(gpInputParams);
+
+  m_progressDialog->setVisible(false);
+}
+
+void MapController::onSubmitJobComplete(const EsriRuntimeQt::GPJobResource& jobResource)
+{
+  JobStatus gpStatus = jobResource.jobStatus();
+
+  QString jobID = jobResource.jobID();
+  qDebug() << "GP SubmitJobComplete - gpStatus: " << int(gpStatus) << ", Job ID:" << jobID;
+  int i = 0;
+  const int MAX_TIMEOUT_COUNT = 40;
+  while ((gpStatus != JobStatus::Succeeded) &&
+         (gpStatus != JobStatus::Failed) &&
+         (i < MAX_TIMEOUT_COUNT))
+  {
+      GPJobResource jobResourceNext = geoprocessor.jobStatusAndWait(jobID);
+      gpStatus = jobResourceNext.jobStatus();
+
+      qDebug() << "GP Job in progress(jobStatusAndWait) - gpStatus: " << int(gpStatus) << ", Job ID:" << jobID;
+
+      if (gpStatus == JobStatus::Succeeded)
+      {
+        qDebug() << "GP Job Succeeded - adding results to map";
+
+        viewshedLayer = ArcGISDynamicMapServiceLayer(geoprocessor.url(), jobResourceNext);
+        viewshedLayer.setName("Viewshed");
+        map->addLayer(viewshedLayer);
+
+        break;
+      }
+
+      const int sleepMilliSecs = 500;
+// Workaround/Note: QThread::msleep/sleep not public until Qt5
+#ifdef _WIN32
+  ::Sleep(sleepMilliSecs);
+#else
+  usleep(sleepMilliSecs * (10*10*10)); // convert to usec (10^-6) to msec (10^-3)
+#endif
+
+      i++;
+  }
+
+  disconnect(&geoprocessor, SIGNAL(gpSubmitJobComplete(EsriRuntimeQt::GPJobResource)), this, SLOT(onSubmitJobComplete(EsriRuntimeQt::GPJobResource)));
+  disconnect(&geoprocessor, SIGNAL(gpError(EsriRuntimeQt::ServiceError)), this, SLOT(onGpError(EsriRuntimeQt::ServiceError)));
+
+  visibilityInProgress = false;
+}
+
+void MapController::onGpError(const EsriRuntimeQt::ServiceError& error)
+{
+  qDebug() << "GP Error! Message=" << error.message();
+
+  disconnect(&geoprocessor, SIGNAL(gpSubmitJobComplete(EsriRuntimeQt::GPJobResource)), this, SLOT(onSubmitJobComplete(EsriRuntimeQt::GPJobResource)));
+  disconnect(&geoprocessor, SIGNAL(gpError(EsriRuntimeQt::ServiceError)), this, SLOT(onGpError(EsriRuntimeQt::ServiceError)));
+
+  visibilityInProgress = false;
 }

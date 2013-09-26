@@ -20,11 +20,15 @@
 #include <QObject>
 #include <QUdpSocket>
 #include <QMouseEvent>
+#include <ArcGISDynamicMapServiceLayer.h>
 
+// ArcGIS Runtime Includes
 #include "IdentifyTask.h"
 #include "Geometry.h"
+#include "Geoprocessor.h"
 #include "GraphicsLayer.h"
 #include "Layer.h"
+#include "LocalGeoprocessingService.h"
 #include "Map.h"
 #include "MarkerSymbol.h"
 #include "Message.h"
@@ -32,9 +36,9 @@
 #include "MessageProcessor.h"
 #include "SymbolDictionary.h"
 
+// Local Project Includes
 #include "AppConfigDialog.h"
 #include "GPSSimulator.h"
-
 #include "simplegraphicoverlay.h"
 
 using namespace EsriRuntimeQt;
@@ -108,6 +112,7 @@ private:
   GraphicsLayer observationsLayer;
   GraphicsLayer chemLightLayer;
   GraphicsLayer mouseClickGraphicLayer;
+  GraphicsLayer viewshedGraphicLayer;
 
   Envelope originalExtent;
   double originalScale;
@@ -146,6 +151,11 @@ private:
   enum mouseStateEnum { MouseStateNone, MouseStateMenuClicked, MouseStateWaitingForMapPoint };
   mouseStateEnum mouseState;
 
+  EsriRuntimeQt::ArcGISDynamicMapServiceLayer viewshedLayer;
+  EsriRuntimeQt::LocalGeoprocessingService viewshedService;
+  EsriRuntimeQt::Geoprocessor geoprocessor;
+  bool visibilityInProgress;
+
 signals:
   void clearChemLightUI();
   void headingChanged(QVariant newHeading);
@@ -183,6 +193,9 @@ public slots:
   void applyAppConfigSettings();
   void mousePress(QMouseEvent mouseEvent);
   void onIdentifyComplete(QList<IdentifyResult> results);
+  void handleVisibilityAnalysisClicked();
+  void onSubmitJobComplete(const EsriRuntimeQt::GPJobResource& jobResource);
+  void onGpError(const EsriRuntimeQt::ServiceError& error);
 
   /*!
     \brief Slot to tell MainView that a UI element was clicked, preventing it from running "identify"
