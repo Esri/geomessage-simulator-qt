@@ -14,23 +14,35 @@
  | limitations under the License.
  */
 
+#include <QApplication>
+#include <QDesktopWidget>
+#include <QFileDialog>
+#include <QDebug>
+#include <QMessageBox>
+#include <QProgressDialog>
+
 #include "Geometry.h"
 #include "Layer.h"
 #include "GraphicsLayer.h"
 #include "LocalServer.h"
 #include "MarkerSymbol.h"
 #include "GeometryEngine.h"
-#include "ArcGISLocalDynamicMapServiceLayer.h"
+#include "LocalMapService.h"
 #include "Geomessage.h"
+#include "SimpleMarkerSymbol.h"
+#include "SimpleFillSymbol.h"
 
 #include "MapController.h"
 
 static const QString APP_CONFIG_PATH(":/Resources/appconfig.xml");
 static const QString GPS_SIMULATION_FILE(":/Resources/Route_Archer.gpx");
 
-MapController::MapController(Map* inputMap, QObject* parent) :
+MapController::MapController(Map* inputMap,
+                             MapGraphicsView* inputGraphicsView,
+                             QObject* parent) :
     QObject(parent),
     map(inputMap),
+    mapGraphicsView(inputGraphicsView),
     buddiesLayerVisible(true),
     observationsLayerVisible(true),
     udpSocket(NULL),
@@ -46,7 +58,8 @@ MapController::MapController(Map* inputMap, QObject* parent) :
     isMapReady(false),
     drawingOverlay(0),
     lastHeading(0.0),
-    mouseState(MouseStateNone)
+    mouseState(MouseStateNone),
+    visibilityInProgress(false)
 {
   if (QFile::exists("./route.gpx"))
     simulator.setGpxFile("./route.gpx");
@@ -88,10 +101,10 @@ QByteArray MapController::createChemLightReport(Point& location, const QString& 
 {
   Q_UNUSED(action)
 
-  if (qIsNaN(location.X()) || qIsNaN(location.Y()))
+  if (qIsNaN(location.x()) || qIsNaN(location.y()))
     return QByteArray();
 
-  QString strControlPoint = QString("%1,%2").arg(location.X()).arg(location.Y());
+  QString strControlPoint = QString("%1,%2").arg(location.x()).arg(location.y());
 
   QByteArray data;
   QXmlStreamWriter chemLightReport(&data);
@@ -138,9 +151,9 @@ QByteArray MapController::createPositionReport(const QString& action)
   Q_UNUSED(action)
 
   Point location = lastOwnshipPoint;
-  QString strLocationControlPoint = QString("%1,%2").arg(location.X()).arg(location.Y());
-  double lat = location.Y();
-  double lon = location.X();
+  QString strLocationControlPoint = QString("%1,%2").arg(location.x()).arg(location.y());
+  double lat = location.y();
+  double lon = location.x();
 
   QString mgrs = mapPointToMGRS(lastOwnshipPoint);
 
@@ -377,6 +390,20 @@ void MapController::handleHomeClicked()
   }
 }
 
+void MapController::mousePress(QMouseEvent mouseEvent)
+{
+  QPointF mousePoint = QPointF(mouseEvent.pos().x(), mouseEvent.pos().y());
+
+  if (mouseEvent.button() == Qt::LeftButton)
+  {
+    handleMapMousePressLeft(mousePoint);
+  }
+  else if (mouseEvent.button() == Qt::RightButton)
+  {
+    handleMapMousePressRight(mousePoint);
+  }
+}
+
 void MapController::handleMapMousePressLeft(QPointF mousePoint)
 {
   if ((map) && (isMapReady))
@@ -386,10 +413,10 @@ void MapController::handleMapMousePressLeft(QPointF mousePoint)
     previousMousePressPosScreen.setX(mousePoint.x());
     previousMousePressPosScreen.setY(mousePoint.y());
 
-    previousMousePressPosMap.setX(mapPoint.X());
-    previousMousePressPosMap.setY(mapPoint.Y());
+    previousMousePressPosMap.setX(mapPoint.x());
+    previousMousePressPosMap.setY(mapPoint.y());
 
-    qDebug() << "Right Click, Map Point = " << mapPoint.X() << ", " << mapPoint.Y();
+    qDebug() << "Right Click, Map Point = " << mapPoint.x() << ", " << mapPoint.y();
 
     if (mouseState == MouseStateMenuClicked)
         mouseState = MouseStateWaitingForMapPoint;
@@ -412,26 +439,26 @@ void MapController::handleMapMousePressRight(QPointF mousePoint)
     previousMousePressPosScreen.setX(mousePoint.x());
     previousMousePressPosScreen.setY(mousePoint.y());
 
-    previousMousePressPosMap.setX(mapPoint.X());
-    previousMousePressPosMap.setY(mapPoint.Y());
+    previousMousePressPosMap.setX(mapPoint.x());
+    previousMousePressPosMap.setY(mapPoint.y());
 
-    qDebug() << "Left Click, Map Point = " << mapPoint.X() << ", " << mapPoint.Y();
+    qDebug() << "Left Click, Map Point = " << mapPoint.x() << ", " << mapPoint.y();
 
     QList<Layer> layers = map->layers();
 
     foreach (Layer layer, layers)
     {
       QString name = layer.name();
-      Layer::LayerType layerType = layer.type();
-      Layer::LayerStatus status = layer.status();
+      LayerType layerType = layer.type();
+      LayerStatus status = layer.status();
 
-      qDebug() << "Layer Name: " << name << ", Type: " + layerType;
+      qDebug() << "Layer Name: " << name << ", Type: " << int(layerType);
 
-      if ((status == Layer::LS_Initialized) &&
-              (layerType ==  Layer::LT_DynamicMapService))
+      if ((status == LayerStatus::Initialized) &&
+              (layerType ==  LayerType::ArcGISDynamicMapService))
       {
-        ArcGISLocalDynamicMapServiceLayer dynaMapLayer =
-          static_cast<ArcGISLocalDynamicMapServiceLayer>(layer);
+        ArcGISDynamicMapServiceLayer dynaMapLayer =
+          static_cast<ArcGISDynamicMapServiceLayer>(layer);
 
         QString url = dynaMapLayer.url();
         qDebug() << "url: " << url;
@@ -449,7 +476,7 @@ void MapController::handleMapMousePressRight(QPointF mousePoint)
 
         IdentifyTask identifyTask(url);
 
-        QList<IdentifyResult> results = identifyTask.execute(params);
+        QList<IdentifyResult> results = identifyTask.executeAndWait(params);
         onIdentifyComplete(results);
 
         // if Async Desired:
@@ -525,6 +552,7 @@ void MapController::handlePan(QString direction)
 void MapController::handlePositionAvailable(QPointF pos, double orientation)
 {
   QDateTime positionReceivedTime = QDateTime::currentDateTime();
+  Q_UNUSED(positionReceivedTime)
 
   if (!isMapReady)
       return;
@@ -535,7 +563,7 @@ void MapController::handlePositionAvailable(QPointF pos, double orientation)
   if (0) // if debug simulation data
   {
       qDebug() << "Simulator Data: " << QString::number(pos.y()) << ", " << QString::number(pos.y()) << ", Orientation: " << orientation;
-      qDebug() << "         Delta: " << QString::number(mapPoint.X()) << ", " << QString::number(mapPoint.Y());
+      qDebug() << "         Delta: " << QString::number(mapPoint.x()) << ", " << QString::number(mapPoint.y());
   }
 
   double angle = (double) ((static_cast<int>(orientation + 90.0)) % 360);
@@ -634,7 +662,7 @@ void MapController::handleToggleReceiveSpotReports(bool state)
 void MapController::openAppConfigDialog()
 {
   if (NULL == appConfigDialog)
-    appConfigDialog = new AppConfigDialog(this, map);
+    appConfigDialog = new AppConfigDialog(this, mapGraphicsView);
   appConfigDialog->show();
 }
 
@@ -682,7 +710,7 @@ void MapController::toggleLayerVisibility(QString layerName)
 {
   Layer layer = map->layer(layerName);
 
-  if (layer.status() == Layer::LayerStatus::LS_Initialized)
+  if (layer.status() == LayerStatus::Initialized)
   {
       layer.setVisible(!layer.visible());
   }
@@ -691,16 +719,19 @@ void MapController::toggleLayerVisibility(QString layerName)
 void MapController::handleOpenMPK()
 {
   //Give user a dialog to open an MPK
-  QFileDialog dialog(map);
+  QFileDialog dialog(mapGraphicsView);
   dialog.setFileMode(QFileDialog::ExistingFile);
   dialog.setNameFilter(tr("Map packages (*.mpk)"));
 
   QString mpkFileName = dialog.getOpenFileName();
   if (0 < mpkFileName.length())
   {
-    ArcGISLocalDynamicMapServiceLayer dynamicLayer =
-    ArcGISLocalDynamicMapServiceLayer(mpkFileName);
-    map->addLayer(dynamicLayer);
+    LocalMapService localMapService = LocalMapService(mpkFileName);
+    localMapService.startAndWait();
+
+    ArcGISDynamicMapServiceLayer dynamicLocalServiceLayer =
+        ArcGISDynamicMapServiceLayer(localMapService.urlMapService());
+     map->addLayer(dynamicLocalServiceLayer);
   }
 }
 
@@ -721,12 +752,12 @@ void MapController::initController()
     return;
   }
 
-  if (!messageProcessor.isNull())
+  if (!messageProcessor.isEmpty())
   {
     return;
   }
 
-  messagGroupLayer = MessageGroupLayer(SymbolDictionary::DictionaryType::Mil2525C);
+  messagGroupLayer = MessageGroupLayer(SymbolDictionaryType::Mil2525C);
   map->addLayer(messagGroupLayer);
 
   messageProcessor = messagGroupLayer.messageProcessor();
@@ -738,13 +769,14 @@ void MapController::initController()
   bool dictionaryWorks = (symbolCount > 0);
 
   if (!dictionaryWorks)
-      QMessageBox::warning(map, "Failure", "Dictionary Did not initialize", "Advanced/Military Symbology will not work");
+      QMessageBox::warning(mapGraphicsView, "Failure", "Dictionary Did not initialize", "Advanced/Military Symbology will not work");
 
   // Needed so map does not try to pan while we are following the vehicle (which gives a lagging appearance)
   map->setPanAnimationEnabled(false);
 
   map->addLayer(mouseClickGraphicLayer);
   map->addLayer(chemLightLayer);
+  map->addLayer(viewshedGraphicLayer);
 
 }
 
@@ -774,7 +806,7 @@ void MapController::returnPoint(Point point)
 
   mouseClickGraphicLayer.removeAll();
 
-  SimpleMarkerSymbol smsSymbol(SMSS_Circle, 16, Qt::red);
+  SimpleMarkerSymbol smsSymbol(Qt::red, 16, SimpleMarkerSymbolStyle::Circle);
   Graphic mouseClickGraphic(point, smsSymbol);
 
   int id = mouseClickGraphicLayer.addGraphic(mouseClickGraphic);
@@ -782,7 +814,7 @@ void MapController::returnPoint(Point point)
   mouseClickGraphicLayer.select(id);
 
   QString mgrs = mapPointToMGRS(point);
-  emit newPointCreated(point.X(), point.Y(), mgrs);
+  emit newPointCreated(point.x(), point.y(), mgrs);
 
   mouseState = MouseStateNone;
 }
@@ -885,7 +917,7 @@ void MapController::sendChemLightMessage(Point pos)
     if (chemLightColorStr == "yellow")
         chemlightColor = Qt::yellow;
 
-  SimpleMarkerSymbol smsSymbol(SMSS_Circle, 20, chemlightColor);
+  SimpleMarkerSymbol smsSymbol(chemlightColor, 20, SimpleMarkerSymbolStyle::Circle);
   Graphic mouseClickGraphic(pos, smsSymbol);
 
   int id = this->chemLightLayer.addGraphic(mouseClickGraphic);
@@ -1141,7 +1173,7 @@ bool MapController::readMessage(QXmlStreamReader& reader)
 
 void MapController::showHideMe(bool show, Point atPoint, double withHeading)
 {
-  if (!isMapReady)
+  if ((!isMapReady) || (mapGraphicsView == 0))
     return;
 
   // set these on the first positioning
@@ -1159,7 +1191,7 @@ void MapController::showHideMe(bool show, Point atPoint, double withHeading)
     QPixmap ownshipPixmap(":/Resources/icons/Ownship.png");
     QImage ownshipImage = ownshipPixmap.toImage();
     drawingOverlay->setImage(ownshipImage);
-    drawingOverlay->setMap(map);
+    drawingOverlay->setGraphicsView(mapGraphicsView);
   }
 
   drawingOverlay->setVisible(show);
@@ -1188,8 +1220,8 @@ void MapController::mapReady()
   const bool DEFAULT_GRID_ON = true;
   if (DEFAULT_GRID_ON)
   {
-      map->grid().setType(Grid::GridType::GT_MGRS);
-      map->grid().setVisibility(true);
+      map->grid().setType(GridType::Mgrs);
+      map->grid().setVisible(true);
   }
 }
 
@@ -1211,7 +1243,7 @@ Point MapController::MGRSToMapPoint(QString mgrs)
   mgrss.append(mgrs);
 
   QList<Point> points;
-  points = sr.fromMilitaryGrid(mgrss, SpatialReference::MGRS_Automatic);
+  points = sr.fromMilitaryGrid(mgrss, MgrsConversionMode::Automatic);
 
   if (points.length() < 1)
     return returnPoint;
@@ -1219,7 +1251,7 @@ Point MapController::MGRSToMapPoint(QString mgrs)
   returnPoint = points.at(0);
 
   if (0)
-    qDebug() << "MGRSToMapPoint: " << QString::number(returnPoint.X()) << ", " << QString::number(returnPoint.Y());;
+    qDebug() << "MGRSToMapPoint: " << QString::number(returnPoint.x()) << ", " << QString::number(returnPoint.y());;
 
   return returnPoint;
 }
@@ -1241,7 +1273,7 @@ QString MapController::mapPointToMGRS(Point point)
   QList<Point> coordinates;
   coordinates.append(point);
 
-  const SpatialReference::MgrsConversionMode method = SpatialReference::MGRS_Automatic;
+  const MgrsConversionMode method = MgrsConversionMode::Automatic;
   const int digits = 5;
   QStringList mgrss = sr.toMilitaryGrid(method, digits, false, true, coordinates);
 
@@ -1289,4 +1321,160 @@ QVariantMap MapController::symbolNameOrId2VariantMap(QString nameOrId)
   vMap["Tags"] = keywordString;
 
   return vMap;
+}
+
+void MapController::handleVisibilityAnalysisClicked()
+{ 
+  // IMPORTANT: Assumes gpk is in same folder as .exe
+  QString currentPath = QCoreApplication::applicationDirPath();
+
+  QFileInfo gpkFile(currentPath + QDir::separator() + "FastVisibilityByDistance.gpk");
+
+  if (!gpkFile.exists())
+  {
+    QString msg = "Could not find required GPK at: " + gpkFile.absoluteFilePath();
+    qDebug() << "IMPORTANT: " << msg;
+    QMessageBox messageBox;
+    messageBox.setText(msg);
+    messageBox.exec();
+    return;
+  }
+
+  if (visibilityInProgress)
+  {
+    qDebug() << "Visibility/Viewshed Already In Progress...";
+    return;
+  }
+  visibilityInProgress = true;
+
+  QProgressDialog* m_progressDialog = new QProgressDialog();
+  // set up progress bar
+  m_progressDialog->setBaseSize(280, 20);
+  m_progressDialog->setRange(0, 0);
+  m_progressDialog->setValue(0);
+  m_progressDialog->setCancelButton(0);
+  m_progressDialog->setLabelText("Computing the viewshed...");
+  m_progressDialog->setVisible(true);
+
+  if (viewshedService.isEmpty())
+  {
+    m_progressDialog->setLabelText("Starting Viewshed Service...");
+    viewshedService = EsriRuntimeQt::LocalGeoprocessingService(gpkFile.absoluteFilePath());
+    viewshedService.setServiceType(EsriRuntimeQt::GPServiceType::SubmitJobWithMapServerResult);
+    viewshedService.startAndWait();
+    m_progressDialog->setLabelText("Computing the viewshed...");
+  }
+
+  // the ownship is the viewshed point
+  EsriRuntimeQt::Point viewshedPoint = lastOwnshipPoint;
+
+  EsriRuntimeQt::SpatialReference srMap = map->spatialReference();
+  if (!EsriRuntimeQt::GeometryEngine::within(viewshedPoint, map->extent(), srMap))
+    qDebug() << "Warning: Viewshed point not on the map.";
+
+  if (!(viewshedLayer.isEmpty() || viewshedLayer.isNull()))
+  {
+    // remove the previous viewshed layer's outputs
+    map->removeLayer("Viewshed");
+  }
+
+  viewshedGraphicLayer.removeAll();
+
+  EsriRuntimeQt::SimpleMarkerSymbol sms(QColor("Red"), 14, EsriRuntimeQt::SimpleMarkerSymbolStyle::X);
+  EsriRuntimeQt::Graphic viewshedPointGraphic(viewshedPoint, sms);
+  viewshedGraphicLayer.addGraphic(viewshedPointGraphic);
+
+  QString viewshedUrl = viewshedService.url();
+
+  // IMPORTANT: The remaining parameters are dependent on the
+  // GPK used
+  QString modelName = "Fast%20Visibility%20By%20Distance";
+  geoprocessor = EsriRuntimeQt::Geoprocessor(viewshedUrl + "/" + modelName);
+
+  geoprocessor.setProcessSR(srMap);
+  geoprocessor.setOutSR(srMap);
+
+  QList<EsriRuntimeQt::GPParameter> gpInputParams;
+
+  EsriRuntimeQt::GPFeatureRecordSetLayer gpInputViewshedPoint("Observer");
+  gpInputViewshedPoint.setSpatialReference(srMap);
+  gpInputViewshedPoint.setGeometryType(GeometryType::Point);
+  gpInputViewshedPoint.addGraphic(viewshedPointGraphic);
+
+  // TODO: make this a setting on the menu
+  EsriRuntimeQt::GPLinearUnit gpInputViewshedDistance("Radius");
+  gpInputViewshedDistance.setUnits("esriMeters");
+  double viewshedDistance = 5000;
+  gpInputViewshedDistance.setDistance(viewshedDistance);
+
+  GPDouble gpInputHeight("ObserverHeight");
+  double observerHeight = 2.0;
+  gpInputHeight.setValue(observerHeight);
+
+  gpInputParams.append(gpInputViewshedPoint);
+  gpInputParams.append(gpInputViewshedDistance);
+  gpInputParams.append(gpInputHeight);
+
+  // execute the geoprocessing request
+  connect(&geoprocessor, SIGNAL(gpSubmitJobComplete(EsriRuntimeQt::GPJobResource)), this, SLOT(onSubmitJobComplete(EsriRuntimeQt::GPJobResource)));
+  connect(&geoprocessor, SIGNAL(gpError(EsriRuntimeQt::ServiceError)), this, SLOT(onGpError(EsriRuntimeQt::ServiceError)));
+
+  geoprocessor.submitJob(gpInputParams);
+
+  m_progressDialog->setVisible(false);
+}
+
+void MapController::onSubmitJobComplete(const EsriRuntimeQt::GPJobResource& jobResource)
+{
+  JobStatus gpStatus = jobResource.jobStatus();
+
+  QString jobID = jobResource.jobID();
+  qDebug() << "GP SubmitJobComplete - gpStatus: " << int(gpStatus) << ", Job ID:" << jobID;
+  int i = 0;
+  const int MAX_TIMEOUT_COUNT = 40;
+  while ((gpStatus != JobStatus::Succeeded) &&
+         (gpStatus != JobStatus::Failed) &&
+         (i < MAX_TIMEOUT_COUNT))
+  {
+      GPJobResource jobResourceNext = geoprocessor.jobStatusAndWait(jobID);
+      gpStatus = jobResourceNext.jobStatus();
+
+      qDebug() << "GP Job in progress(jobStatusAndWait) - gpStatus: " << int(gpStatus) << ", Job ID:" << jobID;
+
+      if (gpStatus == JobStatus::Succeeded)
+      {
+        qDebug() << "GP Job Succeeded - adding results to map";
+
+        viewshedLayer = ArcGISDynamicMapServiceLayer(geoprocessor.url(), jobResourceNext);
+        viewshedLayer.setName("Viewshed");
+        map->addLayer(viewshedLayer);
+
+        break;
+      }
+
+      const int sleepMilliSecs = 500;
+// Workaround/Note: QThread::msleep/sleep not public until Qt5
+#ifdef _WIN32
+  ::Sleep(sleepMilliSecs);
+#else
+  usleep(sleepMilliSecs * (10*10*10)); // convert to usec (10^-6) to msec (10^-3)
+#endif
+
+      i++;
+  }
+
+  disconnect(&geoprocessor, SIGNAL(gpSubmitJobComplete(EsriRuntimeQt::GPJobResource)), this, SLOT(onSubmitJobComplete(EsriRuntimeQt::GPJobResource)));
+  disconnect(&geoprocessor, SIGNAL(gpError(EsriRuntimeQt::ServiceError)), this, SLOT(onGpError(EsriRuntimeQt::ServiceError)));
+
+  visibilityInProgress = false;
+}
+
+void MapController::onGpError(const EsriRuntimeQt::ServiceError& error)
+{
+  qDebug() << "GP Error! Message=" << error.message();
+
+  disconnect(&geoprocessor, SIGNAL(gpSubmitJobComplete(EsriRuntimeQt::GPJobResource)), this, SLOT(onSubmitJobComplete(EsriRuntimeQt::GPJobResource)));
+  disconnect(&geoprocessor, SIGNAL(gpError(EsriRuntimeQt::ServiceError)), this, SLOT(onGpError(EsriRuntimeQt::ServiceError)));
+
+  visibilityInProgress = false;
 }

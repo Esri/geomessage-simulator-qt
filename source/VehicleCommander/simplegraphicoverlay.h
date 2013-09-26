@@ -18,9 +18,11 @@
 #define SIMPLEGRAPHICOVERLAY_H
 
 #include <QGraphicsWidget>
+#include <QGraphicsView>
 
-#include "Map.h"
 #include "Geometry.h"
+#include "Point.h"
+#include "MapGraphicsView.h"
 
 using namespace EsriRuntimeQt;
 
@@ -33,7 +35,7 @@ public:
     void setImage(QImage imageIn);
     void setAngle(double rotationIn);
     void setPosition(Point point);
-    void setMap(Map* pMap);
+    void setGraphicsView(MapGraphicsView* pGraphicView);
     void setVisible(bool visibleIn);
 
     QRectF boundingRect() const;
@@ -51,8 +53,7 @@ private:
     double rotation;
     int screenX, screenY;
     bool visible;
-    Map* m_pMap;
-
+    MapGraphicsView* m_pMapGraphicsView;
 };
 
 #endif // SIMPLEGRAPHICOVERLAY_H

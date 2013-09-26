@@ -1,4 +1,4 @@
-import Qt 4.7
+import QtQuick 1.1
 import "../../Controls"
 
 Panel
@@ -11,6 +11,7 @@ Panel
   property Panel buddiesPanel
   property Panel observationsPanel
   property Panel optionsPanel
+  property Panel visibilityPanel
 
   id: mainPanel
   title: "Main Menu"
@@ -20,7 +21,7 @@ Panel
   [
     ModelObject { text: "Reports"; onNoArgModelSignal: stack.addPanel(reportsPanel); },
     ModelObject { text: "Overlays"; onNoArgModelSignal: stack.addPanel(overlaysPanel); },
-    ModelObject { text: "Waypoints"; },
+    ModelObject { text: "Visibility"; onNoArgModelSignal: stack.addPanel(visibilityPanel);},
     ModelObject { text: "Buddies"; onNoArgModelSignal: stack.addPanel(buddiesPanel); },
     ModelObject { text: "Observations"; onNoArgModelSignal: stack.addPanel(observationsPanel); },
     ModelObject { text: "Options"; onNoArgModelSignal: stack.addPanel(optionsPanel); }

@@ -44,7 +44,9 @@ protected:
 private:
   static const QString MIL2525C_DIRECTORY;
 
-  Map* map;
+  Map map;
+  MapGraphicsView* mapGraphicsView;
+
   MapController* mapController;
   SearchController* searchController;
   DictionaryImageProvider* imageProvider;
