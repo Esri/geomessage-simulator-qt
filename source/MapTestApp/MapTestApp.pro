@@ -1,18 +1,19 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2012-05-10T09:33:25
-#
-#-------------------------------------------------
-
-QT += core gui opengl
-
-TEMPLATE = app
 QMAKE_TARGET_COMPANY = Esri, Inc.
 QMAKE_TARGET_PRODUCT = ArcGIS Runtime for Qt
 QMAKE_TARGET_DESCRIPTION = Sample application using ArcGIS Runtime for Qt development.
 QMAKE_TARGET_COPYRIGHT = Copyright 2010-2013 Esri Inc.
 
-QMAKE_TARGET.arch = $$(BUILD_ARCH)
+QT += core gui opengl
+
+TEMPLATE = app
+
+greaterThan(QT_MAJOR_VERSION, 4) {
+    QT += widgets
+}
+
+# Important: requires file: $qtsdk\mkspecs\features\esri_runtime_qt_10_2.prf
+# See ArcGIS Runtime Qt SDK documentation for more information
+CONFIG += esri_runtime_qt_10_2
 
 CONFIG += debug_and_release
 CONFIG(debug, debug|release){
@@ -22,39 +23,10 @@ else{
     TARGET = MapTestApp
 }
 
-INCLUDEPATH += $(ARCGISRUNTIMESDKQT_10_2)/sdk/include
-
-win32{
-
-  contains(QMAKE_TARGET.arch, x86_64):{
-     message( "Building for Windows 64 bit")
-     LIBS +=  \
-       -L"$$(ARCGISRUNTIMESDKQT_10_2)"/ArcGISRuntime10.2/Client64
-  }
-  else {
-     message( "Building for Windows 32 bit")
-     LIBS +=  \
-       -L"$$(ARCGISRUNTIMESDKQT_10_2)"/ArcGISRuntime10.2/Client32
-  }
-
-  CONFIG(debug, debug|release) {
-    LIBS += \
-            -lEsriRuntimeQtd
-  } else {
-    LIBS += \
-            -lEsriRuntimeQt
-  }
-}
-
-unix{
-  QMAKE_CXXFLAGS += --std=c++0x
-
-  LIBS +=  \
-            -L$(ARCGISRUNTIMESDKQT_10_2)/ArcGISRuntime10.2/ClientLx \
-            -lEsriRuntimeQt
-}
-
 win32:DEFINES += WINDOWS
+
+win32:CONFIG += \
+  embed_manifest_exe
 
 SOURCES += main.cpp\
         mainwindow.cpp \

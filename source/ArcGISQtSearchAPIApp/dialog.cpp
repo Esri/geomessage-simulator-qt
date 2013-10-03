@@ -73,7 +73,7 @@ Dialog::Dialog(QWidget *parent) :
   ui->appliedKeywords->setSelectionMode(QAbstractItemView::MultiSelection);
   ui->appliedKeywords->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-  dictionary = SymbolDictionary(SymbolDictionary::DictionaryType::Mil2525C);
+  dictionary = SymbolDictionary(SymbolDictionaryType::Mil2525C);
 
   on_btnReset_clicked();
 }
@@ -351,11 +351,13 @@ void Dialog::on_btnReset_clicked()
   ui->search->clear();
   ui->lblResults->setText("Results");
 
-  if(!dictionary.isNull())
+  if(!dictionary.isEmpty())
   {
     ui->filters->setVisible(true);
     ui->validValues->setVisible(true);
-    ui->filters->addItems(dictionary.filters().keys());
+
+    QStringList filterKeys = dictionary.filters().keys();
+    ui->filters->addItems(filterKeys);
 
     QListWidgetItem* item = ui->filters->itemAt(0,0);
     ui->filters->setCurrentItem(item, QItemSelectionModel::SelectCurrent);

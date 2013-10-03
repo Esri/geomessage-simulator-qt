@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2012 Esri
+ * Copyright 2012-2013 Esri
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
  ******************************************************************************/
 
 #include "mapcompass.h"
-#include <QtGui>
 
 static const QString COMPASS_FILE = ":/Resources/icons/North-Arrow.png";
 
-MapCompass::MapCompass(QGraphicsItem *parent) : QGraphicsWidget(parent)
+MapCompass::MapCompass(QGraphicsItem *parent) :
+  QGraphicsWidget(parent), m_pMapGraphicsView(0)
 {
     QString fileName = QString(COMPASS_FILE);
     QImage loadedImage;
@@ -38,24 +38,24 @@ MapCompass::MapCompass(QGraphicsItem *parent) : QGraphicsWidget(parent)
     setAutoFillBackground(false);
 }
 
-void MapCompass::setMap(Map* pMap)
+void MapCompass::setGraphicsView(MapGraphicsView* pGraphicView)
 {
-    m_pMap = pMap;
+    m_pMapGraphicsView = pGraphicView;
 
-    QGraphicsScene* scene = m_pMap->scene();
+    QGraphicsScene* scene = m_pMapGraphicsView->scene();
     scene->addItem(this);
 }
 
 void MapCompass::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    if (!m_pMap || !m_pMap->isReady())
-        return;
+  if (!m_pMapGraphicsView || !m_pMapGraphicsView->map().isReady())
+      return;
 
     Q_UNUSED(option)
     Q_UNUSED(widget)
 
-    double mapWidth  = m_pMap->width();
-    double mapHeight = m_pMap->height();
+    double mapWidth  = m_pMapGraphicsView->map().width();
+    double mapHeight = m_pMapGraphicsView->map().height();
 
     QSize size = image.size();
     double halfImageWidth = size.width() / 2.0;

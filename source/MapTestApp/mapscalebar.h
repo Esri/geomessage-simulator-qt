@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2012 Esri
+ * Copyright 2012-2013 Esri
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,9 +18,10 @@
 #define MAPSCALEBAR_H
 
 #include <QWidget>
+#include <QGraphicsScene>
 #include <QGraphicsWidget>
 
-#include "Map.h"
+#include "MapGraphicsView.h"
 
 using namespace EsriRuntimeQt;
 
@@ -30,7 +31,7 @@ class MapScalebar : public QGraphicsWidget
 public:
     MapScalebar(QGraphicsItem *parent = 0);
 
-    void setMap(Map* pMap);
+    void setGraphicsView(MapGraphicsView* pGraphicView);
     void updateScalebar();
 
 signals:
@@ -47,7 +48,7 @@ private:
     double pixelLength;
     double pixelMaxLength;
 
-    Map* m_pMap;
+    MapGraphicsView* m_pMapGraphicsView;
 };
 
 #endif // MAPSCALEBAR_H

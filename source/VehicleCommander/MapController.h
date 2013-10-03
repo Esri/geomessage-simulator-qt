@@ -19,11 +19,16 @@
 
 #include <QObject>
 #include <QUdpSocket>
+#include <QMouseEvent>
+#include <ArcGISDynamicMapServiceLayer.h>
 
+// ArcGIS Runtime Includes
 #include "IdentifyTask.h"
 #include "Geometry.h"
+#include "Geoprocessor.h"
 #include "GraphicsLayer.h"
 #include "Layer.h"
+#include "LocalGeoprocessingService.h"
 #include "Map.h"
 #include "MarkerSymbol.h"
 #include "Message.h"
@@ -31,9 +36,9 @@
 #include "MessageProcessor.h"
 #include "SymbolDictionary.h"
 
+// Local Project Includes
 #include "AppConfigDialog.h"
 #include "GPSSimulator.h"
-
 #include "simplegraphicoverlay.h"
 
 using namespace EsriRuntimeQt;
@@ -45,7 +50,7 @@ public:
   static const double METERS_PER_MILE;
   static const int MILLISECONDS_PER_HOUR;
 
-  explicit MapController(Map* inputMap, QObject* parent = 0);
+  explicit MapController(Map* inputMap, MapGraphicsView *inputGraphicsView, QObject* parent = 0);
   virtual ~MapController();
   void setMap(Map* newMap);
   void initController();
@@ -82,6 +87,9 @@ private:
   QString getReaderValue(QXmlStreamReader& reader);
   void readToElementEnd(QXmlStreamReader& reader);
 
+  void handleMapMousePressLeft(QPointF mousePoint);
+  void handleMapMousePressRight(QPointF mousePoint);
+
   void showHideMe(bool show, Point atPoint, double withHeading);
   Point MGRSToMapPoint(QString mgrs);
   QString mapPointToMGRS(Point point);
@@ -93,6 +101,7 @@ private:
 
   // Attributes
   Map* map;
+  MapGraphicsView* mapGraphicsView;
   SymbolDictionary dictionary;
   MessageGroupLayer messagGroupLayer;
   MessageProcessor messageProcessor;
@@ -103,6 +112,7 @@ private:
   GraphicsLayer observationsLayer;
   GraphicsLayer chemLightLayer;
   GraphicsLayer mouseClickGraphicLayer;
+  GraphicsLayer viewshedGraphicLayer;
 
   Envelope originalExtent;
   double originalScale;
@@ -141,6 +151,11 @@ private:
   enum mouseStateEnum { MouseStateNone, MouseStateMenuClicked, MouseStateWaitingForMapPoint };
   mouseStateEnum mouseState;
 
+  EsriRuntimeQt::ArcGISDynamicMapServiceLayer viewshedLayer;
+  EsriRuntimeQt::LocalGeoprocessingService viewshedService;
+  EsriRuntimeQt::Geoprocessor geoprocessor;
+  bool visibilityInProgress;
+
 signals:
   void clearChemLightUI();
   void headingChanged(QVariant newHeading);
@@ -176,9 +191,11 @@ public slots:
   void processPendingDatagrams();
   void sendSpotReport(QVariant data);
   void applyAppConfigSettings();
-  void handleMapMousePressLeft(QPointF mousePoint);
-  void handleMapMousePressRight(QPointF mousePoint);
+  void mousePress(QMouseEvent mouseEvent);
   void onIdentifyComplete(QList<IdentifyResult> results);
+  void handleVisibilityAnalysisClicked();
+  void onSubmitJobComplete(const EsriRuntimeQt::GPJobResource& jobResource);
+  void onGpError(const EsriRuntimeQt::ServiceError& error);
 
   /*!
     \brief Slot to tell MainView that a UI element was clicked, preventing it from running "identify"

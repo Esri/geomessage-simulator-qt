@@ -19,6 +19,10 @@
 
 #include <QDialog>
 #include <QtGui>
+#include <QListWidgetItem>
+#include <QLabel>
+#include <QVBoxLayout>
+
 #include "SymbolDictionary.h"
 
 using namespace EsriRuntimeQt;

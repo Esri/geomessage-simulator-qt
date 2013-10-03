@@ -1,4 +1,8 @@
-QT       += network xml
+QT       += core gui network xml
+
+greaterThan(QT_MAJOR_VERSION, 4) {
+    QT += widgets
+}
 
 CONFIG(debug, debug|release){
     TARGET = ArcGISQtMessageSimulatord
@@ -9,7 +13,7 @@ else{
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
+SOURCES += main.cpp \
         SimulatorDialog.cpp \
     SimulatorController.cpp \
     Geomessage.cpp

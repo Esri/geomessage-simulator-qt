@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2012 Esri
+ * Copyright 2012-2013 Esri
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,7 +14,18 @@
  *   limitations under the License.
  ******************************************************************************/
 
- #include <QtGui>
+#include <QGroupBox>
+#include <QRadioButton>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QComboBox>
+#include <QPushButton>
+#include <QCheckBox>
+#include <QLineEdit>
+#include <QListWidget>
+#include <QListWidgetItem>
+#include <QSettings>
+#include <QDebug>
 
  #include "pages.h"
 
@@ -307,12 +318,12 @@
      QGroupBox *packagesGroup = new QGroupBox(tr("Symbol"));
 
      QLabel *sicLabel = new QLabel(tr("SIC:"));
-     QLineEdit *sicEdit = new QLineEdit;
+     QLineEdit *sicEdit = new QLineEdit(parent);
 
      connect(sicEdit,SIGNAL(textChanged(QString)),this,SLOT(handleSICChanged(QString)));
 
      QLabel *countLabel = new QLabel(tr("Count:"));
-     QLineEdit *countEdit = new QLineEdit;
+     QLineEdit *countEdit = new QLineEdit(parent);
 
      connect(countEdit,SIGNAL(textChanged(QString)),this,SLOT(handleSymbolCountChanged(QString)));
 

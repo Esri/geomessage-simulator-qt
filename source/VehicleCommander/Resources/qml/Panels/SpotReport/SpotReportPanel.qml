@@ -1,4 +1,4 @@
-import Qt 4.7
+import QtQuick 1.1
 import "../../Controls"
 
 Panel
@@ -36,6 +36,11 @@ Panel
   delegate: MultiDelegate { }
   Component.onCompleted:
   {
+// WARNING: There is a known issue that when
+// this project's QML is run in the QML debugger, it does initialize
+// in the correct order and the following properties are null
+// For now, you will need to disable the QML debugger to run the debugger
+// as a workaround (in Projects | Run | Debugger Settings)
     equipmentPanel.contentUpdated.connect(spotReportPanel.updateEquipmentModel)
     locationPanel.contentUpdated.connect(spotReportPanel.updateLocationModel)
   }

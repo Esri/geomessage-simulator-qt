@@ -1,4 +1,4 @@
-import Qt 4.7
+import QtQuick 1.1
 import "../Panels/MainMenu"
 import "../Controls"
 
@@ -19,6 +19,7 @@ Item
   signal openMPK()
   signal toggleLayerVisibility(string name)
   signal clicked()
+  signal visibilityAnalysisClicked()
 
   property Stack stack
   property Panel panel
@@ -35,12 +36,19 @@ Item
     buddiesPanel: buddiesPanel
     observationsPanel: observationsPanel
     optionsPanel: optionsPanel
+    visibilityPanel: visibilityPanel
+
     anchors.fill: parent
     stack: mainMenu.stack;
     visible: false
     onGoBack: mainMenu.closeMenu()
     Component.onCompleted:
     {
+// WARNING: There is a known issue that when
+// this project's QML is run in the QML debugger, it does initialize
+// in the correct order and the following properties are null
+// For now, you will need to disable the QML debugger to run the debugger
+// as a workaround (in Projects | Run | Debugger Settings)
       stack.addPanel(mainPanel);
       mainPanel.exitClicked.connect(mainMenu.exitClicked);
       mainPanel.buttonClicked.connect(mainMenu.clicked)
@@ -97,6 +105,17 @@ Item
       sendMyPositionToggled.connect(mainMenu.sendMyPositionToggled)
       resetMapClicked.connect(mainMenu.resetMapClicked)
       aboutMeClicked.connect(mainMenu.aboutMeClicked)
+    }
+  }
+
+  VisibilityPanel
+  {
+    id: visibilityPanel
+    stack: mainMenu.stack
+    anchors.fill: parent
+    Component.onCompleted:
+    {
+      visibilityAnalysisClicked.connect(mainMenu.visibilityAnalysisClicked)
     }
   }
 }
