@@ -42,8 +42,6 @@
 #include "mapcompass.h"
 #include "mapscalebar.h"
 
-using namespace EsriRuntimeQt;
-
 enum MapElementSize
 {
     MES_Small,
@@ -132,10 +130,10 @@ public:
     virtual QList<int> HitTest(int screenX, int screenY, int tolerance);
 
     // Screen to Map
-    virtual const Point ScreenToMap(const QPoint& pixelPoint);
+    virtual const EsriRuntimeQt::Point ScreenToMap(const QPoint& pixelPoint);
 
     // Map to Screen
-    virtual const QPoint MapToScreenPoint(const Point& mapPoint);
+    virtual const QPoint MapToScreenPoint(const EsriRuntimeQt::Point& mapPoint);
 
     // Show/Hide scale bar
     virtual void ShowScalebar(bool visible);
@@ -156,6 +154,9 @@ public:
     // Reset Map to original state
     virtual void Reset();
 
+    // Load an XML file with symbol messages
+    virtual void LoadMessageFile();
+
     //Test Repro Case for testing / demonstrating problems
     virtual void TestReproCase();
 
@@ -167,29 +168,29 @@ private:
 
     QString controlPoints2QString(QList<QPointF> pointFList);
 
-    Message MilitaryObject2UpdateMessage(const MilitarySymbolObject& mo);
+    EsriRuntimeQt::Message MilitaryObject2UpdateMessage(const MilitarySymbolObject& mo);
     bool isMilMultipoint(const MilitarySymbolObject& mo);
 
     QString getPathSampleData();
     void debugNotImplemented();
 
-    MapGraphicsView* m_pMapGraphicsView;
-    MapGraphicsView* m_pMapGraphicsViewInsetMap;
+    EsriRuntimeQt::MapGraphicsView* m_pMapGraphicsView;
+    EsriRuntimeQt::MapGraphicsView* m_pMapGraphicsViewInsetMap;
 
-    Map m_pMap;
-    Map m_pInsetMap;
+    EsriRuntimeQt::Map m_pMap;
+    EsriRuntimeQt::Map m_pInsetMap;
 
     MapCompass*  m_pMapCompass;
     MapScalebar* m_pMapScalebar;
 
-    SymbolDictionary dictionary;
-    MessageProcessor messageProcessor;
-    MessageGroupLayer messagGroupLayer;
+    EsriRuntimeQt::SymbolDictionary dictionary;
+    EsriRuntimeQt::MessageProcessor messageProcessor;
+    EsriRuntimeQt::MessageGroupLayer messagGroupLayer;
 
-    GraphicsLayer graphicsLayer;
-    QMap<int, Graphic> graphicsMap;
+    EsriRuntimeQt::GraphicsLayer graphicsLayer;
+    QMap<int, EsriRuntimeQt::Graphic> graphicsMap;
 
-    Envelope firstExtent;
+    EsriRuntimeQt::Envelope firstExtent;
     double firstScale;
 };
 #endif // SAMPLEMAP_H

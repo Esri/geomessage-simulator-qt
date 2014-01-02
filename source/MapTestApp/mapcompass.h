@@ -22,15 +22,13 @@
 
 #include "MapGraphicsView.h"
 
-using namespace EsriRuntimeQt;
-
 class MapCompass : public QGraphicsWidget
 {
     Q_OBJECT
 public:
     MapCompass(QGraphicsItem *parent = 0);
 
-    void setGraphicsView(MapGraphicsView* pGraphicView);
+    void setGraphicsView(EsriRuntimeQt::MapGraphicsView* pGraphicView);
     QSize sizeHint() const;
     void UpdateRotation(double);
     void setScale(double);
@@ -47,7 +45,7 @@ private:
     double rotateValue;
     double scaleValue;
 
-    MapGraphicsView* m_pMapGraphicsView;
+    EsriRuntimeQt::MapGraphicsView* m_pMapGraphicsView;
 };
 
 #endif // MAPCOMPASS_H

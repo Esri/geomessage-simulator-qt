@@ -342,8 +342,6 @@ void MainWindow::readAppConfig()
     {
       while (reader.readNextStartElement())
       {
-          //reader.readNext();
-
         QString elementName = reader.name().toString();
 
         if (QString::compare(elementName, "appconfig", Qt::CaseInsensitive) == 0)
@@ -446,6 +444,11 @@ void MainWindow::keyPressEvent(QKeyEvent* event)
     this->close();
   else
     QMainWindow::keyPressEvent(event);
+}
+
+void MainWindow::on_actionLoad_Message_File_triggered()
+{
+  m_pSampleMap->LoadMessageFile();
 }
 
 void MainWindow::on_actionTest_Graphics_triggered()

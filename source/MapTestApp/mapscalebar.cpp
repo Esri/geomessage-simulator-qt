@@ -30,7 +30,7 @@ MapScalebar::MapScalebar(QGraphicsItem *parent) : QGraphicsWidget(parent), m_pMa
     setAutoFillBackground(false);
 }
 
-void MapScalebar::setGraphicsView(MapGraphicsView* pGraphicView)
+void MapScalebar::setGraphicsView(EsriRuntimeQt::MapGraphicsView* pGraphicView)
 {
     m_pMapGraphicsView = pGraphicView;
 
@@ -69,8 +69,9 @@ void MapScalebar::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     // calculate pixel length of graphic
     pixelLength = maxTick / mapResolution;
 
-    qDebug()<< "maxTick = " << maxTick;
-    qDebug()<< "ESRIRuntimeQT::Unit = " << m_pMapGraphicsView->map().layer(0).spatialReference().unit().displayName();
+    //
+    // qDebug()<< "maxTick = " << maxTick;
+    // qDebug()<< "ESRIRuntimeQT::Unit = " << m_pMapGraphicsView->map().layer(0).spatialReference().unit().displayName();
 
     QLinearGradient linearGradient(QPointF(40, 40), QPointF(80, 80));
         linearGradient.setColorAt(0.1, Qt::red);

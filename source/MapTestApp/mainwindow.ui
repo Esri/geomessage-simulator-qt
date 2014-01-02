@@ -37,6 +37,7 @@
     </property>
     <addaction name="actionAdd_Random_Graphics"/>
     <addaction name="actionClear_All"/>
+    <addaction name="actionLoad_Message_File"/>
     <addaction name="actionTest_Graphics"/>
    </widget>
    <widget class="QMenu" name="menuView">
@@ -267,6 +268,11 @@
   <action name="actionTest_Graphics">
    <property name="text">
     <string>Test Repro Case</string>
+   </property>
+  </action>
+  <action name="actionLoad_Message_File">
+   <property name="text">
+    <string>Load Message File</string>
    </property>
   </action>
  </widget>

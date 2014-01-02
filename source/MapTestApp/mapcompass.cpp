@@ -38,7 +38,7 @@ MapCompass::MapCompass(QGraphicsItem *parent) :
     setAutoFillBackground(false);
 }
 
-void MapCompass::setGraphicsView(MapGraphicsView* pGraphicView)
+void MapCompass::setGraphicsView(EsriRuntimeQt::MapGraphicsView* pGraphicView)
 {
     m_pMapGraphicsView = pGraphicView;
 
