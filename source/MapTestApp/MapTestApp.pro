@@ -34,6 +34,7 @@ SOURCES += main.cpp\
     mapscalebar.cpp \
     pages.cpp \
     configdialog.cpp \
+    messagereaderxml.cpp \
     samplemap.cpp
 
 HEADERS  += mainwindow.h \
@@ -41,7 +42,9 @@ HEADERS  += mainwindow.h \
     mapscalebar.h \
     pages.h \
     configdialog.h \
+    messagereaderxml.h \
     samplemap.h
+
 
 FORMS    += mainwindow.ui
 
