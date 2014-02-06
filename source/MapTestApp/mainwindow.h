@@ -60,6 +60,8 @@ private slots:
 
     void on_actionClear_All_triggered();
 
+    void on_actionLoad_Message_File_triggered();
+
     void on_actionTest_Graphics_triggered();
 
     void on_actionInset_Map_ShowHide_toggled(bool visible);

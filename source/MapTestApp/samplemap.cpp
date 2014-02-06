@@ -14,16 +14,18 @@
  *   limitations under the License.
  ******************************************************************************/
 
-#include "samplemap.h"
-
 #include "Point.h"
 #include "ArcGISRuntime.h"
 #include "ArcGISLocalTiledLayer.h"
 #include "SpatialReference.h"
 #include "MultiLayerSymbol.h"
 
+#include <QFileDialog>
 #include <QGraphicsScene>
 #include <QMessageBox>
+
+#include "samplemap.h"
+#include "messagereaderxml.h"
 
 static const QString PROP_MANAGING_LAYOUT = "managingLayout";
 static const double INSETMAP_SCALE_FACTOR = 25.0;
@@ -38,11 +40,11 @@ SampleMap::SampleMap(QWidget *parent) :
         // setup UI
         setUI();
     }
-    catch (Exception ex)
+    catch (EsriRuntimeQt::Exception ex)
     {
         this->showMaximized();
         this->setWindowTitle("MapTestApp");
-        qDebug()<<"Exception: "<<QString(ex.what());
+        qDebug()<<"Exception: "<< QString(ex.what());
         return;
     }
 
@@ -95,17 +97,17 @@ SampleMap::SampleMap(QWidget *parent) :
 
         connect(&m_pMap, SIGNAL(mapReady()), this, SLOT(onMapReady()));
 
-        m_pMap.grid().setType(GridType::Mgrs);
+        m_pMap.grid().setType(EsriRuntimeQt::GridType::Mgrs);
         m_pMap.grid().setVisible(false);
 
-        messagGroupLayer = MessageGroupLayer(SymbolDictionaryType::Mil2525C);
+        messagGroupLayer = EsriRuntimeQt::MessageGroupLayer(EsriRuntimeQt::SymbolDictionaryType::Mil2525C);
         m_pMap.addLayer(messagGroupLayer);
 
         messageProcessor = messagGroupLayer.messageProcessor();
 
         dictionary = messageProcessor.symbolDictionary();
 
-        QList<SymbolProperties> symbolPropList = dictionary.findSymbols();
+        QList<EsriRuntimeQt::SymbolProperties> symbolPropList = dictionary.findSymbols();
         int symbolCount = symbolPropList.count();
         bool dictionaryWorks = (symbolCount > 0);
 
@@ -130,7 +132,7 @@ void SampleMap::onMapReady()
     firstExtent = m_pMap.extent();
     firstScale = m_pMap.scale();
 
-    SpatialReference sr = m_pMap.spatialReference();
+    EsriRuntimeQt::SpatialReference sr = m_pMap.spatialReference();
 
     qDebug() << "MapReady, Spatial Reference = " << sr.id();
 }
@@ -178,10 +180,10 @@ void SampleMap::handleMapExtentChanged()
     if(!m_pInsetMap.isInitialized() || !m_pMap.isInitialized() || !m_pInsetMap.isReady() || !m_pMap.isReady())
         return;
 
-    Envelope extent = m_pMap.extent();
+    EsriRuntimeQt::Envelope extent = m_pMap.extent();
 
-    SpatialReference srMap = m_pInsetMap.spatialReference();
-    SpatialReference srInsetMap = m_pInsetMap.spatialReference();
+    EsriRuntimeQt::SpatialReference srMap = m_pInsetMap.spatialReference();
+    EsriRuntimeQt::SpatialReference srInsetMap = m_pInsetMap.spatialReference();
 
     int wkidMap = srMap.id();
     int wkidInsetMap = srInsetMap.id();
@@ -208,7 +210,7 @@ void SampleMap::panMap(QString direction)
 {
     qDebug() << "panMap, direction=" << direction;
 
-    Envelope extent = m_pMap.extent();
+    EsriRuntimeQt::Envelope extent = m_pMap.extent();
 
     double width = extent.width();
     double height = extent.height();
@@ -227,7 +229,7 @@ void SampleMap::panMap(QString direction)
     else if (direction.compare("Right") == 0)
         centerX += width * PAN_INCREMENT;
 
-    Envelope newExtent(Point(centerX, centerY), width, height);
+    EsriRuntimeQt::Envelope newExtent(EsriRuntimeQt::Point(centerX, centerY), width, height);
 
     m_pMap.panTo(newExtent);
 }
@@ -271,7 +273,7 @@ void SampleMap::CenterOn(QPointF point)
     if(!m_pMap.isInitialized())
         return;
 
-    Point mapPoint(point.x(), point.y());
+    EsriRuntimeQt::Point mapPoint(point.x(), point.y());
     m_pMap.panTo(mapPoint);
 }
 
@@ -291,7 +293,7 @@ void SampleMap::Zoom(double zoomFactor, QPointF centerOnPoint)
     if(!m_pMap.isInitialized())
         return;
 
-    Point mapCenterOnPoint(centerOnPoint.x(), centerOnPoint.y());
+    EsriRuntimeQt::Point mapCenterOnPoint(centerOnPoint.x(), centerOnPoint.y());
     m_pMap.zoomToResolution(zoomFactor, mapCenterOnPoint);
 }
 
@@ -338,7 +340,7 @@ QRectF SampleMap::GetExtent()
     if(!m_pMap.isInitialized())
         return QRectF();
 
-    Envelope extent = m_pMap.extent();
+    EsriRuntimeQt::Envelope extent = m_pMap.extent();
 
     return QRectF(extent.xMin(), extent.yMin(), extent.width(), extent.height());
 }
@@ -361,23 +363,23 @@ bool SampleMap::GetGridVisible()
 }
 
 // Screen to Map
-const Point SampleMap::ScreenToMap(const QPoint& pixelPoint)
+const EsriRuntimeQt::Point SampleMap::ScreenToMap(const QPoint& pixelPoint)
 {
     if(!m_pMap.isInitialized())
         return QPointF();
 
-    Point mapPoint = m_pMap.toMapPoint(pixelPoint.x(), pixelPoint.y());
+    EsriRuntimeQt::Point mapPoint = m_pMap.toMapPoint(pixelPoint.x(), pixelPoint.y());
 
     return mapPoint;
 }
 
 // Map to Screen
-const QPoint SampleMap::MapToScreenPoint(const Point& mapPoint)
+const QPoint SampleMap::MapToScreenPoint(const EsriRuntimeQt::Point& mapPoint)
 {
     if(!m_pMap.isInitialized())
         return QPoint();
 
-    Point screenPoint = m_pMap.toScreenPoint(mapPoint);
+    EsriRuntimeQt::Point screenPoint = m_pMap.toScreenPoint(mapPoint);
 
     QPointF* pWindowPoint = new QPointF(screenPoint.x(), screenPoint.y());
 
@@ -415,13 +417,13 @@ void SampleMap::AddMapObjects(const QList<MilitarySymbolObject>& milObjects)
             continue;
         }
 
-        Message message = MilitaryObject2UpdateMessage(mo);
+        EsriRuntimeQt::Message message = MilitaryObject2UpdateMessage(mo);
 
         qDebug()<<"Message Add: ID = " << message.id() << ", x=" << mo.ControlPoints[0].x() << ", y=" << mo.ControlPoints[0].y();
 
         messageProcessor.processMessage(message);
 
-        Graphic graphic = messageProcessor.graphic(message.id());
+        EsriRuntimeQt::Graphic graphic = messageProcessor.graphic(message.id());
 
         // TODO: we probably don't need this graphicsMap any longer (stored in MessageProcessor now)
         // add to ID graphic map
@@ -445,7 +447,7 @@ void SampleMap::DeleteMapObjects(const QList<int>& graphicIDs)
           properties["_action"] = "remove";
           properties["_id"] = QVariant(sGraphicId);
 
-          Message message;
+          EsriRuntimeQt::Message message;
           message.setProperties(properties);
 
           qDebug() << "Removing Graphic with ID:" << message.id() << " / " << sGraphicId; // should be the same
@@ -536,7 +538,7 @@ bool SampleMap::IsInsetMapVisible()
 
 QString SampleMap::getPathSampleData()
 {
-  QString path = ArcGISRuntime::installDirectory();
+  QString path = EsriRuntimeQt::ArcGISRuntime::installDirectory();
   path.append("/sdk/samples/data");
   QDir dataDir(path); // using QDir to convert to correct file separator
   QString pathSampleData = dataDir.path() + QDir::separator();
@@ -586,10 +588,10 @@ void SampleMap::setUI()
     if (!(QFile(highResTpk).exists() || QDir(highResTpk).exists()))
         mainMapTpk = lowResTpk;
 
-    ArcGISLocalTiledLayer tiledLayer(mainMapTpk);
+    EsriRuntimeQt::ArcGISLocalTiledLayer tiledLayer(mainMapTpk);
     m_pMap.addLayer(tiledLayer);
 
-    ArcGISLocalTiledLayer overviewMapLayer(lowResTpk);
+    EsriRuntimeQt::ArcGISLocalTiledLayer overviewMapLayer(lowResTpk);
     m_pInsetMap.addLayer(overviewMapLayer);
     m_pInsetMap.setWrapAroundEnabled(true);
 
@@ -640,11 +642,11 @@ QList<int> SampleMap::HitTest(int screenX, int screenY, int tolerance)
     if(!m_pMap.isInitialized())
         return list;
 
-    QList<Layer> layers = messagGroupLayer.getLayers();
+    QList<EsriRuntimeQt::Layer> layers = messagGroupLayer.getLayers();
 
-    foreach (Layer layer,  layers)
+    foreach (EsriRuntimeQt::Layer layer,  layers)
     {
-        GraphicsLayer glayer(layer);
+        EsriRuntimeQt::GraphicsLayer glayer(layer);
         if (!glayer.isNull())
         {
             // There is a know bug where this doesn't work
@@ -717,9 +719,9 @@ bool SampleMap::isMilMultipoint(const MilitarySymbolObject& mo)
     return false;
 }
 
-Message SampleMap::MilitaryObject2UpdateMessage(const MilitarySymbolObject& mo)
+EsriRuntimeQt::Message SampleMap::MilitaryObject2UpdateMessage(const MilitarySymbolObject& mo)
 {
-    Message message;
+    EsriRuntimeQt::Message message;
 
     QVariantMap properties;
 
@@ -771,6 +773,21 @@ void SampleMap::Reset()
 void SampleMap::TestReproCase()
 {
    QMessageBox::warning(m_pMapGraphicsView, "Test Case", "Insert Your Test Repro Case Here", "To Show Problems");
+}
+
+// Load an XML file with symbol messages
+void SampleMap::LoadMessageFile()
+{
+  QString defaultPath = "..";
+  QString fileName = QFileDialog::getOpenFileName(this, tr("Open tiled layer package"), defaultPath, tr("*.xml"));
+
+  if (!fileName.isEmpty())
+  {
+    MessageReaderXml messageReader;
+
+    messageReader.LoadMessageFile(messageProcessor, fileName);
+  }
+
 }
 
 void SampleMap::resizeEvent(QResizeEvent* event)

@@ -23,15 +23,13 @@
 
 #include "MapGraphicsView.h"
 
-using namespace EsriRuntimeQt;
-
 class MapScalebar : public QGraphicsWidget
 {
     Q_OBJECT
 public:
     MapScalebar(QGraphicsItem *parent = 0);
 
-    void setGraphicsView(MapGraphicsView* pGraphicView);
+    void setGraphicsView(EsriRuntimeQt::MapGraphicsView* pGraphicView);
     void updateScalebar();
 
 signals:
@@ -48,7 +46,7 @@ private:
     double pixelLength;
     double pixelMaxLength;
 
-    MapGraphicsView* m_pMapGraphicsView;
+    EsriRuntimeQt::MapGraphicsView* m_pMapGraphicsView;
 };
 
 #endif // MAPSCALEBAR_H
