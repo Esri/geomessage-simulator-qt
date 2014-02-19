@@ -11,9 +11,9 @@ greaterThan(QT_MAJOR_VERSION, 4) {
     QT += widgets
 }
 
-# Important: requires file: $qtsdk\mkspecs\features\esri_runtime_qt_10_2.prf
+# Important: requires file: $qtsdk\mkspecs\features\esri_runtime_qt_10_2_2.prf
 # See ArcGIS Runtime Qt SDK documentation for more information
-CONFIG += esri_runtime_qt_10_2
+CONFIG += esri_runtime_qt_10_2_2
 
 CONFIG += debug_and_release
 CONFIG(debug, debug|release){
