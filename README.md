@@ -21,7 +21,7 @@ The Vehicle Commander Qt demonstrates developer samples for building and testing
 
 ## Requirements
 
-* ArcGIS Runtime SDK for Qt 10.2
+* ArcGIS Runtime SDK for Qt 10.2 or later
     * Hardware and software requirements are the same as those for ArcGIS Runtime SDK for Qt.  See the [Runtime SDK documentation for more information](https://developers.arcgis.com/en/qt/).
 * The [Qt Software Developer Kit](http://qt.digia.com/) with Qt Creator
     * See the ArcGIS Runtime SDK documentation for specific versions supported.
@@ -37,10 +37,12 @@ The Vehicle Commander Qt demonstrates developer samples for building and testing
 
 ### Getting Started with the Vehicle Commander (Qt)
 * Check your development environment is properly configured for the ArcGIS Runtime SDK for Qt; some items of note:
-    * Ensure the configuration file esri_runtime_qt_10_2.prf has been installed
-        * Copied from {ARCGISRUNTIMESDKQT}\sdk\ideintegration\esri_runtime_qt_10_2.prf to {QTDIR}\mkspecs\features\esri_runtime_qt_10_2.prf 
+    * Ensure the configuration file, ex. `esri_runtime_qt_10_2.prf` has been installed
+        * Copied from` {ARCGISRUNTIMESDKQT}\sdk\ideintegration\esri_runtime_qt_10_2.prf to {QTDIR}\mkspecs\features\esri_runtime_qt_10_2.prf` 
     * (Linux only) Initialize runtime. From a Command Prompt> `> . {RuntimeSDKHome}/init_sdk_qt64.sh`
 * Open, build, and run one of the sample projects in Qt Creator
+    * Note: if you are not using the latest version of the Runtime SDK, you may need to edit the .pro file for each project
+    * Change the line `CONFIG += esri_runtime_qt_10_2_2` to match the version of your Runtime SDK.
 * These projects include:
     * ArcGISQtMessageSimulator - sends simulated network update messages
     * ArcGISQtSearchAPIApp - a stand-alone symbol search sample
@@ -56,7 +58,7 @@ The Vehicle Commander Qt demonstrates developer samples for building and testing
 ## Resources
 
 * Learn more about Esri's [ArcGIS for Defense maps and apps](http://resources.arcgis.com/en/communities/defense-and-intelligence/).
-* This application uses [Esri's ArcGIS Runtime SDK for Qt 10.2](https://developers.arcgis.com/en/qt/);
+* This application uses [Esri's ArcGIS Runtime SDK for Qt](https://developers.arcgis.com/en/qt/);
 see the site for concepts, samples, and references for using the API to create mapping applications.
 
 ## Issues
@@ -69,7 +71,7 @@ Esri welcomes contributions from anyone and everyone. Please see our [guidelines
 
 ## Licensing
 
-Copyright 2012-2013 Esri
+Copyright 2012-2014 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
