@@ -18,6 +18,7 @@
 
 #include <QtCore/qmath.h>
 #include <QDateTime>
+#include <QNetworkInterface>
 
 const int SimulatorController::DEFAULT_BROADCAST_PORT = 45678;
 const QString SimulatorController::DATE_FORMAT = "yyyy-MM-dd hh:mm:ss";
@@ -166,7 +167,20 @@ void SimulatorController::timerEvent(QTimerEvent *event)
 
     QByteArray datagram;
     datagram += payload;
-    m_udpSocket->writeDatagram(datagram.data(), datagram.size(), QHostAddress::Broadcast, getPort());
+    QList<QNetworkInterface> ifaces = QNetworkInterface::allInterfaces();
+    for (int i = 0; i < ifaces.size(); i++)
+    {
+      QNetworkInterface::InterfaceFlags flags = ifaces[i].flags();
+      if (!(flags & QNetworkInterface::IsLoopBack) && (flags & QNetworkInterface::IsUp))
+      {
+        QList<QNetworkAddressEntry> entries = ifaces[i].addressEntries();
+        for (int j = 0; j < entries.size(); j++)
+        {
+          m_udpSocket->writeDatagram(datagram.data(), datagram.size(), entries[j].broadcast(), getPort());
+        }
+      }
+    }
+
     if (verbose())
     {
       consoleOut << payload << endl;
