@@ -63,17 +63,17 @@ Double click the .exe file to start the app in GUI mode. Click "Choose Simulatio
 Run the executable from the command line with the parameter "-c" for a GUI-free experience. This enables you to run the simulator from a script or as a Windows service or Linux cron job, for example. Note that if you run from the command line but do not include the "-c" parameter, the simulator will run in graphical mode and none of the other command-line parameters will have any effect.
 
 Command-line parameters (available only in command-line mode):
-| Parameter                    | Description
-| ---------------------------- | -----------
-| -?                           | Print the available parameters and exit
-| -c                           | Activate command-line mode (i.e. no GUI)
-| -p &lt;port number&gt;       | Port number (console mode only; default is 45678)
-| -f &lt;filename&gt;          | Simulation file
-| -q &lt;frequency&gt;         | Frequency (messages per time unit); default is 1
-| -i &lt;time count&gt;        | Amount of time for frequency; default is 1
-| -t &lt;time unit&gt;         | Time unit for frequency; valid values are seconds, minutes, hours, days, and weeks; default is seconds
-| -o &lt;field1,...,fieldN&gt; | Override the value of these fields with the current date/time
-| -s                           | Silent mode; no verbose output
+| Parameter                    | Description |
+| ---------------------------- | ----------- |
+| -?                           | Print the available parameters and exit |
+| -c                           | Activate command-line mode (i.e. no GUI) |
+| -p &lt;port number&gt;       | Port number (console mode only; default is 45678) |
+| -f &lt;filename&gt;          | Simulation file |
+| -q &lt;frequency&gt;         | Frequency (messages per time unit); default is 1 |
+| -i &lt;time count&gt;        | Amount of time for frequency; default is 1 |
+| -t &lt;time unit&gt;         | Time unit for frequency; valid values are seconds, minutes, hours, days, and weeks; default is seconds |
+| -o &lt;field1,...,fieldN&gt; | Override the value of these fields with the current date/time |
+| -s                           | Silent mode; no verbose output |
 
 ## Resources
 
