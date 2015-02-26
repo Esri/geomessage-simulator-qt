@@ -62,11 +62,6 @@ Double click the .exe file to start the app in GUI mode. Click "Choose Simulatio
 ##### Command-line mode
 Run the executable from the command line with the parameter "-c" for a GUI-free experience. This enables you to run the simulator from a script or as a Windows service or Linux cron job, for example. Note that if you run from the command line but do not include the "-c" parameter, the simulator will run in graphical mode and none of the other command-line parameters will have any effect.
 
-| Parameter  | Description |
-| ------------- | ------------- |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-
 Command-line parameters (available only in command-line mode):
 
 | Parameter                    | Description
