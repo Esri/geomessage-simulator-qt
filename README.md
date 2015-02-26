@@ -12,7 +12,7 @@ Note: the Qt version of Vehicle Commander that was in this repo has been retired
 
 ## Features
 
-* Takes GeoMessage XML files as input. The GeoMessage format is described in the [sample GeoMessage XML files](source/ArcGISQtMessageSimulator/SampleMessages) and also the page for the [GeoMessage Connector for GeoEvent Extension](http://www.arcgis.com/home/item.html?id=cd3ce7a01fdc46a48aa199bfd091dd50).
+* Takes GeoMessage XML files as input. The GeoMessage format is described in the [sample GeoMessage XML files](source/geomessage-simulator/SampleMessages) and also the page for the [GeoMessage Connector for GeoEvent Extension](http://www.arcgis.com/home/item.html?id=cd3ce7a01fdc46a48aa199bfd091dd50).
 * Writes UDP broadcast datagrams as output
 * Allows you to adjust frequency of output
 * Includes sample GeoMessage XML files
@@ -41,8 +41,8 @@ Note: the Qt version of Vehicle Commander that was in this repo has been retired
 ### Getting Started with Message Simulator
 #### Building from Source
 * Fork and clone this repo.
-* Use Qt Creator to open source/ArcGISQtMessageSimulator/ArcGISQtMessageSimulator.pro.
-* Run the application and run the simulation with one of the sample message files in source/ArcGISQtMessageSimulator/SampleMessages.
+* Use Qt Creator to open source/geomessage-simulator/geomessage-simulator.pro.
+* Run the application and run the simulation with one of the sample message files in source/geomessage-simulator/SampleMessages.
 * Confirm that Vehicle Commander or Squad Leader displays the messages. Alternatively, you could use Qt to develop a simple client app that receives UDP messages, maybe using [QUdpSocket](http://doc.qt.io/qt-5/qudpsocket.html). Note the [requirement](#requirements) that the simulator and the client must be able to communicate over UDP for this to work.
 
 #### Binary distributions
