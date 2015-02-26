@@ -40,6 +40,10 @@ SimulatorController::SimulatorController(QObject *parent) :
   m_messageThroughput(1), // messages per broadcast
   m_reachedEndOfFile(false),
   m_currentIndex(-1),
+  /**
+   * Don't change "Message Simulator" to "GeoMessage Simulator" here. We don't want to wipe out people's
+   * settings just because we renamed the app.
+   */
   settings("DefenseTemplates", "Message Simulator"),
   consoleOut(stdout),
   m_fieldNames(),
