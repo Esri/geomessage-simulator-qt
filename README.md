@@ -2,9 +2,9 @@
 
 Message Simulator provides UDP messaging for applications and system components in the ArcGIS for the Military solution, including:
 
-* [Vehicle Commander](https://github.com/Esri/vehicle-commander-java)
-* [Squad Leader](https://github.com/Esri/squad-leader-android)
-* Custom transports and adapters for ArcGIS GeoEvent Extension for Server ([solutions-geoevent-java](https://github.com/Esri/solutions-geoevent-java))
+* Vehicle Commander ([source](https://github.com/Esri/vehicle-commander-java), [binary for Windows](http://www.arcgis.com/home/item.html?id=ae30551d12f443cb903f4829b03de315), [binary for Linux](http://www.arcgis.com/home/item.html?id=2aa94d8f14374470a2157a3ca4e70413))
+* Squad Leader ([source](https://github.com/Esri/squad-leader-android), [binary](http://www.arcgis.com/home/item.html?id=2623cc788070408a8bff99bf2ec67f5b))
+* GeoMessage Adapter for ArcGIS GeoEvent Extension for Server ([source](https://github.com/Esri/solutions-geoevent-java/blob/master/solutions-geoevent/adapters/geomessage-adapter/README.md), [ArcGIS Online item](http://www.arcgis.com/home/item.html?id=cd3ce7a01fdc46a48aa199bfd091dd50))
 
 Note: the Qt version of Vehicle Commander that was in this repo has been retired. If you would like to use that source code, which is no longer supported by Esri, go to [the 10.2 release](https://github.com/Esri/message-simulator-qt/releases/tag/v10.2) or [the last commit that included Vehicle Commander](https://github.com/Esri/message-simulator-qt/tree/ee7b931565859b34c77d493d4c1333c2424d29e3). It is recommended that you use the current [Vehicle Commander](https://github.com/Esri/vehicle-commander-java) instead.
 
