@@ -14,7 +14,7 @@ Note: the Qt version of Vehicle Commander that was in this repo has been retired
 
 * Takes GeoMessage XML files as input. The GeoMessage format is described in the [sample GeoMessage XML files](source/ArcGISQtMessageSimulator/SampleMessages) and also the page for the [GeoMessage Connector for GeoEvent Extension](http://www.arcgis.com/home/item.html?id=cd3ce7a01fdc46a48aa199bfd091dd50).
 * Writes UDP broadcast datagrams as output
-* Allows you to adjust throughput and frequency of output
+* Allows you to adjust frequency of output
 * Includes sample GeoMessage XML files
 
 ## Sections
@@ -47,6 +47,31 @@ Note: the Qt version of Vehicle Commander that was in this repo has been retired
 
 #### Binary distributions
 If you don't want to build from source, a binary distribution of Message Simulator is available in the 10.2.4 and later binary distributions of Vehicle Commander ([Windows](http://www.arcgis.com/home/item.html?id=ae30551d12f443cb903f4829b03de315), [Linux](http://www.arcgis.com/home/item.html?id=2aa94d8f14374470a2157a3ca4e70413)).
+
+#### Running
+
+##### Graphical mode
+Double click the .exe file to start the app in GUI mode. Click "Choose Simulation File" and navigate to a GeoMessage XML file, such as the ones included in this repository. Loading the file will take several seconds if it is a particularly large file. When the file is loaded, "File Loaded" displays under the Time Override Fields list, and then you can use the controls to configure and run the simulation:
+- Time Override Fields: choose any fields whose value you want to be overridden with the current time when messages are sent.
+- "X messages per Y <time units>": adjust the frequency of output messages as desired. Only one message is sent per UDP broadcast; this control lets you determine how often a UDP broadcast is sent.
+- Port: choose a UDP port on which messages are sent. Clients must bind and listen to the same port in order to receive messages from this Message Simulator instance.
+- Start Simulator/Restart Simulator: start the simulation from the beginning of the file.
+- Pause Simulator/Continue Simulator: click Pause Simulator to pause the simulation. Click Continue Simulator to continue the simulation from where it was paused.
+- Stop Simulator: stop the simulation. After clicking Stop Simulator, you cannot continue the simulation from where it was stopped. You can only start from the beginning of the file.
+
+##### Command-line mode
+Run the executable from the command line with the parameter "-c" for a GUI-free experience. This enables you to run the simulator from a script or as a Windows service or Linux cron job, for example. Note that if you run from the command line but do not include the "-c" parameter, the simulator will run in graphical mode and none of the other command-line parameters will have any effect.
+
+Command-line parameters (available only in command-line mode):
+- -?                     Print the available parameters and exit
+- -c                     Activate command-line mode (i.e. no GUI)
+- -p <port number>       Port number (console mode only; default is 45678)
+- -f <filename>          Simulation file
+- -q <frequency>         Frequency (messages per time unit); default is 1
+- -i <time count>        Amount of time for frequency; default is 1
+- -t <time unit>         Time unit for frequency; valid values are seconds, minutes, hours, days, and weeks; default is seconds
+- -o <field1,...,fieldN> Override the value of these fields with the current date/time
+- -s                     Silent mode; no verbose output
 
 ## Resources
 
