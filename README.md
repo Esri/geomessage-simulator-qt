@@ -53,7 +53,7 @@ If you don't want to build from source, a binary distribution of Message Simulat
 ##### Graphical mode
 Double click the .exe file to start the app in GUI mode. Click "Choose Simulation File" and navigate to a GeoMessage XML file, such as the ones included in this repository. Loading the file will take several seconds if it is a particularly large file. When the file is loaded, "File Loaded" displays under the Time Override Fields list, and then you can use the controls to configure and run the simulation:
 - Time Override Fields: choose any fields whose value you want to be overridden with the current time when messages are sent.
-- "X messages per Y <time units>": adjust the frequency of output messages as desired. Only one message is sent per UDP broadcast; this control lets you determine how often a UDP broadcast is sent.
+- "X messages per Y &lt;time units&gt;": adjust the frequency of output messages as desired. Only one message is sent per UDP broadcast; this control lets you determine how often a UDP broadcast is sent.
 - Port: choose a UDP port on which messages are sent. Clients must bind and listen to the same port in order to receive messages from this Message Simulator instance.
 - Start Simulator/Restart Simulator: start the simulation from the beginning of the file.
 - Pause Simulator/Continue Simulator: click Pause Simulator to pause the simulation. Click Continue Simulator to continue the simulation from where it was paused.
@@ -65,12 +65,12 @@ Run the executable from the command line with the parameter "-c" for a GUI-free 
 Command-line parameters (available only in command-line mode):
 - -?                     Print the available parameters and exit
 - -c                     Activate command-line mode (i.e. no GUI)
-- -p <port number>       Port number (console mode only; default is 45678)
-- -f <filename>          Simulation file
-- -q <frequency>         Frequency (messages per time unit); default is 1
-- -i <time count>        Amount of time for frequency; default is 1
-- -t <time unit>         Time unit for frequency; valid values are seconds, minutes, hours, days, and weeks; default is seconds
-- -o <field1,...,fieldN> Override the value of these fields with the current date/time
+- -p &lt;port number&gt;       Port number (console mode only; default is 45678)
+- -f &lt;filename&gt;          Simulation file
+- -q &lt;frequency&gt;         Frequency (messages per time unit); default is 1
+- -i &lt;time count&gt;        Amount of time for frequency; default is 1
+- -t &lt;time unit&gt;         Time unit for frequency; valid values are seconds, minutes, hours, days, and weeks; default is seconds
+- -o &lt;field1,...,fieldN&gt; Override the value of these fields with the current date/time
 - -s                     Silent mode; no verbose output
 
 ## Resources
