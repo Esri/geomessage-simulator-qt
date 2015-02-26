@@ -13,7 +13,7 @@ Note: the Qt version of Vehicle Commander that was in this repo has been retired
 ## Features
 
 * Takes GeoMessage XML files as input. The GeoMessage format is described in the [sample GeoMessage XML files](source/ArcGISQtMessageSimulator/SampleMessages) and also the page for the [GeoMessage Connector for GeoEvent Extension](http://www.arcgis.com/home/item.html?id=cd3ce7a01fdc46a48aa199bfd091dd50).
-* Writes UDP datagrams as output
+* Writes UDP broadcast datagrams as output
 * Allows you to adjust throughput and frequency of output
 * Includes sample GeoMessage XML files
 
