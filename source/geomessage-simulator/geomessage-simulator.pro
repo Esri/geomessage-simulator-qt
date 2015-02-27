@@ -5,10 +5,10 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 }
 
 CONFIG(debug, debug|release){
-    TARGET = ArcGISQtMessageSimulatord
+    TARGET = geomessage-simulatord
 }
 else{
-    TARGET = ArcGISQtMessageSimulator
+    TARGET = geomessage-simulator
 }
 TEMPLATE = app
 
