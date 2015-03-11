@@ -46,7 +46,7 @@ Note: the Qt version of Vehicle Commander that was in this repo has been retired
 * Confirm that Vehicle Commander or Squad Leader displays the messages. Alternatively, you could use Qt to develop a simple client app that receives UDP messages, maybe using [QUdpSocket](http://doc.qt.io/qt-5/qudpsocket.html). Note the [requirement](#requirements) that the simulator and the client must be able to communicate over UDP for this to work.
 
 #### Binary distributions
-If you don't want to build from source, a binary distribution of GeoMessage Simulator is available. (TODO add link when it is posted)
+If you don't want to build from source, a [binary distribution](http://www.esri.com/apps/products/download/index.cfm#ArcGIS_for_the_Military) is available.
 
 #### Running
 
