@@ -36,6 +36,7 @@ int main(int argc, char *argv[])
     {
       //Print help and exit
       QTextStream out(stdout);
+      out << "GeoMessage Simulator " << SimulatorController::RELEASE << endl;
       out << "Available command line parameters:" << endl;
       out << "  -?                     Print this help and exit" << endl;
       out << "  -c                     Console mode (no GUI)" << endl;

@@ -30,6 +30,8 @@ SimulatorDialog::SimulatorDialog(bool isVerboseOutput, QWidget *parent) :
   controller.setVerbose(isVerboseOutput);
   ui->setupUi(this);
 
+  setWindowTitle(windowTitle() + " " + SimulatorController::RELEASE);
+
   ui->btnStart->setEnabled(false);
   ui->btnPause->setEnabled(false);
   ui->btnStop->setEnabled(false);

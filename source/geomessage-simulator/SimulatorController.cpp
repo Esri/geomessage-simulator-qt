@@ -22,6 +22,7 @@
 
 const int SimulatorController::DEFAULT_BROADCAST_PORT = 45678;
 const QString SimulatorController::DATE_FORMAT = "yyyy-MM-dd hh:mm:ss";
+const QString SimulatorController::RELEASE = "1.0.0";
 const QString SimulatorController::PORT_SETTING_NAME = "port";
 const QString SimulatorController::TAG_ROOT = "geomessages";
 const QString SimulatorController::TAG_MESSAGES = "geomessages";
