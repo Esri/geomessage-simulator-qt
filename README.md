@@ -29,7 +29,8 @@ Note: the Qt version of Vehicle Commander that was in this repo has been retired
 ## Requirements
 
 * The [Qt software development kit](http://qt.io) with Qt Creator
-    * Tested with Qt 5.1.1 and Qt Creator 2.8.1
+    * Tested on Windows with Qt 5.1.1 and Qt Creator 2.8.1
+    * Tested on Linux with Qt 4.8.6
 * Required libraries for your Qt distribution. For example, if you compile with Qt for Visual Studio, end-users will need the Visual C++ Redistributable for the appropriate Visual Studio version and platform (e.g. x86 or x64).
 * **IMPORTANT**: clients will only receive messages from the GeoMessage Simulator if the machine running GeoMessage Simulator and the machine or device running the client are connected to the same router and that router allows UDP broadcast traffic.
 
