@@ -112,5 +112,7 @@ limitations under the License.
 A copy of the license is available in the repository's
 [license.txt](license.txt) file.
 
+Note: Portions of this code reference the Qt GUI Toolkit, which is licensed under GNU Lesser General Public License 2.1. See [license-ThirdParty.txt](license-ThirdParty.txt) for the details of this license or visit the [Qt](http://www.qt.io/) website for more details.
+
 [](Esri Tags: ArcGIS Defense and Intelligence Situational Awareness Qt Military ArcGISSolutions)
 [](Esri Language: C++)
