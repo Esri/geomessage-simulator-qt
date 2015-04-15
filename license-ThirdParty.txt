@@ -3,6 +3,8 @@ the GNU Lesser General Public License (LGPL):
 
 Qt GUI Toolkit
 
+The provided binary distributions include the Qt libraries.
+
 GNU LESSER GENERAL PUBLIC LICENSE
 		       Version 2.1, February 1999
 
