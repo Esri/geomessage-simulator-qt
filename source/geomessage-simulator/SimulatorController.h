@@ -39,6 +39,7 @@ class SimulatorController : public QObject
 public:
   static const int DEFAULT_BROADCAST_PORT;
   static const QString DATE_FORMAT;
+  static const QString RELEASE;
 
   explicit SimulatorController(QObject *parent = 0);
   /*!

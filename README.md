@@ -29,7 +29,9 @@ Note: the Qt version of Vehicle Commander that was in this repo has been retired
 ## Requirements
 
 * The [Qt software development kit](http://qt.io) with Qt Creator
-    * Tested with Qt 5.1.1 and Qt Creator 2.8.1
+    * Tested on Windows with Qt 5.1.1 and Qt Creator 2.8.1
+    * Tested on Linux with Qt 4.8.6
+* Required libraries for your Qt distribution. For example, if you compile with Qt for Visual Studio, end-users will need the Visual C++ Redistributable for the appropriate Visual Studio version and platform (e.g. x86 or x64).
 * **IMPORTANT**: clients will only receive messages from the GeoMessage Simulator if the machine running GeoMessage Simulator and the machine or device running the client are connected to the same router and that router allows UDP broadcast traffic.
 
 ## Instructions
@@ -46,7 +48,7 @@ Note: the Qt version of Vehicle Commander that was in this repo has been retired
 * Confirm that Vehicle Commander or Squad Leader displays the messages. Alternatively, you could use Qt to develop a simple client app that receives UDP messages, maybe using [QUdpSocket](http://doc.qt.io/qt-5/qudpsocket.html). Note the [requirement](#requirements) that the simulator and the client must be able to communicate over UDP for this to work.
 
 #### Binary distributions
-If you don't want to build from source, a [binary distribution](http://www.esri.com/apps/products/download/index.cfm#ArcGIS_for_the_Military) is available.
+If you don't want to build from source, a [binary distribution](http://www.esri.com/apps/products/download/index.cfm#ArcGIS_for_the_Military) is available. The binary distribution for Windows requires Microsoft's [Visual C++ Redistributable for Visual Studio 2012](http://www.microsoft.com/en-us/download/details.aspx?id=30679) or newer. The 32-bit GeoMessage Simulator requires the 32-bit Visual C++ Redistributable, and the 32-bit GeoMessage Simulator requires the 64-bit Visual C++ Redistributable.
 
 #### Running
 
@@ -110,6 +112,8 @@ limitations under the License.
 
 A copy of the license is available in the repository's
 [license.txt](license.txt) file.
+
+Note: Portions of this code reference the Qt GUI Toolkit, which is licensed under GNU Lesser General Public License 2.1. See [license-ThirdParty.txt](license-ThirdParty.txt) for the details of this license or visit the [Qt](http://www.qt.io/) website for more details.
 
 [](Esri Tags: ArcGIS Defense and Intelligence Situational Awareness Qt Military ArcGISSolutions)
 [](Esri Language: C++)
