@@ -11,7 +11,6 @@
                                         <xs:enumeration value="bedavail"/>
                                         <xs:enumeration value="chemlight"/>
                                         <xs:enumeration value="eod"/>
-                                        <xs:enumeration value="eod9line"/>
                                         <xs:enumeration value="gsrrep"/>
                                         <xs:enumeration value="medevac"/>
                                         <xs:enumeration value="medevacreq"/>

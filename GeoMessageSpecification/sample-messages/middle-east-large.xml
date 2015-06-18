@@ -116259,26 +116259,6 @@
 		<nationality>1</nationality>
 	</geomessage>
 	<geomessage v="1.0">
-		<_type>eod9line</_type>
-		<_action>update</_action>
-		<_control_points>7840570,4087963</_control_points>
-		<_id>{274bcb7b-e02c-441f-addc-2ad85cfbf9d7}</_id>
-		<_wkid>3857</_wkid>
-		<datetimesubmitted>2012-06-03 17:51:01</datetimesubmitted>
-		<uniquedesignation>text</uniquedesignation>
-		<location>text</location>
-		<location_desc>text</location_desc>
-		<contact>text</contact>
-		<nbc_type>text</nbc_type>
-		<resources>text</resources>
-		<impact>text</impact>
-		<protective_meas>text</protective_meas>
-		<status>1</status>
-		<munition_type>1</munition_type>
-		<priority>1</priority>
-		<nbc>1</nbc>
-	</geomessage>
-	<geomessage v="1.0">
 		<_type>sitrep</_type>
 		<_action>update</_action>
 		<_control_points>7840600,4087965</_control_points>
