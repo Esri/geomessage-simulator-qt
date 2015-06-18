@@ -41,8 +41,47 @@ Most `<geomessage>` elements contain at least the following elements:
 - `<_control_points>`: a semicolon-delimited list of 2D points, where each point is expressed as `x,y`. A list of one point denotes a point geometry. A list of two points denotes a line (a.k.a. polyline) geometry. A list of three or more points denotes either a line geometry or an area (a.k.a. polygon) geometry.
 - `<datetimesubmitted>`: the GeoMessage's timestamp, in the following format: `2015-07-26 00:00:00`. In a future GeoMessage version, XML `dateTime` will be used.
 - `<uniquedesignation>`: a unique and often human-readable unique identifier for the subject of the GeoMessage. See `<sic>` above for a discussion of the subject of a GeoMessage.
+- `<color>`: the color of a `chemlight` GeoMessage:
+    - 1 = red
+    - 2 = green
+    - 3 = blue
+    - 4 = yellow
 
 A GeoMessage may contain many other elements, depending on `<_type>`, and these elements are specified in the XSD files in the [schema directory](./schema/).
 
 ## Sample GeoMessages
 
+The sample-messages directory contains sample GeoMessages. The following is a valid list of two GeoMessages: one of type `position_report` and one of type `chemlight`.
+
+```
+<geomessages>
+	<geomessage v="1.1">
+		<_type>position_report</_type>
+		<_action>update</_action>
+		<_id>{3a752ef3-b085-41e8-993a-3ec39098fde2}</_id>
+		<_wkid>4326</_wkid>
+		<sic>SFGPEVAL-------</sic>
+		<_control_points>70.4565000013,34.4345000014</_control_points>
+		<uniquedesignation>3A1-001</uniquedesignation>
+		<quantity>1</quantity>
+		<direction>359</direction>
+		<type>M1126</type>
+		<datetimevalid>2012-07-26 00:00:00</datetimevalid>
+		<speed>100</speed>
+		<owningunit>2/3/A/1</owningunit>
+		<status911>0</status911>
+		<fuel_state>100</fuel_state>
+		<rel_info>0</rel_info>
+	</geomessage>
+	<geomessage v="1.1">
+		<_type>chemlight</_type>
+		<_action>update</_action>
+		<_id>{ecfc34f6-1583-4b88-8fe6-456e30874672}</_id>
+		<_wkid>4326</_wkid>
+		<_control_points>70.4426000006,34.4375</_control_points>
+		<datetimesubmitted>2012-07-26 00:00:00</datetimesubmitted>
+		<uniquedesignation>War Eagles 1 D</uniquedesignation>
+		<color>1</color>
+	</geomessage>
+</geomessages>
+```
