@@ -1,4 +1,7 @@
-# GeoMessage Specification
+GeoMessage Specification
+========================
+Version 1.1
+-------------------
 
 Esri created the GeoMessage specification as a pattern for messages that are sent and received by applications and components that are part of the [ArcGIS for the Military](http://solutions.arcgis.com/military) solution. This document explains the GeoMessage format for those who want to generate, process, or otherwise use GeoMessages.
 
