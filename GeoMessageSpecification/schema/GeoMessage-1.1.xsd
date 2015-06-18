@@ -13,7 +13,6 @@
                                         <xs:enumeration value="eod"/>
                                         <xs:enumeration value="gsrrep"/>
                                         <xs:enumeration value="medevac"/>
-                                        <xs:enumeration value="medevacreq"/>
                                         <xs:enumeration value="position_report"/>
                                         <xs:enumeration value="sensor_obs"/>
                                         <xs:enumeration value="sitrep"/>

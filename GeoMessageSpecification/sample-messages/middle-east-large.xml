@@ -116233,32 +116233,6 @@
 		<narrative>text</narrative>
 	</geomessage>
 	<geomessage v="1.0">
-		<_type>medevacreq</_type>
-		<_action>update</_action>
-		<_control_points>7840564,4087964</_control_points>
-		<_id>{274bcb7b-e02c-441f-addc-2ad85cfbf9d7}</_id>
-		<_wkid>3857</_wkid>
-		<datetimesubmitted>2012-06-03 17:51:01</datetimesubmitted>
-		<uniquedesignation>text</uniquedesignation>
-		<radio_freq>text</radio_freq>
-		<patients_a>2</patients_a>
-		<patients_b>3</patients_b>
-		<patients_c>3</patients_c>
-		<patients_d>3</patients_d>
-		<patients_e>3</patients_e>
-		<patients_type_l>3</patients_type_l>
-		<patients_type_a>3</patients_type_a>
-		<wounds>text</wounds>
-		<terrain>text</terrain>
-		<authentication>text</authentication>
-		<status>1</status>
-		<equipment>1</equipment>
-		<security>1</security>
-		<marking>1</marking>
-		<nbc>1</nbc>
-		<nationality>1</nationality>
-	</geomessage>
-	<geomessage v="1.0">
 		<_type>sitrep</_type>
 		<_action>update</_action>
 		<_control_points>7840600,4087965</_control_points>
