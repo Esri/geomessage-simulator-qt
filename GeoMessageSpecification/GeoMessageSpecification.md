@@ -51,7 +51,7 @@ A GeoMessage may contain many other elements, depending on `<_type>`, and these 
 
 ## Sample GeoMessages
 
-The sample-messages directory contains sample GeoMessages. The following is a valid list of two GeoMessages: one of type `position_report` and one of type `chemlight`.
+The [sample-messages directory](./sample-messages) contains sample GeoMessages. The following is a valid list of two GeoMessages: one of type `position_report` and one of type `chemlight`.
 
 ```
 <geomessages>
