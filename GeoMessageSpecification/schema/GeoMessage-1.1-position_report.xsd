@@ -18,7 +18,7 @@
                                 </xs:simpleType>
                             </xs:element>
                             <xs:element type="xs:string" name="_id"/>
-                            <xs:element type="xs:short" name="_wkid"/>
+                            <xs:element type="xs:integer" name="_wkid"/>
                             <xs:element type="xs:string" name="sic"/>
                             <xs:element type="xs:string" name="_control_points"/>
                             <xs:element type="xs:string" name="uniquedesignation"/>
@@ -43,7 +43,7 @@
                             <xs:element type="xs:float" name="max_range"/>
                             <xs:element type="xs:byte" name="rel_info"/>
                         </xs:choice>
-                        <xs:attribute type="xs:float" name="v" use="optional"/>
+                        <xs:attribute type="xs:integer" name="v" use="optional"/>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
