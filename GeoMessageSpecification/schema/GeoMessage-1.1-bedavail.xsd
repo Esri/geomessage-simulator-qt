@@ -1,0 +1,63 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="geomessages">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="geomessage" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                        <xs:choice maxOccurs="unbounded" minOccurs="0">
+                            <xs:element type="xs:string" name="_type" fixed="bedavail"/>
+                            <xs:element name="_action">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="remove"/>
+                                        <xs:enumeration value="removeall"/>
+                                        <xs:enumeration value="select"/>
+                                        <xs:enumeration value="un-select"/>
+                                        <xs:enumeration value="update"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element type="xs:string" name="_id"/>
+                            <xs:element type="xs:integer" name="_wkid"/>
+                            <xs:element type="xs:string" name="_control_points"/>
+                            <xs:element type="xs:string" name="datetimesubmitted"/>
+                            <xs:element type="xs:string" name="uniquedesignation"/>
+                            <xs:element type="xs:string" name="element"/>
+                            <xs:element type="xs:short" name="total_opl"/>
+                            <xs:element type="xs:short" name="med_opl"/>
+                            <xs:element type="xs:short" name="gen_opl"/>
+                            <xs:element type="xs:short" name="burn_opl"/>
+                            <xs:element type="xs:short" name="spinal_opl"/>
+                            <xs:element type="xs:short" name="neuro_opl"/>
+                            <xs:element type="xs:short" name="thor_opl"/>
+                            <xs:element type="xs:short" name="avail_total"/>
+                            <xs:element type="xs:short" name="avail_med"/>
+                            <xs:element type="xs:short" name="avail_gen"/>
+                            <xs:element type="xs:short" name="avail_burn"/>
+                            <xs:element type="xs:short" name="avail_spinal"/>
+                            <xs:element type="xs:short" name="avail_neuro"/>
+                            <xs:element type="xs:short" name="suites"/>
+                            <xs:element type="xs:short" name="backlog"/>
+                            <xs:element type="xs:short" name="overflow"/>
+                            <xs:element type="xs:string" name="narrative"/>
+                            <xs:element type="xs:short" name="avail_thor"/>
+                            <xs:element type="xs:short" name="psych_opl"/>
+                            <xs:element type="xs:short" name="ortho_opl"/>
+                            <xs:element type="xs:short" name="ob_gyn_opl"/>
+                            <xs:element type="xs:short" name="ped_opl"/>
+                            <xs:element type="xs:short" name="oral_opl"/>
+                            <xs:element type="xs:short" name="opth_opl"/>
+                            <xs:element type="xs:short" name="avail_psych"/>
+                            <xs:element type="xs:short" name="avail_ortho"/>
+                            <xs:element type="xs:short" name="avail_ob_gyn"/>
+                            <xs:element type="xs:short" name="avail_ped"/>
+                            <xs:element type="xs:short" name="avail_oral"/>
+                            <xs:element type="xs:short" name="avail_opth"/>
+                        </xs:choice>
+                        <xs:attribute type="xs:string" name="v" use="optional"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
