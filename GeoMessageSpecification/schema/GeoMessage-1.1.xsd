@@ -19,7 +19,6 @@
                                         <xs:enumeration value="situation_report"/>
                                         <xs:enumeration value="slantrep"/>
                                         <xs:enumeration value="spotrep"/>
-                                        <xs:enumeration value="trackrep"/>
                                     </xs:restriction>
                                 </xs:simpleType>
                             </xs:element>
