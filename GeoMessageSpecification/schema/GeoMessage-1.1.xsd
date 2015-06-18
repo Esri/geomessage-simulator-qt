@@ -16,7 +16,6 @@
                                         <xs:enumeration value="position_report"/>
                                         <xs:enumeration value="sensor_obs"/>
                                         <xs:enumeration value="sitrep"/>
-                                        <xs:enumeration value="situation_report"/>
                                         <xs:enumeration value="slantrep"/>
                                         <xs:enumeration value="spotrep"/>
                                     </xs:restriction>
