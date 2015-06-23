@@ -1,0 +1,50 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="geomessages">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="geomessage" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element type="xs:string" name="_type" fixed="medevac"/>
+                            <xs:element name="_action">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="remove"/>
+                                        <xs:enumeration value="removeall"/>
+                                        <xs:enumeration value="select"/>
+                                        <xs:enumeration value="un-select"/>
+                                        <xs:enumeration value="update"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element type="xs:string" name="_id"/>
+                            <xs:element type="xs:integer" name="_wkid"/>
+                            <xs:element type="xs:string" name="_control_points"/>
+                            <xs:element type="xs:string" name="datetimesubmitted"/>
+                            <xs:element type="xs:string" name="uniquedesignation"/>
+                            <xs:element type="xs:byte" name="equipment" minOccurs="0"/>
+                            <xs:element type="xs:float" name="radio_freq"/>
+                            <xs:element type="xs:byte" name="patients_a"/>
+                            <xs:element type="xs:byte" name="patients_b"/>
+                            <xs:element type="xs:byte" name="patients_c"/>
+                            <xs:element type="xs:byte" name="patients_d"/>
+                            <xs:element type="xs:byte" name="patients_e"/>
+                            <xs:element type="xs:byte" name="patients_type_l"/>
+                            <xs:element type="xs:byte" name="patients_type_a"/>
+                            <xs:element type="xs:string" name="wounds"/>
+                            <xs:element type="xs:string" name="terrain"/>
+                            <xs:element type="xs:string" name="authentication"/>
+                            <xs:element type="xs:byte" name="status"/>
+                            <xs:element type="xs:byte" name="security"/>
+                            <xs:element type="xs:byte" name="marking"/>
+                            <xs:element type="xs:byte" name="nbc"/>
+                            <xs:element type="xs:byte" name="nationality"/>
+                            <xs:element type="xs:integer" name="incident_id"/>
+                        </xs:sequence>
+                        <xs:attribute type="xs:string" name="v" use="optional"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

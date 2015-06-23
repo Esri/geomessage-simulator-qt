@@ -1,0 +1,52 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="geomessages">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="geomessage" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                        <xs:choice maxOccurs="unbounded" minOccurs="0">
+                            <xs:element type="xs:string" name="_type" fixed="position_report"/>
+                            <xs:element name="_action">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="remove"/>
+                                        <xs:enumeration value="removeall"/>
+                                        <xs:enumeration value="select"/>
+                                        <xs:enumeration value="un-select"/>
+                                        <xs:enumeration value="update"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element type="xs:string" name="_id"/>
+                            <xs:element type="xs:integer" name="_wkid"/>
+                            <xs:element type="xs:string" name="sic"/>
+                            <xs:element type="xs:string" name="_control_points"/>
+                            <xs:element type="xs:string" name="uniquedesignation"/>
+                            <xs:element type="xs:byte" name="quantity"/>
+                            <xs:element type="xs:string" name="additionalinformation"/>
+                            <xs:element type="xs:byte" name="iff_sif"/>
+                            <xs:element type="xs:short" name="direction"/>
+                            <xs:element type="xs:string" name="type"/>
+                            <xs:element type="xs:string" name="datetimevalid"/>
+                            <xs:element type="xs:short" name="speed"/>
+                            <xs:element type="xs:string" name="owningunit"/>
+                            <xs:element type="xs:byte" name="operationalcondition"/>
+                            <xs:element type="xs:byte" name="status911"/>
+                            <xs:element type="xs:string" name="staffcomment"/>
+                            <xs:element type="xs:byte" name="fuel_state"/>
+                            <xs:element type="xs:string" name="sys_msgs"/>
+                            <xs:element type="xs:float" name="offseta"/>
+                            <xs:element type="xs:byte" name="vert_traverse"/>
+                            <xs:element type="xs:byte" name="obs_elev"/>
+                            <xs:element type="xs:short" name="horiz_traverse"/>
+                            <xs:element type="xs:float" name="min_range"/>
+                            <xs:element type="xs:float" name="max_range"/>
+                            <xs:element type="xs:byte" name="rel_info"/>
+                        </xs:choice>
+                        <xs:attribute type="xs:integer" name="v" use="optional"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

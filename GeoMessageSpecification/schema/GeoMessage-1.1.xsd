@@ -1,0 +1,153 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="geomessages">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="geomessage" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                        <xs:choice maxOccurs="unbounded" minOccurs="0">
+                            <xs:element name="_type">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="bedavail"/>
+                                        <xs:enumeration value="chemlight"/>
+                                        <xs:enumeration value="eod"/>
+                                        <xs:enumeration value="gsrrep"/>
+                                        <xs:enumeration value="medevac"/>
+                                        <xs:enumeration value="position_report"/>
+                                        <xs:enumeration value="sensor_obs"/>
+                                        <xs:enumeration value="sitrep"/>
+                                        <xs:enumeration value="slantrep"/>
+                                        <xs:enumeration value="spotrep"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="_action">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="remove"/>
+                                        <xs:enumeration value="removeall"/>
+                                        <xs:enumeration value="select"/>
+                                        <xs:enumeration value="un-select"/>
+                                        <xs:enumeration value="update"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element type="xs:string" name="_id"/>
+                            <xs:element type="xs:integer" name="_wkid"/>
+                            <xs:element type="xs:string" name="sic"/>
+                            <xs:element type="xs:string" name="_control_points"/>
+                            <xs:element type="xs:string" name="datetimesubmitted"/>
+                            <xs:element type="xs:string" name="uniquedesignation"/>
+                            <xs:element type="xs:integer" name="quantity"/>
+                            <xs:element type="xs:string" name="additionalinformation"/>
+                            <xs:element type="xs:byte" name="iff_sif"/>
+                            <xs:element type="xs:short" name="direction"/>
+                            <xs:element type="xs:string" name="type"/>
+                            <xs:element type="xs:string" name="datetimevalid"/>
+                            <xs:element type="xs:integer" name="speed"/>
+                            <xs:element type="xs:string" name="owningunit"/>
+                            <xs:element type="xs:boolean" name="status911"/>
+                            <xs:element type="xs:string" name="staffcomment"/>
+                            <xs:element type="xs:byte" name="fuel_state"/>
+                            <xs:element type="xs:byte" name="rel_info"/>
+                            <xs:element type="xs:string" name="element"/>
+                            <xs:element type="xs:short" name="total_opl"/>
+                            <xs:element type="xs:short" name="med_opl"/>
+                            <xs:element type="xs:short" name="gen_opl"/>
+                            <xs:element type="xs:short" name="burn_opl"/>
+                            <xs:element type="xs:short" name="spinal_opl"/>
+                            <xs:element type="xs:short" name="neuro_opl"/>
+                            <xs:element type="xs:short" name="thor_opl"/>
+                            <xs:element type="xs:short" name="avail_total"/>
+                            <xs:element type="xs:short" name="avail_med"/>
+                            <xs:element type="xs:short" name="avail_gen"/>
+                            <xs:element type="xs:short" name="avail_burn"/>
+                            <xs:element type="xs:short" name="avail_spinal"/>
+                            <xs:element type="xs:short" name="avail_neuro"/>
+                            <xs:element type="xs:short" name="suites"/>
+                            <xs:element type="xs:short" name="backlog"/>
+                            <xs:element type="xs:short" name="overflow"/>
+                            <xs:element type="xs:string" name="narrative"/>
+                            <xs:element type="xs:short" name="avail_thor"/>
+                            <xs:element type="xs:string" name="activity"/>
+                            <xs:element type="xs:string" name="effective"/>
+                            <xs:element type="xs:string" name="own_situation"/>
+                            <xs:element type="xs:string" name="situation_overview"/>
+                            <xs:element type="xs:string" name="operations"/>
+                            <xs:element type="xs:string" name="isr"/>
+                            <xs:element type="xs:string" name="sustainment"/>
+                            <xs:element type="xs:string" name="equipment"/>
+                            <xs:element type="xs:string" name="radio_freq"/>
+                            <xs:element type="xs:byte" name="patients_a"/>
+                            <xs:element type="xs:byte" name="patients_b"/>
+                            <xs:element type="xs:byte" name="patients_c"/>
+                            <xs:element type="xs:byte" name="patients_d"/>
+                            <xs:element type="xs:byte" name="patients_e"/>
+                            <xs:element type="xs:byte" name="patients_type_l"/>
+                            <xs:element type="xs:byte" name="patients_type_a"/>
+                            <xs:element type="xs:string" name="wounds"/>
+                            <xs:element type="xs:string" name="terrain"/>
+                            <xs:element type="xs:string" name="authentication"/>
+                            <xs:element type="xs:byte" name="status"/>
+                            <xs:element type="xs:byte" name="security"/>
+                            <xs:element type="xs:byte" name="marking"/>
+                            <xs:element type="xs:byte" name="nbc"/>
+                            <xs:element type="xs:byte" name="nationality"/>
+                            <xs:element type="xs:integer" name="incident_id"/>
+                            <xs:element type="xs:string" name="location"/>
+                            <xs:element type="xs:string" name="location_desc"/>
+                            <xs:element type="xs:string" name="contact"/>
+                            <xs:element type="xs:string" name="nbc_type"/>
+                            <xs:element type="xs:string" name="resources"/>
+                            <xs:element type="xs:string" name="impact"/>
+                            <xs:element type="xs:string" name="protective_meas"/>
+                            <xs:element type="xs:byte" name="munition_type"/>
+                            <xs:element type="xs:byte" name="priority"/>
+                            <xs:element type="xs:string" name="size"/>
+                            <xs:element type="xs:string" name="unit"/>
+                            <xs:element type="xs:string" name="activity_cat"/>
+                            <xs:element type="xs:string" name="unit_cat"/>
+                            <xs:element type="xs:string" name="equip_cat"/>
+                            <xs:element type="xs:integer" name="size_cat"/>
+                            <xs:element type="xs:string" name="timeobserved"/>
+                            <xs:element type="xs:string" name="sys_msgs"/>
+                            <xs:element type="xs:float" name="offseta"/>
+                            <xs:element type="xs:short" name="vert_traverse"/>
+                            <xs:element type="xs:integer" name="obs_elev"/>
+                            <xs:element type="xs:short" name="horiz_traverse"/>
+                            <xs:element type="xs:float" name="min_range"/>
+                            <xs:element type="xs:float" name="max_range"/>
+                            <xs:element type="xs:byte" name="operationalcondition"/>
+                            <xs:element type="xs:string" name="created_at"/>
+                            <xs:element type="xs:string" name="edited_at"/>
+                            <xs:element type="xs:string" name="created_by"/>
+                            <xs:element type="xs:string" name="edited_by"/>
+                            <xs:element type="xs:integer" name="prod_id"/>
+                            <xs:element type="xs:byte" name="color"/>
+                            <xs:element type="xs:string" name="personnel"/>
+                            <xs:element type="xs:string" name="comms"/>
+                            <xs:element type="xs:string" name="symbolname"/>
+                            <xs:element type="xs:string" name="datetimemodified"/>
+                            <xs:element type="xs:string" name="modifiedby"/>
+                            <xs:element type="xs:string" name="notes"/>
+                            <xs:element type="xs:short" name="psych_opl"/>
+                            <xs:element type="xs:short" name="ortho_opl"/>
+                            <xs:element type="xs:short" name="ob_gyn_opl"/>
+                            <xs:element type="xs:short" name="ped_opl"/>
+                            <xs:element type="xs:short" name="oral_opl"/>
+                            <xs:element type="xs:short" name="opth_opl"/>
+                            <xs:element type="xs:short" name="avail_psych"/>
+                            <xs:element type="xs:short" name="avail_ortho"/>
+                            <xs:element type="xs:short" name="avail_ob_gyn"/>
+                            <xs:element type="xs:short" name="avail_ped"/>
+                            <xs:element type="xs:short" name="avail_oral"/>
+                            <xs:element type="xs:short" name="avail_opth"/>
+                            <xs:element type="xs:string" name="cir"/>
+                        </xs:choice>
+                        <xs:attribute type="xs:string" name="v" use="optional"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
