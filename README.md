@@ -1,5 +1,7 @@
 # geomessage-simulator-qt
 
+___This repository is no longer maintained. For more information, please visit the [Esri Product Life Cycle](http://support.esri.com/en/content/productlifecycles) page.___
+
 GeoMessage Simulator provides UDP messaging for applications and system components in the ArcGIS for the Military solution, including:
 
 * Vehicle Commander ([source](https://github.com/Esri/vehicle-commander-java), [binary for Windows](http://www.arcgis.com/home/item.html?id=ae30551d12f443cb903f4829b03de315), [binary for Linux](http://www.arcgis.com/home/item.html?id=2aa94d8f14374470a2157a3ca4e70413))
