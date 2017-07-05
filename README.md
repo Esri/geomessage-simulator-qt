@@ -1,6 +1,6 @@
-# geomessage-simulator-qt
+# geomessage-simulator-qt (Mature Support)
 
-___This repository is no longer maintained. For more information, please visit the [Esri Product Life Cycle](http://support.esri.com/en/content/productlifecycles) page.___
+***This GeoMessage Simulator repo has been moved to the [Mature Support Lifecycle Phase](http://links.esri.com/Support/ProductLifeCycle), applications built from this repo are in the Mature Support lifecycle phase.***
 
 GeoMessage Simulator provides UDP messaging for applications and system components in the ArcGIS for the Military solution, including:
 
