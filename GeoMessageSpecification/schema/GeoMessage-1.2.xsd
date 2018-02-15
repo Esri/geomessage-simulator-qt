@@ -143,6 +143,16 @@
                             <xs:element type="xs:short" name="avail_oral"/>
                             <xs:element type="xs:short" name="avail_opth"/>
                             <xs:element type="xs:string" name="cir"/>
+                            <xs:element name="environment">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="air"/>
+                                        <xs:enumeration value="land"/>
+                                        <xs:enumeration value="subsurface"/>
+                                        <xs:enumeration value="surface"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
                         </xs:choice>
                         <xs:attribute type="xs:string" name="v" use="optional"/>
                     </xs:complexType>
