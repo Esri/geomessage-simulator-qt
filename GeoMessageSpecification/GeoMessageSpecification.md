@@ -49,6 +49,11 @@ Most `<geomessage>` elements contain at least the following elements:
     - 2 = green
     - 3 = blue
     - 4 = yellow
+- `<environment>`: the environment in which the associated track is operating. Valid values:
+    - `air`: the track is operating in the air.
+    - `land`: the track is operating on land.
+    - `subsurface`: the track is operating below the surface.
+    - `surface`: the track is operating on the surface.
 
 A GeoMessage may contain many other elements, depending on `<_type>`, and these elements are specified in the XSD files in the [schema directory](./schema/).
 
