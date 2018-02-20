@@ -49,7 +49,7 @@ Most `<geomessage>` elements contain at least the following elements:
     - 2 = green
     - 3 = blue
     - 4 = yellow
-- `<environment>`: the environment in which the associated track is operating. Valid values:
+- `<environment>`: the environment in which the associated `position_report` track is operating. Valid values:
     - `air`: the track is operating in the air.
     - `land`: the track is operating on land.
     - `subsurface`: the track is operating below the surface.
