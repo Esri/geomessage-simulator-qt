@@ -42,6 +42,16 @@
                             <xs:element type="xs:float" name="min_range"/>
                             <xs:element type="xs:float" name="max_range"/>
                             <xs:element type="xs:byte" name="rel_info"/>
+                            <xs:element name="environment">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="air"/>
+                                        <xs:enumeration value="land"/>
+                                        <xs:enumeration value="subsurface"/>
+                                        <xs:enumeration value="surface"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
                         </xs:choice>
                         <xs:attribute type="xs:integer" name="v" use="optional"/>
                     </xs:complexType>
